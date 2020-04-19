@@ -15,7 +15,6 @@ except ImportError:
     pass
 
 SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
-print(SIGNATURES_ROOT)
 COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
 
 
@@ -70,7 +69,7 @@ class FA:
         filename = os.path.join(COMMANDS_ROOT, "{}.py".format(command))
 
         if not os.path.exists(filename):
-            print("no such command: {}".format(command))
+            self.log("no such command: {}".format(command))
             return -1
 
         if sys.version == '3':
@@ -85,44 +84,42 @@ class FA:
 
         return module.run(self._segments, manner, manner_args, current_ea, args, endianity=self._endianity)
 
-    def find(self, symbol_name):
-        symbol_sig_filename = os.path.join(self._signatures_root, self._project, '{}.sig'.format(symbol_name))
-
+    def find_from_sig_file(self, symbol_sig_filename, decremental=True):
         if not os.path.exists(symbol_sig_filename):
             raise NotImplementedError("no signature for the given symbol")
 
         first = True
-        current_ea = -1
-        manner_args = None
         addresses = []
+        manner_args = None
 
-        for line in open(symbol_sig_filename).readlines():
-            # print(line)
-            line = line.strip()
-            command, args = line.split(' ', 1)
+        with open(symbol_sig_filename) as f:
+            for line in f.readlines():
+                # print(line)
+                line = line.strip()
 
-            manner = 'start'
+                if len(line) == 0:
+                    continue
 
-            if '{' in command:
-                manner_args = command.split('{')[1].split('}')[0]
-                command = command.split('{')[0]
+                if '#' in line:
+                    line, comment = line.split('#', 1)
 
-            if '/' in command:
-                prefix, suffix = command.split('/', 1)
-                if suffix in ('next', 'prev', 'unique'):
+                command, args = line.split(' ', 1)
+
+                manner = 'start'
+
+                if '{' in command:
+                    manner_args = command.split('{')[1].split('}')[0]
+                    command = command.split('{')[0]
+
+                if '/' in command:
+                    prefix, suffix = command.split('/', 1)
                     command = prefix
                     manner = suffix
 
-            if first:
-                addresses = self.run_command(command, manner, manner_args, current_ea, args)
-                first = False
-            else:
-                new_addresses = set()
-                for current_ea in addresses:
-                    new_addresses.update(self.run_command(command, manner, manner_args, current_ea, args))
-                addresses = new_addresses
+                addresses = self.run_command(command, manner, manner_args, addresses, args)
 
         return addresses
 
-
-
+    def find(self, symbol_name):
+        symbol_sig_filename = os.path.join(self._signatures_root, self._project, '{}.sig'.format(symbol_name))
+        return self.find_from_sig_file(symbol_sig_filename)

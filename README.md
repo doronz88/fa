@@ -39,7 +39,7 @@ command/manner{manner_args} args
 
 Available commands:
 * `find-bytes`
-    * Searches for the specified bytes given as an hex string. 
+    * Searches for the specified bytes given as an hex string.
     * For example: `00 01 02 03`
 * `powerpc-find-opcodes`
     * Searches for PPC32 opcodes, seperated by `;`.
@@ -47,10 +47,21 @@ Available commands:
 * `add`
     * Adds a constant offset to the search results.
     * For example: `8`, `-8`, `0x10`,...
+* `add-range`
+    * Adds a range of offsets to the search.
+    * For example: `0 10 2` will add all offsets in range: `(0, 10, 2)`
 * `verify`
     * Verifies the search results up until now match a const 
     expression given as hex string.
+    * Supported manners: `start`, `next`, `prev`, `unique`
     * For example: `11 22 33 44`
+* `xrefs-to`
+    * Searches for function references to given expression.
+     Equivalent to IDA's `Alt+B`.
+    * Supported manners: `and`, `or`. 
+    * For example: `"11 22" 00`
+* `unique`
+    * Verifies the number of search results == 1.
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
@@ -72,23 +83,17 @@ back to `11 22 33 44` by reducing the `-20` from the search cursor.
 #### Manners
 
 The manners can be specified to change the "*manner*" in the command
-will run. For example: `find-bytes/next{20}` will look ahead for the 
-given bytes only up until an offset of `20`. Not all manners 
+will run. For example: `xrefs-to/or` will perform a union,
+whereas `xrefs-to/and` will perform an intersection. Not all manners 
 require additional arguments, but those can be given in curly braces
 (`{}`).
 
 Available manners (`[]` means optional):
 
-* `start[{count}]`
-    * The default manner. Look for everthing from the start.
-    * Limit search results to `count`
-* `next[{max_offset}]`
-    * Search for the given expression only after the given cursor.
-    * Limit the offset between the cursor to `max_offset`.
-* `prev[{max_offset}]`
-    * Not yet supported, but same is `next`, except backwards.
-* `unique`
-    * Verifies the given search is matched only once.
+* `and`
+    * Reduces the results to only those matching
+* `or`
+    * Extends the results to every matching
 
 ### Loaders
 
