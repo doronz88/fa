@@ -52,6 +52,10 @@ class FA:
 
         return projects
 
+    def get_symbols(self):
+        symbols_dir = os.path.join(self._signatures_root, self._project)
+        return [os.path.splitext(filename)[0] for filename in os.listdir(symbols_dir)]
+
     @staticmethod
     def log(message):
         for line in message.splitlines():
