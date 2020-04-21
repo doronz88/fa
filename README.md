@@ -44,11 +44,15 @@ Available commands:
         * `find-bytes 00 01 02 03`
 * `keystone-find-opcodes <arch> <mode> <opcodes>`
     * Searches for opcodes using keystone engine.
+    * Optional manners: 
+        * `bele` for automatic big/little endian support.
     * For example: 
         * `keystone-find-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`
 * `keystone-verify-opcodes <opcodes>`
     * Reduces the search results to only those matching 
     PPC32 opcodes, seperated by `;`.
+    * Optional manners: 
+        * `bele` for automatic big/little endian support. 
     * For example: 
         * `keystone-verify-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`    
 * `add <offset>`
