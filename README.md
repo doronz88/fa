@@ -38,34 +38,34 @@ command/manner{manner_args} args
 ``` 
 
 Available commands:
-* `find-bytes`
+* `find-bytes <bytes>`
     * Searches for the specified bytes given as an hex string.
     * For example: `00 01 02 03`
-* `powerpc-find-opcodes`
+* `powerpc-find-opcodes <opcodes>`
     * Searches for PPC32 opcodes, seperated by `;`.
     * For example: `addi %r1, %r1, 4; addi %r1, %r1, 8;`
-* `powerpc-verify-opcodes`
+* `powerpc-verify-opcodes <opcodes>`
     * Reduces the search results to only those matching 
     PPC32 opcodes, seperated by `;`.
     * For example: `addi %r1, %r1, 4; addi %r1, %r1, 8;`    
-* `add`
+* `add <offset>`
     * Adds a constant offset to the search results.
     * For example: `8`, `-8`, `0x10`,...
-* `add-range`
+* `add-range <start> <end> <skip>`
     * Adds a range of offsets to the search.
     * For example: `0 10 2` will add all offsets in range: `(0, 10, 2)`
-* `verify-bytes`
+* `verify-bytes <bytes>`
     * Verifies the search results up until now match a const 
     expression given as hex string.
     * For example: `11 22 33 44`
-* `xrefs-to`
+* `xrefs-to <ida-expression>`
     * Searches for function references to given expression.
      Equivalent to IDA's `Alt+B`.
     * Supported manners: `and`, `or`. 
     * For example: `"11 22" 00`
 * `unique`
     * Verifies the number of search results == 1.
-* `aligned`
+* `aligned <immediate>`
     * Verifies the results align a specific value.
     * For example: `4`
 
