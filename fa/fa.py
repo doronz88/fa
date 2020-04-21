@@ -17,6 +17,8 @@ except ImportError:
 SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
 
+NON_REDUCING_MANNERS = ('or', )
+NON_REDUCING_COMMANDS = ('find_bytes', 'powerpc_find_opcodes')
 
 class FA:
     def __init__(self, signatures_root=SIGNATURES_ROOT):
@@ -88,13 +90,11 @@ class FA:
         if not os.path.exists(symbol_sig_filename):
             raise NotImplementedError("no signature for the given symbol")
 
-        first = True
         addresses = []
         manner_args = None
 
         with open(symbol_sig_filename) as f:
             for line in f.readlines():
-                # print(line)
                 line = line.strip()
 
                 if len(line) == 0:
@@ -116,7 +116,14 @@ class FA:
                     command = prefix
                     manner = suffix
 
-                addresses = self.run_command(command, manner, manner_args, addresses, args)
+                new_addresses = self.run_command(command, manner, manner_args, addresses, args)
+
+                if decremental and len(new_addresses) == 0:
+                    if (manner not in NON_REDUCING_MANNERS) and (command not in NON_REDUCING_COMMANDS):
+                        # these commands never reduce the number of results
+                        return addresses
+
+                addresses = new_addresses
 
         return addresses
 
