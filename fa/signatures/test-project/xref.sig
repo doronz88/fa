@@ -1,1 +1,4 @@
-xrefs-to 70 72 69 6E 74 66 00
+xrefs-to/or "snprintf" 00
+ppc32-verify mr %r12, %r1
+add 4
+

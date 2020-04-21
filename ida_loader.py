@@ -138,7 +138,7 @@ def create():
 def find():
     global fa_instance
 
-    for address in fa_instance.find_from_sig_file(TEMP_SIG_FILENAME):
+    for address in fa_instance.find_from_sig_file(TEMP_SIG_FILENAME, decremental=True):
         fa.FA.log('Search result: 0x{:x}'.format(address))
     fa.FA.log('Search done')
 

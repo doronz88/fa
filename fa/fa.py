@@ -20,6 +20,7 @@ COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'comman
 NON_REDUCING_MANNERS = ('or', )
 NON_REDUCING_COMMANDS = ('find_bytes', 'powerpc_find_opcodes')
 
+
 class FA:
     def __init__(self, signatures_root=SIGNATURES_ROOT):
         self._signatures_root = signatures_root
@@ -86,7 +87,17 @@ class FA:
 
         return module.run(self._segments, manner, manner_args, current_ea, args, endianity=self._endianity)
 
-    def find_from_sig_file(self, symbol_sig_filename, decremental=True):
+    @staticmethod
+    def get_alias():
+        retval = {}
+        with open(os.path.join(COMMANDS_ROOT, 'alias')) as f:
+            for line in f.readlines():
+                line = line.strip()
+                k, v = line.split('=')
+                retval[k.strip()] = v.strip()
+        return retval
+
+    def find_from_sig_file(self, symbol_sig_filename, decremental=False):
         if not os.path.exists(symbol_sig_filename):
             raise NotImplementedError("no signature for the given symbol")
 
@@ -102,6 +113,11 @@ class FA:
 
                 if '#' in line:
                     line, comment = line.split('#', 1)
+
+                for k, v in self.get_alias().items():
+                    # handle aliases
+                    if line.startswith(k):
+                        line = line.replace(k, v)
 
                 command, args = line.split(' ', 1)
 
