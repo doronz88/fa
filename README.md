@@ -54,10 +54,9 @@ Available commands:
 * `add-range`
     * Adds a range of offsets to the search.
     * For example: `0 10 2` will add all offsets in range: `(0, 10, 2)`
-* `verify`
+* `verify-bytes`
     * Verifies the search results up until now match a const 
     expression given as hex string.
-    * Supported manners: `start`, `next`, `prev`, `unique`
     * For example: `11 22 33 44`
 * `xrefs-to`
     * Searches for function references to given expression.
