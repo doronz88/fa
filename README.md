@@ -79,6 +79,8 @@ Available commands:
     * Verifies the results align a specific value.
     * For example: 
         * `aligned 4`
+* `single`
+    * Pops only a single result
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
