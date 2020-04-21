@@ -65,6 +65,9 @@ Available commands:
     * For example: `"11 22" 00`
 * `unique`
     * Verifies the number of search results == 1.
+* `aligned`
+    * Verifies the results align a specific value.
+    * For example: `4`
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
