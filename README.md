@@ -43,7 +43,11 @@ Available commands:
     * For example: `00 01 02 03`
 * `powerpc-find-opcodes`
     * Searches for PPC32 opcodes, seperated by `;`.
-    * For example: `addi %r1, %r1, 4; addi %r1, %r1, 8;`  
+    * For example: `addi %r1, %r1, 4; addi %r1, %r1, 8;`
+* `powerpc-verify-opcodes`
+    * Reduces the search results to only those matching 
+    PPC32 opcodes, seperated by `;`.
+    * For example: `addi %r1, %r1, 4; addi %r1, %r1, 8;`    
 * `add`
     * Adds a constant offset to the search results.
     * For example: `8`, `-8`, `0x10`,...
