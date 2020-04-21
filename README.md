@@ -6,6 +6,13 @@ FA stands for Firmware Analysis.
 FA allows one to easily perform code exploration, symbol finding and 
 other functionality with ease.
 
+## Requirements
+
+In your IDA's python directory, install:
+* [keystone](http://www.keystone-engine.org/download/)
+* capstone (`pip install capstone`)
+
+
 ## How its used?
 
 Before using, one must understand the terminology for: 
@@ -135,4 +142,3 @@ You should get a nice prompt inside the output window welcoming you
 into using FA. Also, a quick usage guide will also be printed so you 
 don't have to memorize everything.
 
- 
