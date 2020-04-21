@@ -119,7 +119,11 @@ class FA:
                     if line.startswith(k):
                         line = line.replace(k, v)
 
-                command, args = line.split(' ', 1)
+                if ' ' in line:
+                    command, args = line.split(' ', 1)
+                else:
+                    command = line
+                    args = ''
 
                 manner = 'start'
 
