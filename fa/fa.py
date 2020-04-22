@@ -17,7 +17,6 @@ except ImportError:
 SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
 
-DEFAULT_MANNER = 'or'
 NON_REDUCING_MANNERS = ('or', )
 
 MULTILINE_PREFIX = '    '
@@ -145,8 +144,6 @@ class FA:
             else:
                 command = line
                 args = ''
-
-            manner = DEFAULT_MANNER
 
             if '/' in command:
                 # parse manners
