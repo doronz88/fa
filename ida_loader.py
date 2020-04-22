@@ -1,10 +1,7 @@
 import binascii
 import tempfile
-import operator
-import re
 import os
 
-from capstone import *
 import idautils
 import _idaapi
 import idaapi
@@ -31,16 +28,16 @@ class String(object):
               "ULEN4"]
 
     def __init__(self, xref, addr):
-        type = idc.GetStringType(addr)
-        if type < 0 or type >= len(String.ASCSTR):
+        type_ = idc.GetStringType(addr)
+        if type_ < 0 or type_ >= len(String.ASCSTR):
             raise StringParsingException()
 
         CALC_MAX_LEN = -1
-        string = str(idc.GetString(addr, CALC_MAX_LEN, type))
+        string = str(idc.GetString(addr, CALC_MAX_LEN, type_))
 
         self.xref = xref
         self.addr = addr
-        self.type = type
+        self.type = type_
         self.string = string
 
     def get_bytes_for_find(self):
@@ -58,7 +55,7 @@ def create_signature_ppc32(start, end, inf, verify=True):
     opcode_size = 4
     first = True
 
-    command = 'find-bytes' if not verify else 'verify-bytes'
+    command = 'find-bytes/or' if not verify else 'verify-bytes'
 
     for ea in range(start, end, opcode_size):
         mnemonic = idc.GetMnem(ea)
@@ -95,8 +92,9 @@ def create_signature_arm(start, end, inf, verify=True):
         opcode_size = idautils.DecodeInstruction(ea).size
         # Skip memory accesses and branches.
         if mnemonic not in ('LDR', 'STR', 'BL', 'B', 'BLX', 'BX', 'BXJ'):
-            signature.append('{}-bytes {} \n'.format(
-                'find' if not verify and ea == start else 'verify',
+            command = 'find-bytes/or' if not verify and ea == start else 'verify-bytes'
+            signature.append('{} {} \n'.format(
+                command,
                 binascii.hexlify(idc.GetManyBytes(ea, opcode_size)))
             )
         ea += opcode_size
@@ -115,7 +113,7 @@ SIGNATURE_CREATION_BY_ARCH = {
 def find_function_strings(func_ea):
     end_ea = idc.FindFuncEnd(func_ea)
     if end_ea == idaapi.BADADDR:
-        return
+        return []
 
     strings = []
     for line in idautils.Heads(func_ea, end_ea):
@@ -129,74 +127,84 @@ def find_function_strings(func_ea):
     return strings
 
 
-def create():
-    global fa_instance
+class IdaLoader(fa.FA):
+    def __init__(self):
+        super(IdaLoader, self).__init__()
 
-    fa_instance.log('creating temporary signature')
-    func_start = idc.GetFunctionAttr(idc.ScreenEA(), idc.FUNCATTR_START)
-    func_end = idc.GetFunctionAttr(idc.ScreenEA(), idc.FUNCATTR_END)
+    def create_symbol(self):
+        """
+        Create a temporary symbol signature from the current function on the
+        IDA screen.
+        """
+        self.log('creating temporary signature')
+        func_start = idc.GetFunctionAttr(idc.ScreenEA(), idc.FUNCATTR_START)
+        func_end = idc.GetFunctionAttr(idc.ScreenEA(), idc.FUNCATTR_END)
 
-    signature = []
+        signature = []
 
-    # first try adding references to strings
-    strings = find_function_strings(func_start)
+        # first try adding references to strings
+        strings = find_function_strings(func_start)
 
-    strings_addr_set = set()
+        strings_addr_set = set()
 
-    for s in strings:
-        if s.addr not in strings_addr_set:
-            # link each string ref only once
-            strings_addr_set.add(s.addr)
-            signature.append('xrefs-to/or {}\n'.format(s.get_bytes_for_find()))
+        for s in strings:
+            if s.addr not in strings_addr_set:
+                # link each string ref only once
+                strings_addr_set.add(s.addr)
+                signature.append(
+                    'xrefs-to/or {}\n'.format(s.get_bytes_for_find())
+                )
 
-    if len(strings_addr_set) > 0:
-        signature.append('function-start\n')
+        if len(strings_addr_set) > 0:
+            signature.append('function-start\n')
 
-    inf = idaapi.get_inf_structure()
-    proc_name = inf.procName
+        inf = idaapi.get_inf_structure()
+        proc_name = inf.procName
 
-    if proc_name not in SIGNATURE_CREATION_BY_ARCH:
-        if len(signature) == 0:
-            fa.FA.log('failed to create signature')
-            return
+        if proc_name not in SIGNATURE_CREATION_BY_ARCH:
+            if len(signature) == 0:
+                fa.FA.log('failed to create signature')
+                return
 
-    signature += SIGNATURE_CREATION_BY_ARCH[proc_name](func_start, func_end, inf, verify=len(signature) != 0)
+        signature += SIGNATURE_CREATION_BY_ARCH[proc_name](
+            func_start, func_end, inf, verify=len(signature) != 0
+        )
 
-    with open(TEMP_SIG_FILENAME, 'w') as f:
-        f.writelines(signature)
+        with open(TEMP_SIG_FILENAME, 'w') as f:
+            f.writelines(signature)
 
-    print(TEMP_SIG_FILENAME)
+        self.log('Signature created at {}'.format(TEMP_SIG_FILENAME))
 
+    def find_symbol(self):
+        """
+        Find the last create symbol signature.
+        :return:
+        """
+        for address in self.find_from_sig_file(
+                TEMP_SIG_FILENAME, decremental=True):
+            fa.FA.log('Search result: 0x{:x}'.format(address))
+        fa.FA.log('Search done')
 
-def find():
-    global fa_instance
+    def symbols(self):
+        for symbol_name in self.get_symbols():
+            symbol_values = self.find(symbol_name)
 
-    for address in fa_instance.find_from_sig_file(TEMP_SIG_FILENAME, decremental=True):
-        fa.FA.log('Search result: 0x{:x}'.format(address))
-    fa.FA.log('Search done')
+            if len(symbol_values) == 1:
+                print('0x{:08x} {}'.format(symbol_values[0], symbol_name))
 
+    def set_input(self, input_):
+        self._endianity = '>' if _idaapi.cvar.inf.mf else '<'
+        self._input = input_
+        self.reload_segments()
 
-def symbols():
-    global fa_instance
-
-    for symbol_name in fa_instance.get_symbols():
-        symbol_values = fa_instance.find(symbol_name)
-
-        if len(symbol_values) == 1:
-            print('0x{:08x} {}'.format(symbol_values[0], symbol_name))
-
-
-def add_hotkeys():
-    idaapi.add_hotkey('Ctrl-8', create)
-    idaapi.add_hotkey('Ctrl-9', find)
-
-
-def test(fa_instance):
-    fa_instance.set_project('test-project')
-    # for s in ('something1', 'something2', 's3', 's4'):
-    #     fa.log(s)
-    #     for ea in fa.find(s):
-    #         fa.log('retval: ' + hex(ea))
+    def reload_segments(self):
+        for segment_ea in idautils.Segments():
+            buf = idc.GetManyBytes(
+                segment_ea, idc.SegEnd(segment_ea) - segment_ea
+            )
+            if buf is not None:
+                self.log('Loaded segment 0x{:x}'.format(segment_ea))
+                self._segments[segment_ea] = buf
 
 
 if __name__ == '__main__':
@@ -208,8 +216,8 @@ fa_instance.set_project(project_name) # select project name
 print(fa_instance.list_projects()) # prints available projects
 print(fa_instance.find(symbol_name)) # searches for the specific symbol
 ---------------------------------''')
-    fa_instance = fa.FA()
+    fa_instance = IdaLoader()
     fa_instance.set_input('ida')
-
-    test(fa_instance)
-    add_hotkeys()
+    fa_instance.set_project('test-project')
+    idaapi.add_hotkey('Ctrl-8', fa_instance.create_symbol)
+    idaapi.add_hotkey('Ctrl-9', fa_instance.find_symbol)
