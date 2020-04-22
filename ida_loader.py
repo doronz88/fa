@@ -130,7 +130,7 @@ def create():
             fa.FA.log('failed to create signature')
             return
 
-    signature += SIGNATURE_CREATION_BY_ARCH[proc_name](func_start, func_end, inf, verify=True)
+    signature += SIGNATURE_CREATION_BY_ARCH[proc_name](func_start, func_end, inf, verify=len(signature) != 0)
 
     with open(TEMP_SIG_FILENAME, 'w') as f:
         f.writelines(signature)
