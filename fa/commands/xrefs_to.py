@@ -16,7 +16,12 @@ def run(segments, manners, addresses, args, **kwargs):
 
     frm = set()
     for ea in occurences:
-        frm.update([ref.frm for ref in idautils.XrefsTo(ea)])
+        froms = [ref.frm for ref in idautils.XrefsTo(ea)]
+
+        if 'function-start' in manners:
+            froms = [idc.GetFunctionAttr(ea, idc.FUNCATTR_START) for ea in froms]
+
+        frm.update(froms)
 
     retval = set()
     retval.update(addresses)

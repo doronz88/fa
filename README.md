@@ -77,7 +77,7 @@ Available commands:
 * `xrefs-to <ida-expression>`
     * Searches for function references to given expression.
      Equivalent to IDA's `Alt+B`.
-    * Manners: `or`, `and`
+    * Manners: `or`, `and`, `function-start`
     * For example: 
         `xrefs-to "11 22" 00`
 * `unique`
@@ -100,9 +100,9 @@ a given result.
 For example, you can test the following:
 
 ```
-find-bytes 11 22 33 44
+find-bytes/or 11 22 33 44
 add 20
-verify aa bb cc dd
+verify-bytes aa bb cc dd
 add -20
 ```
 
@@ -126,6 +126,8 @@ Available manners (`[]` means optional):
     * Extends the results to every matching
 * `bele` 
     * For automatic big/little endian support.
+* `function-start`
+    * Locate the search results into the start of each function
 
 ### Aliases
 
