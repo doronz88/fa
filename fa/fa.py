@@ -1,3 +1,4 @@
+from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 import os
 import sys
@@ -25,6 +26,8 @@ MULTILINE_PREFIX = '    '
 
 
 class FA:
+    __metaclass__ = ABCMeta
+
     def __init__(self, signatures_root=SIGNATURES_ROOT):
         self._signatures_root = signatures_root
         self._project = 'generic'
@@ -32,15 +35,9 @@ class FA:
         self._segments = OrderedDict()
         self._endianity = '<'
 
+    @abstractmethod
     def set_input(self, input_):
-        if input_ == 'ida':
-            self._endianity = '>' if _idaapi.cvar.inf.mf else '<'
-        else:
-            # TODO: handle ELF file when given
-            raise NotImplementedError("currently only ida supported")
-
-        self._input = input_
-        self.reload_segments()
+        pass
 
     def set_project(self, project):
         self._project = project
@@ -64,15 +61,9 @@ class FA:
         for line in message.splitlines():
             print('FA> {}'.format(line))
 
+    @abstractmethod
     def reload_segments(self):
-        if self._input == 'ida':
-            for segment_ea in idautils.Segments():
-                buf = idc.GetManyBytes(segment_ea, idc.SegEnd(segment_ea) - segment_ea)
-                if buf is not None:
-                    self.log('Loaded segment 0x{:x}'.format(segment_ea))
-                    self._segments[segment_ea] = buf
-        else:
-            raise NotImplementedError("only supported from ida")
+        pass
 
     def run_command(self, command, manner, manner_args, current_ea, args):
         command = command.replace('-', '_')
