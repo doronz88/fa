@@ -88,6 +88,8 @@ Available commands:
         * `aligned 4`
 * `single`
     * Pops only a single result
+* `function-start`
+    * Goto function's start
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
