@@ -41,25 +41,25 @@ results.
 
 Syntax for each line is as follows:
 ```
-command/manner{manner_args} args
+command[/manner{manner_args},[/manner2{manner2_args}]] args
 ``` 
 
 Available commands:
+
 * `find-bytes <bytes>`
     * Searches for the specified bytes given as an hex string.
+    * Manners: `or`, `and`
     * For example: 
-        * `find-bytes 00 01 02 03`
+        * `find-bytes/or 00 01 02 03`
 * `keystone-find-opcodes <arch> <mode> <opcodes>`
     * Searches for opcodes using keystone engine.
-    * Optional manners: 
-        * `bele` for automatic big/little endian support.
+    * Manners: `or`, `and`, `bele`
     * For example: 
         * `keystone-find-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`
 * `keystone-verify-opcodes <opcodes>`
     * Reduces the search results to only those matching 
     PPC32 opcodes, seperated by `;`.
-    * Optional manners: 
-        * `bele` for automatic big/little endian support. 
+    * Manners: `bele` 
     * For example: 
         * `keystone-verify-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`    
 * `add <offset>`
@@ -77,7 +77,7 @@ Available commands:
 * `xrefs-to <ida-expression>`
     * Searches for function references to given expression.
      Equivalent to IDA's `Alt+B`.
-    * Supported manners: `and`, `or`. 
+    * Manners: `or`, `and`
     * For example: 
         `xrefs-to "11 22" 00`
 * `unique`
@@ -114,7 +114,7 @@ The manners can be specified to change the "*manner*" in the command
 will run. For example: `xrefs-to/or` will perform a union,
 whereas `xrefs-to/and` will perform an intersection. Not all manners 
 require additional arguments, but those can be given in curly braces
-(`{}`).
+(`{}`). Multiple manners can be specified and added by `,`.
 
 Available manners (`[]` means optional):
 
@@ -122,6 +122,8 @@ Available manners (`[]` means optional):
     * Reduces the results to only those matching
 * `or`
     * Extends the results to every matching
+* `bele` 
+    * For automatic big/little endian support.
 
 ### Aliases
 
