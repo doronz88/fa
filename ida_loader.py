@@ -143,6 +143,16 @@ def find():
     fa.FA.log('Search done')
 
 
+def symbols():
+    global fa_instance
+
+    for symbol_name in fa_instance.get_symbols():
+        symbol_values = fa_instance.find(symbol_name)
+
+        if len(symbol_values) == 1:
+            print('0x{:08x} {}'.format(symbol_values[0], symbol_name))
+
+
 def add_hotkeys():
     idaapi.add_hotkey('Ctrl-8', create)
     idaapi.add_hotkey('Ctrl-9', find)
