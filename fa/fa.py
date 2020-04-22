@@ -17,8 +17,11 @@ except ImportError:
 SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
 
+DEFAULT_MANNER = 'or'
 NON_REDUCING_MANNERS = ('or', )
 NON_REDUCING_COMMANDS = ('find_bytes', 'powerpc_find_opcodes')
+
+MULTILINE_PREFIX = '    '
 
 
 class FA:
@@ -108,46 +111,62 @@ class FA:
         addresses = []
         manner_args = None
 
+        instructions = []
+
         with open(symbol_sig_filename) as f:
-            for line in f.readlines():
-                line = line.strip()
+            instruction_lines_raw = f.readlines()
 
-                if len(line) == 0:
-                    continue
+        for line in instruction_lines_raw:
+            if len(line) == 0:
+                continue
 
-                if '#' in line:
-                    line, comment = line.split('#', 1)
+            line = line.replace('\t', MULTILINE_PREFIX)
+            if line.startswith(MULTILINE_PREFIX):
+                if len(instructions) == 0:
+                    raise ValueError("line-continuation without a first line")
+                instructions[-1] += line.split(MULTILINE_PREFIX, 1)[1].strip()
+            else:
+                instructions.append(line.strip())
 
-                for k, v in self.get_alias().items():
-                    # handle aliases
-                    if line.startswith(k):
-                        line = line.replace(k, v)
+        for line in instructions:
+            line = line.strip()
 
-                if ' ' in line:
-                    command, args = line.split(' ', 1)
-                else:
-                    command = line
-                    args = ''
+            if len(line) == 0:
+                continue
 
-                manner = 'start'
+            if '#' in line:
+                line, comment = line.split('#', 1)
 
-                if '{' in command:
-                    manner_args = command.split('{')[1].split('}')[0]
-                    command = command.split('{')[0]
+            for k, v in self.get_alias().items():
+                # handle aliases
+                if line.startswith(k):
+                    line = line.replace(k, v)
 
-                if '/' in command:
-                    prefix, suffix = command.split('/', 1)
-                    command = prefix
-                    manner = suffix
+            if ' ' in line:
+                command, args = line.split(' ', 1)
+            else:
+                command = line
+                args = ''
 
-                new_addresses = self.run_command(command, manner, manner_args, addresses, args)
+            manner = DEFAULT_MANNER
 
-                if decremental and len(new_addresses) == 0:
-                    if (manner not in NON_REDUCING_MANNERS) and (command not in NON_REDUCING_COMMANDS):
-                        # these commands never reduce the number of results
-                        return addresses
+            if '{' in command:
+                manner_args = command.split('{')[1].split('}')[0]
+                command = command.split('{')[0]
 
-                addresses = new_addresses
+            if '/' in command:
+                prefix, suffix = command.split('/', 1)
+                command = prefix
+                manner = suffix
+
+            new_addresses = self.run_command(command, manner, manner_args, addresses, args)
+
+            if decremental and len(new_addresses) == 0:
+                if (manner not in NON_REDUCING_MANNERS) and (command not in NON_REDUCING_COMMANDS):
+                    # these commands never reduce the number of results
+                    return addresses
+
+            addresses = new_addresses
 
         return addresses
 
