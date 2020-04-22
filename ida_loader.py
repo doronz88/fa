@@ -58,7 +58,7 @@ def create_signature_ppc32(start, end, inf, verify=True):
     opcode_size = 4
     first = True
 
-    command = 'find-bytes' if not verify else 'verify'
+    command = 'find-bytes' if not verify else 'verify-bytes'
 
     for ea in range(start, end, opcode_size):
         mnemonic = idc.GetMnem(ea)
@@ -68,7 +68,7 @@ def create_signature_ppc32(start, end, inf, verify=True):
             signature.append('{} {} \n'.format(command, binascii.hexlify(idc.GetManyBytes(ea, opcode_size))))
             if first:
                 first = False
-                command = 'verify'
+                command = 'verify-bytes'
 
         signature.append('add {} \n'.format(opcode_size))
 
@@ -118,6 +118,9 @@ def create():
             # link each string ref only once
             strings_addr_set.add(s.addr)
             signature.append('xrefs-to/or {}\n'.format(s.get_bytes_for_find()))
+
+    if len(strings_addr_set) > 0:
+        signature.append('function-start\n')
 
     inf = idaapi.get_inf_structure()
     proc_name = inf.procName
