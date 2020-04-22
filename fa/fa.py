@@ -91,28 +91,9 @@ class FA:
                 retval[k.strip()] = v.strip()
         return retval
 
-    def find_from_sig_file(self, symbol_sig_filename, decremental=False):
-        if not os.path.exists(symbol_sig_filename):
-            raise NotImplementedError("no signature for the given symbol")
-
+    def find_from_instructions_list(self, instructions, decremental=False):
         addresses = []
-        instructions = []
         manners = {}
-
-        with open(symbol_sig_filename) as f:
-            instruction_lines_raw = f.readlines()
-
-        for line in instruction_lines_raw:
-            if len(line) == 0:
-                continue
-
-            line = line.replace('\t', MULTILINE_PREFIX)
-            if line.startswith(MULTILINE_PREFIX):
-                if len(instructions) == 0:
-                    raise ValueError("line-continuation without a first line")
-                instructions[-1] += line.split(MULTILINE_PREFIX, 1)[1].strip()
-            else:
-                instructions.append(line.strip())
 
         for line in instructions:
             line = line.strip()
@@ -152,6 +133,29 @@ class FA:
             addresses = new_addresses
 
         return addresses
+
+    def find_from_sig_file(self, symbol_sig_filename, decremental=False):
+        if not os.path.exists(symbol_sig_filename):
+            raise NotImplementedError("no signature for the given symbol")
+
+        instructions = []
+
+        with open(symbol_sig_filename) as f:
+            instruction_lines_raw = f.readlines()
+
+        for line in instruction_lines_raw:
+            if len(line) == 0:
+                continue
+
+            line = line.replace('\t', MULTILINE_PREFIX)
+            if line.startswith(MULTILINE_PREFIX):
+                if len(instructions) == 0:
+                    raise ValueError("line-continuation without a first line")
+                instructions[-1] += line.split(MULTILINE_PREFIX, 1)[1].strip()
+            else:
+                instructions.append(line.strip())
+
+        return self.find_from_instructions_list(instructions, decremental)
 
     def find(self, symbol_name):
         symbol_sig_filename = os.path.join(self._signatures_root, self._project, '{}.sig'.format(symbol_name))
