@@ -55,7 +55,7 @@ def create_signature_ppc32(start, end, inf, verify=True):
     opcode_size = 4
     first = True
 
-    command = 'find-bytes' if not verify else 'verify-bytes'
+    command = 'find-bytes/or' if not verify else 'verify-bytes'
 
     for ea in range(start, end, opcode_size):
         mnemonic = idc.GetMnem(ea)
@@ -92,8 +92,9 @@ def create_signature_arm(start, end, inf, verify=True):
         opcode_size = idautils.DecodeInstruction(ea).size
         # Skip memory accesses and branches.
         if mnemonic not in ('LDR', 'STR', 'BL', 'B', 'BLX', 'BX', 'BXJ'):
-            signature.append('{}-bytes {} \n'.format(
-                'find' if not verify and ea == start else 'verify',
+            command = 'find-bytes/or' if not verify and ea == start else 'verify-bytes'
+            signature.append('{} {} \n'.format(
+                command,
                 binascii.hexlify(idc.GetManyBytes(ea, opcode_size)))
             )
         ea += opcode_size
