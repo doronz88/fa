@@ -65,7 +65,7 @@ class FA:
     def reload_segments(self):
         pass
 
-    def run_command(self, command, manner, manner_args, current_ea, args):
+    def run_command(self, command, manners, current_ea, args):
         command = command.replace('-', '_')
         filename = os.path.join(COMMANDS_ROOT, "{}.py".format(command))
 
@@ -83,7 +83,7 @@ class FA:
             import imp
             module = imp.load_source(command, filename)
 
-        return module.run(self._segments, manner, manner_args, current_ea, args, endianity=self._endianity)
+        return module.run(self._segments, manners, current_ea, args, endianity=self._endianity)
 
     @staticmethod
     def get_alias():
@@ -100,9 +100,8 @@ class FA:
             raise NotImplementedError("no signature for the given symbol")
 
         addresses = []
-        manner_args = None
-
         instructions = []
+        manners = {}
 
         with open(symbol_sig_filename) as f:
             instruction_lines_raw = f.readlines()
@@ -141,16 +140,18 @@ class FA:
 
             manner = DEFAULT_MANNER
 
-            if '{' in command:
-                manner_args = command.split('{')[1].split('}')[0]
-                command = command.split('{')[0]
-
             if '/' in command:
-                prefix, suffix = command.split('/', 1)
-                command = prefix
-                manner = suffix
+                # parse manners
+                command, manners_raw = command.split('/', 1)
+                for manner_raw in manners_raw.split(','):
+                    manner = manner_raw
+                    manner_args = ''
+                    if '{' in manner:
+                        manner, manner_args = manners_raw.split('{')
+                        manner_args = manner_args.split('}')[0]
+                    manners[manner] = manner_args
 
-            new_addresses = self.run_command(command, manner, manner_args, addresses, args)
+            new_addresses = self.run_command(command, manners, addresses, args)
 
             if decremental and len(new_addresses) == 0:
                 if (manner not in NON_REDUCING_MANNERS) and (command not in NON_REDUCING_COMMANDS):

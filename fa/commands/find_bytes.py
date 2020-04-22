@@ -3,17 +3,17 @@ import binascii
 from fa.commands import utils
 
 
-def run(segments, manner, manner_args, addresses, args, **kwargs):
+def run(segments, manners, addresses, args, **kwargs):
     needle = bytearray(binascii.unhexlify(''.join(args.split(' '))))
     results = utils.find_raw(segments, needle)
 
     retval = set(addresses)
-    if manner == 'or':
+    if 'or' in manners.keys():
         retval.update(results)
-    elif manner == 'and':
+    elif 'and' in manners.keys():
         retval.intersection_update(results)
     else:
-        raise ValueError("unsupported manner")
+        raise ValueError("must specify either or/and manner")
 
     return list(retval)
 

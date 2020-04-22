@@ -1,5 +1,5 @@
-find-bytes DE AD 12 34
+find-bytes/or DE AD 12 34
 add 4
-verify-bytes 00 00 00 05
+verify-bytes/or 00 00 00 05
 add-range 0 1000 4
 verify-bytes 01 05 0b
