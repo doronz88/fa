@@ -18,8 +18,6 @@ except ImportError:
 SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
 
-NON_REDUCING_MANNERS = ('or', )
-
 MULTILINE_PREFIX = '    '
 
 
@@ -148,12 +146,7 @@ class FA:
                     manners[manner] = manner_args
 
             new_addresses = self.run_command(command, manners, addresses, args)
-
-            if decremental and len(new_addresses) == 0:
-                for manner in manners.keys():
-                    if manner in NON_REDUCING_MANNERS:
-                        # these commands never reduce the number of results
-                        break
+            if decremental and len(new_addresses) == 0 and len(addresses) > 0:
                 return addresses
 
             addresses = new_addresses

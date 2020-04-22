@@ -152,11 +152,8 @@ class IdaLoader(fa.FA):
                 # link each string ref only once
                 strings_addr_set.add(s.addr)
                 signature.append(
-                    'xrefs-to/or {}\n'.format(s.get_bytes_for_find())
+                    'xrefs-to/or,function-start {}\n'.format(s.get_bytes_for_find())
                 )
-
-        if len(strings_addr_set) > 0:
-            signature.append('function-start\n')
 
         inf = idaapi.get_inf_structure()
         proc_name = inf.procName
