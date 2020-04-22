@@ -17,6 +17,7 @@ except ImportError:
 SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
 
+DEFAULT_MANNER = 'or'
 NON_REDUCING_MANNERS = ('or', )
 NON_REDUCING_COMMANDS = ('find_bytes', 'powerpc_find_opcodes')
 
@@ -147,7 +148,7 @@ class FA:
                 command = line
                 args = ''
 
-            manner = 'start'
+            manner = DEFAULT_MANNER
 
             if '{' in command:
                 manner_args = command.split('{')[1].split('}')[0]
