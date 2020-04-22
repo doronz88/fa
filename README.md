@@ -100,9 +100,9 @@ a given result.
 For example, you can test the following:
 
 ```
-find-bytes 11 22 33 44
+find-bytes/or 11 22 33 44
 add 20
-verify aa bb cc dd
+verify-bytes aa bb cc dd
 add -20
 ```
 
