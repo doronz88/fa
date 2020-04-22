@@ -90,6 +90,8 @@ Available commands:
     * Pops only a single result
 * `function-start`
     * Goto function's start
+* `sort`
+    * Sorts the search results from lower to upper.
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
