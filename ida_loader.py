@@ -77,8 +77,38 @@ def create_signature_ppc32(start, end, inf, verify=True):
     return signature
 
 
+def create_signature_arm(start, end, inf, verify=True):
+    """
+    Create a signature for ARM processors.
+    :param int start: Function's start address.
+    :param int end: Function's end address.
+    :param inf: IDA info object.
+    :param bool verify: True of only verification required.
+    False if searching is required too.
+    :return: Signature steps to validate the function
+    :rtype: list
+    """
+    signature = []
+    ea = start
+    while ea < end:
+        mnemonic = idc.GetMnem(ea)
+        opcode_size = idautils.DecodeInstruction(ea).size
+        # Skip memory accesses and branches.
+        if mnemonic not in ('LDR', 'STR', 'BL', 'B', 'BLX', 'BX', 'BXJ'):
+            signature.append('{}-bytes {} \n'.format(
+                'find' if not verify and ea == start else 'verify',
+                binascii.hexlify(idc.GetManyBytes(ea, opcode_size)))
+            )
+        ea += opcode_size
+        signature.append('add {} \n'.format(opcode_size))
+
+    signature.append('add {}\n'.format(start - end))
+    return signature
+
+
 SIGNATURE_CREATION_BY_ARCH = {
     'PPC': create_signature_ppc32,
+    'ARM': create_signature_arm,
 }
 
 
