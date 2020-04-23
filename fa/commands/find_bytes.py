@@ -13,7 +13,7 @@ def run(segments, manners, addresses, args, **kwargs):
     elif 'and' in manners.keys():
         raise ValueError("Use 'verify-bytes' instead of 'find-bytes/and'!")
     else:
-        raise ValueError("must specify either or/and manner")
+        raise ValueError("must specify either or manner")
 
     return list(retval)
 
