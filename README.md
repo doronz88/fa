@@ -34,14 +34,21 @@ less rate for false-positives.
 
 The SIG format is a core feature of FA regarding symbol searching.
 
-The format describes the algorithms used for different symbols.
+The format is JSON based and used to describe the algorithms used for 
+different symbols.
 The algorithms is preformed is very linear, performed line by line, 
 whereas each line can either extend or reduce the possible search
 results.
 
-Syntax for each line is as follows:
-```
-command[/manner{manner_args},[/manner2{manner2_args}]] args
+SIG syntax:
+```json
+{
+    "type": "<function/global/number>",
+    "name": "name",
+    "instructions" : [
+        "command,[/manner{manner_args},[/manner2{manner2_args}]] args"
+    ]
+}
 ``` 
 
 Available commands:
