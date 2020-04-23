@@ -4,17 +4,7 @@ import json
 import sys
 import os
 
-IDA_MODULE = False
-
-try:
-    import idc
-    import idaapi
-    import _idaapi
-    import idautils
-
-    IDA_MODULE = True
-except ImportError:
-    pass
+from commands import function_start
 
 SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
@@ -174,6 +164,11 @@ class FA:
             raise NotImplementedError('no signature found for: {}'.format(symbol_name))
 
         for sig in signatures:
-            results.update(self.find_from_instructions_list(sig['instructions'], decremental=decremental))
+            sig_results = self.find_from_instructions_list(sig['instructions'], decremental=decremental)
+
+            if sig['type'] == 'function':
+                sig_results = set([function_start.get_function_start(self._segments, ea) for ea in sig_results])
+
+            results.update(sig_results)
 
         return results
