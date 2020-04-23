@@ -1,4 +1,5 @@
 {
+    "type": "global",
 	"name": "dead",
 	"instructions": [
 		"find-bytes/or DE AD 12 34",
