@@ -1,6 +1,5 @@
-from collections import OrderedDict
-
 from fa.commands import utils
+from fa.commands import function_start
 
 try:
     import idc
@@ -21,7 +20,7 @@ def run(segments, manners, addresses, args, **kwargs):
         froms = [ref.frm for ref in idautils.XrefsTo(ea)]
 
         if 'function-start' in manners:
-            froms = [idc.GetFunctionAttr(ea, idc.FUNCATTR_START) for ea in froms]
+            froms = [function_start.get_function_start(segments, ea) for ea in froms]
 
         frm.update(froms)
 
