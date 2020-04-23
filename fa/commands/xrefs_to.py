@@ -12,7 +12,7 @@ except ImportError:
 def run(segments, manners, addresses, args, **kwargs):
     utils.verify_ida()
 
-    occurences = utils.ida_find_all(args)
+    occurences = utils.ida_find_all(str(args))
 
     frm = set()
     for ea in occurences:

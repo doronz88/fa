@@ -1,5 +1,6 @@
 import binascii
 import tempfile
+import json
 import os
 
 import idautils
@@ -62,14 +63,14 @@ def create_signature_ppc32(start, end, inf, verify=True):
         if mnemonic in ('lis', 'lwz', 'bl') or mnemonic.startswith('b'):
             pass
         else:
-            signature.append('{} {} \n'.format(command, binascii.hexlify(idc.GetManyBytes(ea, opcode_size))))
+            signature.append('{} {}'.format(command, binascii.hexlify(idc.GetManyBytes(ea, opcode_size))))
             if first:
                 first = False
                 command = 'verify-bytes'
 
-        signature.append('add {} \n'.format(opcode_size))
+        signature.append('add {}'.format(opcode_size))
 
-    signature.append('add {}\n'.format(start - end))
+    signature.append('add {}'.format(start - end))
 
     return signature
 
@@ -85,7 +86,7 @@ def create_signature_arm(start, end, inf, verify=True):
     :return: Signature steps to validate the function
     :rtype: list
     """
-    signature = []
+    instructions = []
     ea = start
     while ea < end:
         mnemonic = idc.GetMnem(ea)
@@ -93,15 +94,15 @@ def create_signature_arm(start, end, inf, verify=True):
         # Skip memory accesses and branches.
         if mnemonic not in ('LDR', 'STR', 'BL', 'B', 'BLX', 'BX', 'BXJ'):
             command = 'find-bytes/or' if not verify and ea == start else 'verify-bytes'
-            signature.append('{} {} \n'.format(
+            instructions.append('{} {}'.format(
                 command,
                 binascii.hexlify(idc.GetManyBytes(ea, opcode_size)))
             )
         ea += opcode_size
-        signature.append('add {} \n'.format(opcode_size))
+        instructions.append('add {}'.format(opcode_size))
 
-    signature.append('add {}\n'.format(start - end))
-    return signature
+    instructions.append('add {}'.format(start - end))
+    return instructions
 
 
 SIGNATURE_CREATION_BY_ARCH = {
@@ -140,7 +141,11 @@ class IdaLoader(fa.FA):
         func_start = idc.GetFunctionAttr(idc.ScreenEA(), idc.FUNCATTR_START)
         func_end = idc.GetFunctionAttr(idc.ScreenEA(), idc.FUNCATTR_END)
 
-        signature = []
+        signature = {
+            'name': idc.GetFunctionName(idc.ScreenEA()),
+            'type': 'function',
+            'instructions': []
+        }
 
         # first try adding references to strings
         strings = find_function_strings(func_start)
@@ -151,8 +156,8 @@ class IdaLoader(fa.FA):
             if s.addr not in strings_addr_set:
                 # link each string ref only once
                 strings_addr_set.add(s.addr)
-                signature.append(
-                    'xrefs-to/or,function-start {}\n'.format(s.get_bytes_for_find())
+                signature['instructions'].append(
+                    'xrefs-to/or,function-start {}'.format(s.get_bytes_for_find())
                 )
 
         inf = idaapi.get_inf_structure()
@@ -160,15 +165,15 @@ class IdaLoader(fa.FA):
 
         if proc_name not in SIGNATURE_CREATION_BY_ARCH:
             if len(signature) == 0:
-                fa.FA.log('failed to create signature')
+                self.log('failed to create signature')
                 return
 
-        signature += SIGNATURE_CREATION_BY_ARCH[proc_name](
+        signature['instructions'] += SIGNATURE_CREATION_BY_ARCH[proc_name](
             func_start, func_end, inf, verify=len(signature) != 0
         )
 
         with open(TEMP_SIG_FILENAME, 'w') as f:
-            f.writelines(signature)
+            json.dump(signature, f, indent=4)
 
         self.log('Signature created at {}'.format(TEMP_SIG_FILENAME))
 
@@ -177,17 +182,21 @@ class IdaLoader(fa.FA):
         Find the last create symbol signature.
         :return:
         """
-        for address in self.find_from_sig_file(
-                TEMP_SIG_FILENAME, decremental=True):
+        with open(TEMP_SIG_FILENAME) as f:
+            sig = json.load(f)
+
+        for address in self.find_from_instructions_list(
+                sig['instructions'], decremental=True):
             fa.FA.log('Search result: 0x{:x}'.format(address))
+
         fa.FA.log('Search done')
 
     def symbols(self):
-        for symbol_name in self.get_symbols():
-            symbol_values = self.find(symbol_name)
+        for sig in self.get_signatures():
+            symbol_values = self.find(sig['name'], decremental=True)
 
             if len(symbol_values) == 1:
-                print('0x{:08x} {}'.format(symbol_values[0], symbol_name))
+                print('0x{:08x} {}'.format(symbol_values[0], sig['name']))
 
     def set_input(self, input_):
         self._endianity = '>' if _idaapi.cvar.inf.mf else '<'

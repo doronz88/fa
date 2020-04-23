@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
-import os
+import json
 import sys
+import os
 
 IDA_MODULE = False
 
@@ -47,10 +48,6 @@ class FA:
                 projects.append(project_dirname)
 
         return projects
-
-    def get_symbols(self):
-        symbols_dir = os.path.join(self._signatures_root, self._project)
-        return [os.path.splitext(filename)[0] for filename in os.listdir(symbols_dir)]
 
     @staticmethod
     def log(message):
@@ -101,9 +98,6 @@ class FA:
             if len(line) == 0:
                 continue
 
-            if '#' in line:
-                line, comment = line.split('#', 1)
-
             for k, v in self.get_alias().items():
                 # handle aliases
                 if line.startswith(k):
@@ -134,29 +128,28 @@ class FA:
 
         return addresses
 
-    def find_from_sig_file(self, symbol_sig_filename, decremental=False):
-        if not os.path.exists(symbol_sig_filename):
-            raise NotImplementedError("no signature for the given symbol")
+    def get_signatures(self, symbol_name=None):
+        signatures = []
+        project_root = os.path.join(self._signatures_root, self._project)
 
-        instructions = []
+        for root, dirs, files in os.walk(project_root):
+            for filename in files:
+                filename = os.path.join(project_root, filename)
+                with open(filename) as f:
+                    signature = json.load(f)
 
-        with open(symbol_sig_filename) as f:
-            instruction_lines_raw = f.readlines()
+                if (symbol_name is None) or (signature['name'] == symbol_name):
+                    signatures.append(signature)
 
-        for line in instruction_lines_raw:
-            if len(line) == 0:
-                continue
+        return signatures
 
-            line = line.replace('\t', MULTILINE_PREFIX)
-            if line.startswith(MULTILINE_PREFIX):
-                if len(instructions) == 0:
-                    raise ValueError("line-continuation without a first line")
-                instructions[-1] += line.split(MULTILINE_PREFIX, 1)[1].strip()
-            else:
-                instructions.append(line.strip())
+    def find(self, symbol_name, decremental=False):
+        results = set()
+        signatures = self.get_signatures(symbol_name)
+        if len(signatures) == 0:
+            raise NotImplementedError('no signature found for: {}'.format(symbol_name))
 
-        return self.find_from_instructions_list(instructions, decremental)
+        for sig in signatures:
+            results.update(self.find_from_instructions_list(sig['instructions'], decremental=decremental))
 
-    def find(self, symbol_name):
-        symbol_sig_filename = os.path.join(self._signatures_root, self._project, '{}.sig'.format(symbol_name))
-        return self.find_from_sig_file(symbol_sig_filename)
+        return results
