@@ -193,7 +193,7 @@ class IdaLoader(fa.FA):
             symbol_values = self.find(sig['name'], decremental=True)
 
             if len(symbol_values) == 1:
-                print('0x{:08x} {}'.format(symbol_values[0], sig['name']))
+                print('0x{:08x} {}'.format(symbol_values.pop(), sig['name']))
 
     def set_input(self, input_):
         self._endianity = '>' if _idaapi.cvar.inf.mf else '<'
