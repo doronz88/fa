@@ -1,9 +1,7 @@
 import binascii
 
 from keystone import *
-from fa.commands import utils
 from fa.commands import find_bytes
-reload(find_bytes)
 
 
 def run(segments, manners, addresses, args, **kwargs):
