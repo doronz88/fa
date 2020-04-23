@@ -68,9 +68,9 @@ def create_signature_ppc32(start, end, inf, verify=True):
                 first = False
                 command = 'verify-bytes'
 
-        signature.append('add {}'.format(opcode_size))
+        signature.append('offset {}'.format(opcode_size))
 
-    signature.append('add {}'.format(start - end))
+    signature.append('offset {}'.format(start - end))
 
     return signature
 
@@ -99,9 +99,9 @@ def create_signature_arm(start, end, inf, verify=True):
                 binascii.hexlify(idc.GetManyBytes(ea, opcode_size)))
             )
         ea += opcode_size
-        instructions.append('add {}'.format(opcode_size))
+        instructions.append('offset {}'.format(opcode_size))
 
-    instructions.append('add {}'.format(start - end))
+    instructions.append('offset {}'.format(start - end))
     return instructions
 
 

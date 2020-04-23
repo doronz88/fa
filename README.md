@@ -69,13 +69,13 @@ Available commands:
     * Manners: `bele` 
     * For example: 
         * `keystone-verify-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`    
-* `add <offset>`
+* `offset <offset>`
     * Adds a constant offset to the search results.
-    * For example: `8`, `-8`, `0x10`,...
-* `add-range <start> <end> <skip>`
+    * For example: `offset 8`, `offset -8`, `offset 0x10`,...
+* `add-offset-range <start> <end> <skip>`
     * Adds a range of offsets to the search.
     * For example: 
-        * `add-range 0 10 2` will add all offsets in range: `(0, 10, 2)`
+        * `add-offset-range 0 10 2` will add all offsets in range: `(0, 10, 2)`
 * `verify-bytes <bytes>`
     * Verifies the search results up until now match a const 
     expression given as hex string.
