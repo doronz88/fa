@@ -184,9 +184,9 @@ class IdaLoader(fa.FA):
         """
         for address in self.find_from_sig_path(
                 TEMP_SIG_FILENAME, decremental=True):
-            fa.FA.log('Search result: 0x{:x}'.format(address))
+            self.log('Search result: 0x{:x}'.format(address))
 
-        fa.FA.log('Search done')
+        self.log('Search done')
 
     def symbols(self):
         for sig in self.get_signatures():
@@ -211,7 +211,7 @@ class IdaLoader(fa.FA):
 
 
 if __name__ == '__main__':
-    fa.FA.log('''---------------------------------
+    IdaLoader.log('''---------------------------------
 FA Loaded successfully
 
 Quick usage:
