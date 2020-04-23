@@ -25,10 +25,10 @@ def find_raw(segments, needle):
         return ida_find_all(payload)
 
     addresses = []
-    extra_offset = 0
 
     for segment_ea, data in segments.items():
         offset = index_of(needle, data)
+        extra_offset = 0
 
         while offset != -1:
             address = segment_ea + offset + extra_offset
