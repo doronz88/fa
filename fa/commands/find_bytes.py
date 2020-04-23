@@ -11,7 +11,7 @@ def run(segments, manners, addresses, args, **kwargs):
     if 'or' in manners.keys():
         retval.update(results)
     elif 'and' in manners.keys():
-        retval.intersection_update(results)
+        raise ValueError("Use 'verify-bytes' instead of 'find-bytes/and'!")
     else:
         raise ValueError("must specify either or/and manner")
 
