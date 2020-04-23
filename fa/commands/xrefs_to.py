@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from fa.commands import utils
 
 try:
@@ -33,4 +35,4 @@ def run(segments, manners, addresses, args, **kwargs):
         addresses_functions = set([idc.GetFunctionAttr(ea, idc.FUNCATTR_START) for ea in addresses])
         retval.intersection_update(addresses_functions)
 
-    return retval
+    return list(retval)

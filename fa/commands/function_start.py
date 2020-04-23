@@ -11,7 +11,8 @@ except ImportError:
     pass
 
 
-def locate_start_ppc(segments, ea):
+def locate_start_ppc(segments, ea, max_offset=0x1000):
+    start_ea = ea
     inf = idaapi.get_inf_structure()
     opcode_size = 4
 
@@ -19,7 +20,7 @@ def locate_start_ppc(segments, ea):
     mode |= CS_MODE_BIG_ENDIAN if inf.mf else CS_MODE_LITTLE_ENDIAN
     cs = Cs(CS_ARCH_PPC, mode)
 
-    while True:
+    while ea - start_ea <= max_offset:
         inst = list(cs.disasm(utils.read_memory(segments, ea, opcode_size), ea))[0]
 
         if ((inst.mnemonic == 'stwu') and (inst.op_str.startswith('r1'))) or \
@@ -27,6 +28,8 @@ def locate_start_ppc(segments, ea):
             return ea
 
         ea -= opcode_size
+
+    return idc.BADADDR
 
 
 LOCATE_START_BY_ARCH = {

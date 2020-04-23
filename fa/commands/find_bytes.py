@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import binascii
 
 from fa.commands import utils
@@ -15,5 +16,5 @@ def run(segments, manners, addresses, args, **kwargs):
     else:
         raise ValueError("must specify or manner")
 
-    return list(retval)
+    return list(OrderedDict.fromkeys(retval))
 

@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 
 def run(segments, manners, addresses, args, **kwargs):
     start = 0
@@ -14,10 +16,10 @@ def run(segments, manners, addresses, args, **kwargs):
                 skip, args = args.split(' ', 1)
                 skip = eval(start)
 
-    retval = set()
+    retval = []
 
     for ea in addresses:
         for i in range(start, end, skip):
-            retval.add(ea + i)
+            retval.append(ea + i)
 
-    return retval
+    return list(OrderedDict.fromkeys(retval))

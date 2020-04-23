@@ -158,7 +158,7 @@ class FA:
         return signatures
 
     def find(self, symbol_name, decremental=False):
-        results = set()
+        results = []
         signatures = self.get_signatures(symbol_name)
         if len(signatures) == 0:
             raise NotImplementedError('no signature found for: {}'.format(symbol_name))
@@ -167,8 +167,8 @@ class FA:
             sig_results = self.find_from_instructions_list(sig['instructions'], decremental=decremental)
 
             if sig['type'] == 'function':
-                sig_results = set([function_start.get_function_start(self._segments, ea) for ea in sig_results])
+                sig_results = [function_start.get_function_start(self._segments, ea) for ea in sig_results]
 
-            results.update(sig_results)
+            results += sig_results
 
-        return results
+        return list(OrderedDict.fromkeys(results))
