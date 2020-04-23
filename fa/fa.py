@@ -128,6 +128,30 @@ class FA:
 
         return addresses
 
+    def find_from_sig_json(self, signature_json, decremental=False):
+        """
+        Find a signature from a signature JSON data.
+        :param dict signature_json: Data of signature's JSON.
+        :param bool decremental:
+        :return: Addresses of matching signatures.
+        :rtype: list
+        """
+        return self.find_from_instructions_list(
+            signature_json['instructions'], decremental
+        )
+
+    def find_from_sig_path(self, signature_path, decremental=False):
+        """
+        Find a signature from a signature file path.
+        :param str signature_path: Path to a signature file.
+        :param bool decremental:
+        :return: Addresses of matching signatures.
+        :rtype: list
+        """
+        with open(signature_path) as f:
+            sig = json.load(f)
+        return self.find_from_sig_json(sig, decremental)
+
     def get_signatures(self, symbol_name=None):
         signatures = []
         project_root = os.path.join(self._signatures_root, self._project)

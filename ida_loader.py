@@ -182,11 +182,8 @@ class IdaLoader(fa.FA):
         Find the last create symbol signature.
         :return:
         """
-        with open(TEMP_SIG_FILENAME) as f:
-            sig = json.load(f)
-
-        for address in self.find_from_instructions_list(
-                sig['instructions'], decremental=True):
+        for address in self.find_from_sig_path(
+                TEMP_SIG_FILENAME, decremental=True):
             fa.FA.log('Search result: 0x{:x}'.format(address))
 
         fa.FA.log('Search done')
