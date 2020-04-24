@@ -2,7 +2,9 @@
     "type": "global",
     "name": "opcodes-ppc",
 	"instructions": [
-		"ppc32-find-all stwu %r1, -8(%r1); mflr %r0",
+		"ppc32-find-all mr %r12, %r1;",
+		"keystone-verify-opcodes/bele,until{4} KS_ARCH_PPC KS_MODE_PPC32 mflr %r0",
+		"print",
         "single"
 	]
 }

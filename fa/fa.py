@@ -80,7 +80,6 @@ class FA:
 
     def find_from_instructions_list(self, instructions, decremental=False):
         addresses = []
-        manners = {}
 
         for line in instructions:
             line = line.strip()
@@ -99,6 +98,7 @@ class FA:
                 command = line
                 args = ''
 
+            manners = {}
             if '/' in command:
                 # parse manners
                 command, manners_raw = command.split('/', 1)
@@ -106,7 +106,7 @@ class FA:
                     manner = manner_raw
                     manner_args = ''
                     if '{' in manner:
-                        manner, manner_args = manners_raw.split('{')
+                        manner, manner_args = manner_raw.split('{')
                         manner_args = manner_args.split('}')[0]
                     manners[manner] = manner_args
 

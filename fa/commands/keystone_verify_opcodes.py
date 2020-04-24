@@ -1,4 +1,8 @@
+import binascii
+
 from keystone import *
+
+from fa.commands import verify_bytes
 from fa.commands import utils
 
 
@@ -13,5 +17,4 @@ def run(segments, manners, addresses, args, **kwargs):
 
     ks = Ks(arch, mode)
     compiled_buf = bytearray(ks.asm(code)[0])
-
-    return [ea for ea in addresses if utils.read_memory(segments, ea, len(compiled_buf)) == compiled_buf]
+    return verify_bytes.run(segments, manners, addresses, binascii.hexlify(compiled_buf), **kwargs)

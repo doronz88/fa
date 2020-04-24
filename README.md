@@ -66,7 +66,7 @@ Available commands:
 * `keystone-verify-opcodes <opcodes>`
     * Reduces the search results to only those matching 
     PPC32 opcodes, seperated by `;`.
-    * Manners: `bele` 
+    * Manners: `bele`, `until`
     * For example: 
         * `keystone-verify-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`    
 * `offset <offset>`
@@ -79,6 +79,7 @@ Available commands:
 * `verify-bytes <bytes>`
     * Verifies the search results up until now match a const 
     expression given as hex string.
+    * Manners: `until`
     * For example: 
         * `verify-bytes 11 22 33 44`
 * `xrefs-to <ida-expression>`
@@ -99,6 +100,8 @@ Available commands:
     * Goto function's start
 * `sort`
     * Sorts the search results from lower to upper.
+* `print`
+    * Prints the results so far
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
@@ -135,6 +138,9 @@ Available manners (`[]` means optional):
     * For automatic big/little endian support.
 * `function-start`
     * Locate the search results into the start of each function
+* `until[{step}]`
+    * Continues until one address is in result list
+
 
 ### Aliases
 
