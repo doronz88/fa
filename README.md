@@ -85,7 +85,7 @@ Available commands:
 * `xrefs-to <ida-expression>`
     * Searches for function references to given expression.
      Equivalent to IDA's `Alt+B`.
-    * Manners: `or`, `and`, `function-start`
+    * Manners: `or`, `and`, `function-start`, `name`
     * For example: 
         `xrefs-to "11 22" 00`
 * `unique`
@@ -140,7 +140,8 @@ Available manners (`[]` means optional):
     * Locate the search results into the start of each function
 * `until[{step}]`
     * Continues until one address is in result list
-
+* `name` 
+    * Treat args as a symbol name
 
 ### Aliases
 

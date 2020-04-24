@@ -39,18 +39,23 @@ LOCATE_START_BY_ARCH = {
 
 def get_function_start(segments, ea):
     start = idc.GetFunctionAttr(ea, idc.FUNCATTR_START)
-    if start != idc.BADADDR:
-        # get from ida
-        return start
+    return start
 
-    # extract load address ourselves
-    inf = idaapi.get_inf_structure()
-    proc_name = inf.procName
+    # TODO: consider add support locate of function heads manually
 
-    if proc_name in LOCATE_START_BY_ARCH.keys():
-        return LOCATE_START_BY_ARCH[proc_name](segments, ea)
+    # # extract load address ourselves
+    # inf = idaapi.get_inf_structure()
+    # proc_name = inf.procName
+    #
+    # if proc_name in LOCATE_START_BY_ARCH.keys():
+    #     return LOCATE_START_BY_ARCH[proc_name](segments, ea)
 
 
 def run(segments, manners, addresses, args, **kwargs):
     utils.verify_ida()
-    return list(set([get_function_start(segments, ea) for ea in addresses]))
+    results = set()
+    for ea in addresses:
+        result = get_function_start(segments, ea)
+        if result != idc.BADADDR:
+            results.add(result)
+    return list(results)

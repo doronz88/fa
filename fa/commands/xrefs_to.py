@@ -1,5 +1,6 @@
 from fa.commands import utils
 from fa.commands import function_start
+reload(function_start)
 
 try:
     import idc
@@ -12,11 +13,16 @@ except ImportError:
 
 def run(segments, manners, addresses, args, **kwargs):
     utils.verify_ida()
+    args = str(args)
 
-    occurences = utils.ida_find_all(str(args))
+    if 'name' in manners.keys():
+        ea = idc.LocByName(args)
+        occurrences = [ea] if ea != idc.BADADDR else []
+    else:
+        occurrences = utils.ida_find_all(str(args))
 
     frm = set()
-    for ea in occurences:
+    for ea in occurrences:
         froms = [ref.frm for ref in idautils.XrefsTo(ea)]
 
         if 'function-start' in manners:
