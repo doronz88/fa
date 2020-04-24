@@ -128,6 +128,20 @@ def find_function_strings(func_ea):
     return strings
 
 
+def find_function_code_references(func_ea):
+    end_ea = idc.FindFuncEnd(func_ea)
+    if end_ea == idaapi.BADADDR:
+        return []
+
+    results = []
+    for line in idautils.Heads(func_ea, end_ea):
+        refs = list(idautils.CodeRefsFrom(line, 1))
+        if len(refs) > 1:
+            results.append(refs[1])
+
+    return results
+
+
 class IdaLoader(fa.FA):
     def __init__(self):
         super(IdaLoader, self).__init__()
@@ -149,8 +163,10 @@ class IdaLoader(fa.FA):
 
         # first try adding references to strings
         strings = find_function_strings(func_start)
+        code_references = find_function_code_references(func_start)
 
         strings_addr_set = set()
+        code_references_set = set()
 
         for s in strings:
             if s.addr not in strings_addr_set:
@@ -158,6 +174,16 @@ class IdaLoader(fa.FA):
                 strings_addr_set.add(s.addr)
                 signature['instructions'].append(
                     'xrefs-to/or,function-start {}'.format(s.get_bytes_for_find())
+                )
+
+        for ea in code_references:
+            name = idc.Name(ea)
+            if (name != idc.BADADDR) and not (name.startswith('loc_')) and not (name.startswith('sub_')) and \
+                    (ea not in code_references_set):
+                # link each string ref only once
+                code_references_set.add(ea)
+                signature['instructions'].append(
+                    'xrefs-to/or,name,function-start {}'.format(name)
                 )
 
         inf = idaapi.get_inf_structure()
