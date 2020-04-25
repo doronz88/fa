@@ -1,5 +1,3 @@
-import argparse
-
 from fa.commands import utils
 
 

@@ -5,8 +5,6 @@ reload(utils)
 
 try:
     import idc
-    import idaapi
-    import _idaapi
     import idautils
 except ImportError:
     pass
@@ -36,7 +34,8 @@ def run(segments, args, addresses, **kwargs):
         froms = [ref.frm for ref in idautils.XrefsTo(ea)]
 
         if args.function_start:
-            froms = [function_start.get_function_start(segments, ea) for ea in froms]
+            froms = [function_start.get_function_start(segments, ea)
+                     for ea in froms]
 
         frm.update(froms)
 
@@ -47,7 +46,8 @@ def run(segments, args, addresses, **kwargs):
         retval.update(frm)
 
     elif getattr(args, 'and'):
-        addresses_functions = set([idc.GetFunctionAttr(ea, idc.FUNCATTR_START) for ea in addresses])
+        addresses_functions = set([idc.GetFunctionAttr(ea, idc.FUNCATTR_START)
+                                   for ea in addresses])
         retval.intersection_update(addresses_functions)
 
     return list(retval)

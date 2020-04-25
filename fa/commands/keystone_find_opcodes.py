@@ -1,5 +1,6 @@
+# flake8: noqa
+
 import binascii
-import argparse
 
 from keystone import *
 from fa.commands import find_bytes, utils
@@ -21,7 +22,8 @@ def run(segments, args, addresses, **kwargs):
 
     if args.bele:
         if 'endianity' in kwargs:
-            mode |= KS_MODE_BIG_ENDIAN if kwargs['endianity'] == '>' else KS_MODE_LITTLE_ENDIAN
+            mode |= KS_MODE_BIG_ENDIAN if \
+                kwargs['endianity'] == '>' else KS_MODE_LITTLE_ENDIAN
 
     ks = Ks(arch, mode)
     compiled_buf = bytearray(ks.asm(args.code)[0])

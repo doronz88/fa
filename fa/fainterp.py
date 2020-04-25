@@ -1,19 +1,21 @@
-import shlex
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
+import shlex
 import json
 import sys
 import os
 
-from commands import function_start
+from fa.commands.function_start import get_function_start
 
-SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
-COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
+SIGNATURES_ROOT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'signatures')
+COMMANDS_ROOT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'commands')
 
 MULTILINE_PREFIX = '    '
 
 
-class FA:
+class FaInterp:
     __metaclass__ = ABCMeta
 
     def __init__(self, signatures_root=SIGNATURES_ROOT):
@@ -33,7 +35,8 @@ class FA:
     def list_projects(self):
         projects = []
         for project_dirname in os.listdir(self._signatures_root):
-            project_fullpath = os.path.join(self._signatures_root, project_dirname)
+            project_fullpath = os.path.join(
+                self._signatures_root, project_dirname)
 
             if os.path.isdir(project_fullpath):
                 projects.append(project_dirname)
@@ -78,7 +81,8 @@ class FA:
         module = self.get_command(command)
         p = module.get_parser()
         args = p.parse_args(args)
-        return module.run(self._segments, args, addresses, endianity=self._endianity)
+        return module.run(self._segments, args, addresses,
+                          endianity=self._endianity)
 
     @staticmethod
     def get_alias():
@@ -159,13 +163,16 @@ class FA:
         results = []
         signatures = self.get_signatures(symbol_name)
         if len(signatures) == 0:
-            raise NotImplementedError('no signature found for: {}'.format(symbol_name))
+            raise NotImplementedError('no signature found for: {}'
+                                      .format(symbol_name))
 
         for sig in signatures:
-            sig_results = self.find_from_instructions_list(sig['instructions'], decremental=decremental)
+            sig_results = self.find_from_instructions_list(
+                sig['instructions'], decremental=decremental)
 
             if sig['type'] == 'function':
-                sig_results = [function_start.get_function_start(self._segments, ea) for ea in sig_results]
+                sig_results = [get_function_start(self._segments, ea)
+                               for ea in sig_results]
 
             results += sig_results
 

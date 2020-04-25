@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 import pytest
 
-from tests.utils.mock_fa import MockFa
+from tests.utils.mock_fa import MockFaInterp
 
 
 @pytest.mark.parametrize("segments,instruction,result", [
@@ -36,7 +36,7 @@ from tests.utils.mock_fa import MockFa
      "find-bytes --or '11221122'", [0x12345678]),
 ])
 def test_find_bytes_or(segments, instruction, result):
-    analyzer = MockFa()
+    analyzer = MockFaInterp()
     analyzer.segments = OrderedDict(segments)
     assert analyzer.find_from_instructions_list([instruction]) == result
 
@@ -64,7 +64,7 @@ def test_find_bytes_or(segments, instruction, result):
      [0x12345678]),
 ])
 def test_multiple_find_bytes_or(segments, instructions, result):
-    analyzer = MockFa()
+    analyzer = MockFaInterp()
     analyzer.segments = OrderedDict(segments)
     assert analyzer.find_from_instructions_list(instructions) == result
 
@@ -73,6 +73,6 @@ def test_multiple_find_bytes_or(segments, instructions, result):
     "find-bytes --and '11223344'"
 ])
 def test_find_bytes_with_wrong_manner(instruction):
-    analyzer = MockFa()
+    analyzer = MockFaInterp()
     with pytest.raises(ValueError):
         assert analyzer.find_from_instructions_list([instruction])

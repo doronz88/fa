@@ -1,5 +1,4 @@
 import binascii
-import argparse
 
 from fa.commands import utils
 
@@ -14,7 +13,8 @@ def get_parser():
 def run(segments, args, addresses, **kwargs):
     magic = binascii.unhexlify(''.join(args.hex_str.split(' ')))
 
-    results = [ea for ea in addresses if utils.read_memory(segments, ea, len(magic)) == magic]
+    results = [ea for ea in addresses
+               if utils.read_memory(segments, ea, len(magic)) == magic]
 
     if len(results) > 0:
         return results
@@ -23,6 +23,7 @@ def run(segments, args, addresses, **kwargs):
         step = args.until
         while len(results) == 0:
             addresses = [ea + step for ea in addresses]
-            results = [ea for ea in addresses if utils.read_memory(segments, ea, len(magic)) == magic]
+            results = [ea for ea in addresses
+                       if utils.read_memory(segments, ea, len(magic)) == magic]
 
     return results
