@@ -49,19 +49,12 @@ class FA:
     def reload_segments(self):
         pass
 
-    def run_command(self, command, addresses):
-        args = ''
-
-        if ' ' in command:
-            command, args = command.split(' ', 1)
-            command = command.replace('-', '_')
-            args = shlex.split(args)
-
+    @staticmethod
+    def get_command(command):
         filename = os.path.join(COMMANDS_ROOT, "{}.py".format(command))
 
         if not os.path.exists(filename):
-            self.log("no such command: {}".format(command))
-            return -1
+            raise NotImplementedError("no such command: {}".format(command))
 
         if sys.version == '3':
             # TODO: support python 3.0-3.4
@@ -73,9 +66,17 @@ class FA:
             import imp
             module = imp.load_source(command, filename)
 
+        return module
+
+    def run_command(self, command, addresses):
+        args = ''
+        if ' ' in command:
+            command, args = command.split(' ', 1)
+            command = command.replace('-', '_')
+            args = shlex.split(args)
+
+        module = self.get_command(command)
         p = module.get_parser()
-        # print(args)
-        # print(command)
         args = p.parse_args(args)
         return module.run(self._segments, args, addresses, endianity=self._endianity)
 
