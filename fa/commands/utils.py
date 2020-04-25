@@ -1,3 +1,5 @@
+import argparse
+
 IDA_MODULE = False
 
 try:
@@ -64,3 +66,8 @@ def read_memory(segments, ea, size):
 def verify_ida():
     if not IDA_MODULE:
         raise Exception("only available in IDA")
+
+
+class ArgumentParserNoExit(argparse.ArgumentParser):
+    def error(self, message):
+        raise ValueError(message)

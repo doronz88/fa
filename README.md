@@ -36,9 +36,13 @@ The SIG format is a core feature of FA regarding symbol searching.
 
 The format is JSON based and used to describe the algorithms used for 
 different symbols.
-The algorithms is preformed is very linear, performed line by line, 
+The algorithms is preformed are very linear, performed line by line, 
 whereas each line can either extend or reduce the possible search
 results.
+
+Each line behaves like a shell command-line that gets the 
+previous results as the input and outputs the next results
+to the next line.
 
 SIG syntax:
 ```json
@@ -46,29 +50,31 @@ SIG syntax:
     "type": "<function/global/number>",
     "name": "name",
     "instructions" : [
-        "command,[/manner{manner_args},[/manner2{manner2_args}]] args"
+        "command1",
+        "command2"
     ]
 }
 ``` 
 
 Available commands:
 
-* `find-bytes <bytes>`
+* `find-bytes --or '<bytes>'`
     * Searches for the specified bytes given as an hex string.
-    * Manners: `or`, `and`
     * For example: 
-        * `find-bytes/or 00 01 02 03`
-* `keystone-find-opcodes <arch> <mode> <opcodes>`
+        * `find-bytes --or '00 01 02 03'`
+* `keystone-find-opcodes --or [--bele] <arch> <mode> <opcodes>`
     * Searches for opcodes using keystone engine.
-    * Manners: `or`, `and`, `bele`
+    * `bele` flags used to indicate the mode is extracted 
+    implicit.
     * For example: 
-        * `keystone-find-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`
-* `keystone-verify-opcodes <opcodes>`
+        * `keystone-find-opcodes --or KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`
+* `keystone-verify-opcodes [--bele] <arch> <mode> <opcodes>>`
     * Reduces the search results to only those matching 
     PPC32 opcodes, seperated by `;`.
-    * Manners: `bele`, `until`
+    * `bele` flags used to indicate the mode is extracted 
+    implicit.
     * For example: 
-        * `keystone-verify-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`    
+        * `keystone-verify-opcodes [--bele] KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`    
 * `offset <offset>`
     * Adds a constant offset to the search results.
     * For example: `offset 8`, `offset -8`, `offset 0x10`,...
@@ -76,18 +82,16 @@ Available commands:
     * Adds a range of offsets to the search.
     * For example: 
         * `add-offset-range 0 10 2` will add all offsets in range: `(0, 10, 2)`
-* `verify-bytes <bytes>`
+* `verify-bytes [--until step] '<bytes>'`
     * Verifies the search results up until now match a const 
     expression given as hex string.
-    * Manners: `until`
     * For example: 
         * `verify-bytes 11 22 33 44`
-* `xrefs-to <ida-expression>`
+* `xrefs-to [--and/or] [--until step] <--bytes bytes/--name name>`
     * Searches for function references to given expression.
      Equivalent to IDA's `Alt+B`.
-    * Manners: `or`, `and`, `function-start`, `name`
     * For example: 
-        `xrefs-to "11 22" 00`
+        `xrefs-to --or --bytes '"11 22" 00'`
 * `unique`
     * Verifies the number of search results == 1.
 * `aligned <immediate>`
@@ -110,9 +114,9 @@ a given result.
 For example, you can test the following:
 
 ```
-find-bytes/or 11 22 33 44
+find-bytes --or '11 22 33 44'
 add 20
-verify-bytes aa bb cc dd
+verify-bytes 'aa bb cc dd'
 add -20
 ```
 
@@ -120,28 +124,6 @@ This will locate all places of `11 22 33 44`, whereas at offset `20`
 from them, there exists `aa bb cc dd`. Finally, the cursor will point
 back to `11 22 33 44` by reducing the `-20` from the search cursor. 
 
-#### Manners
-
-The manners can be specified to change the "*manner*" in the command
-will run. For example: `xrefs-to/or` will perform a union,
-whereas `xrefs-to/and` will perform an intersection. Not all manners 
-require additional arguments, but those can be given in curly braces
-(`{}`). Multiple manners can be specified and added by `,`.
-
-Available manners (`[]` means optional):
-
-* `and`
-    * Reduces the results to only those matching
-* `or`
-    * Extends the results to every matching
-* `bele` 
-    * For automatic big/little endian support.
-* `function-start`
-    * Locate the search results into the start of each function
-* `until[{step}]`
-    * Continues until one address is in result list
-* `name` 
-    * Treat args as a symbol name
 
 ### Aliases
 
@@ -151,7 +133,7 @@ found in `fa/commands/alias`.
 Syntax for each line is as follows: `alias_command = command`
 For example:
 ```
-ppc32-verify = keystone-verify-opcodes/bele KS_ARCH_PPC KS_MODE_PPC32
+ppc32-verify = keystone-verify-opcodes --bele KS_ARCH_PPC KS_MODE_PPC32
 ```
 
 ### Loaders

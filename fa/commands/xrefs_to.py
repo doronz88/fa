@@ -1,6 +1,7 @@
 from fa.commands import utils
 from fa.commands import function_start
 reload(function_start)
+reload(utils)
 
 try:
     import idc
@@ -11,21 +12,30 @@ except ImportError:
     pass
 
 
-def run(segments, manners, addresses, args, **kwargs):
-    utils.verify_ida()
-    args = str(args)
+def get_parser():
+    p = utils.ArgumentParserNoExit(prog='xrefs-to')
+    p.add_argument('--function-start', action='store_true')
+    p.add_argument('--or', action='store_true')
+    p.add_argument('--and', action='store_true')
+    p.add_argument('--name')
+    p.add_argument('--bytes')
+    return p
 
-    if 'name' in manners.keys():
-        ea = idc.LocByName(args)
+
+def run(segments, args, addresses, **kwargs):
+    utils.verify_ida()
+
+    if args.name:
+        ea = idc.LocByName(args.name)
         occurrences = [ea] if ea != idc.BADADDR else []
     else:
-        occurrences = utils.ida_find_all(str(args))
+        occurrences = utils.ida_find_all(args.bytes)
 
     frm = set()
     for ea in occurrences:
         froms = [ref.frm for ref in idautils.XrefsTo(ea)]
 
-        if 'function-start' in manners:
+        if args.function_start:
             froms = [function_start.get_function_start(segments, ea) for ea in froms]
 
         frm.update(froms)
@@ -33,10 +43,10 @@ def run(segments, manners, addresses, args, **kwargs):
     retval = set()
     retval.update(addresses)
 
-    if 'or' in manners.keys():
+    if getattr(args, 'or'):
         retval.update(frm)
 
-    elif 'and' in manners.keys():
+    elif getattr(args, 'and'):
         addresses_functions = set([idc.GetFunctionAttr(ea, idc.FUNCATTR_START) for ea in addresses])
         retval.intersection_update(addresses_functions)
 

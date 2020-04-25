@@ -1,4 +1,5 @@
 from capstone import *
+import argparse
 
 from fa.commands import utils
 
@@ -51,7 +52,12 @@ def get_function_start(segments, ea):
     #     return LOCATE_START_BY_ARCH[proc_name](segments, ea)
 
 
-def run(segments, manners, addresses, args, **kwargs):
+def get_parser():
+    p = argparse.ArgumentParser()
+    return p
+
+
+def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
     results = set()
     for ea in addresses:

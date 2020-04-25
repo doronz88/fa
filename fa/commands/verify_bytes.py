@@ -1,20 +1,26 @@
 import binascii
+import argparse
 
 from fa.commands import utils
 
 
-def run(segments, manners, addresses, args, **kwargs):
-    magic = binascii.unhexlify(''.join(args.split(' ')))
+def get_parser():
+    p = utils.ArgumentParserNoExit()
+    p.add_argument('--until', type=int)
+    p.add_argument('hex_str')
+    return p
+
+
+def run(segments, args, addresses, **kwargs):
+    magic = binascii.unhexlify(''.join(args.hex_str.split(' ')))
 
     results = [ea for ea in addresses if utils.read_memory(segments, ea, len(magic)) == magic]
 
     if len(results) > 0:
         return results
 
-    if 'until' in manners.keys():
-        step = 1
-        if manners['until']:
-            step = eval(manners['until'])
+    if 'until' in args:
+        step = args.until
         while len(results) == 0:
             addresses = [ea + step for ea in addresses]
             results = [ea for ea in addresses if utils.read_memory(segments, ea, len(magic)) == magic]
