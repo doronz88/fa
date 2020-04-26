@@ -1,7 +1,7 @@
-from fa import fa
+from fa import fainterp
 
 
-class MockFa(fa.FA):
+class MockFaInterp(fainterp.FaInterp):
     def reload_segments(self):
         pass
 

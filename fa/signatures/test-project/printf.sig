@@ -2,7 +2,6 @@
     "type": "function",
 	"name": "printf",
 	"instructions": [
-		"xrefs-to/or \"printf\" 00",
-		"aligned 4"
+		"xrefs-to --or --bytes '\"printf\" 00'"
 	]
 }

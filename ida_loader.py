@@ -8,8 +8,8 @@ import _idaapi
 import idaapi
 import idc
 
-from fa import fa
-reload(fa)
+from fa import fainterp
+reload(fainterp)
 
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
 IS_BE = '>' if _idaapi.cvar.inf.mf else '<'
@@ -56,14 +56,15 @@ def create_signature_ppc32(start, end, inf, verify=True):
     opcode_size = 4
     first = True
 
-    command = 'find-bytes/or' if not verify else 'verify-bytes'
+    command = 'find-bytes --or' if not verify else 'verify-bytes'
 
     for ea in range(start, end, opcode_size):
         mnemonic = idc.GetMnem(ea)
         if mnemonic in ('lis', 'lwz', 'bl') or mnemonic.startswith('b'):
             pass
         else:
-            signature.append('{} {}'.format(command, binascii.hexlify(idc.GetManyBytes(ea, opcode_size))))
+            b = binascii.hexlify(idc.GetManyBytes(ea, opcode_size))
+            signature.append('{} {}'.format(command, b))
             if first:
                 first = False
                 command = 'verify-bytes'
@@ -92,8 +93,10 @@ def create_signature_arm(start, end, inf, verify=True):
         mnemonic = idc.GetMnem(ea)
         opcode_size = idautils.DecodeInstruction(ea).size
         # Skip memory accesses and branches.
-        if mnemonic not in ('LDR', 'STR', 'BL', 'B', 'BLX', 'BX', 'BXJ'):
-            command = 'find-bytes/or' if not verify and ea == start else 'verify-bytes'
+        if mnemonic not in \
+                ('LDR', 'STR', 'BL', 'B', 'BLX', 'BX', 'BXJ'):
+            command = 'find-bytes --or' \
+                if not verify and ea == start else 'verify-bytes'
             instructions.append('{} {}'.format(
                 command,
                 binascii.hexlify(idc.GetManyBytes(ea, opcode_size)))
@@ -142,7 +145,7 @@ def find_function_code_references(func_ea):
     return results
 
 
-class IdaLoader(fa.FA):
+class IdaLoader(fainterp.FaInterp):
     def __init__(self):
         super(IdaLoader, self).__init__()
 
@@ -173,17 +176,21 @@ class IdaLoader(fa.FA):
                 # link each string ref only once
                 strings_addr_set.add(s.addr)
                 signature['instructions'].append(
-                    'xrefs-to/or,function-start {}'.format(s.get_bytes_for_find())
+                    'xrefs-to --or --function-start '
+                    '--bytes "{}"'.format(s.get_bytes_for_find())
                 )
 
         for ea in code_references:
             name = idc.Name(ea)
-            if (name != idc.BADADDR) and not (name.startswith('loc_')) and not (name.startswith('sub_')) and \
+            if (name != idc.BADADDR) and \
+                    not (name.startswith('loc_')) and \
+                    not (name.startswith('sub_')) and \
                     (ea not in code_references_set):
                 # link each string ref only once
                 code_references_set.add(ea)
                 signature['instructions'].append(
-                    'xrefs-to/or,name,function-start {}'.format(name)
+                    'xrefs-to --or --function-start '
+                    '--name "{}"'.format(name)
                 )
 
         inf = idaapi.get_inf_structure()

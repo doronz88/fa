@@ -1,18 +1,21 @@
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
+import shlex
 import json
 import sys
 import os
 
-from commands import function_start
+from fa.commands.function_start import get_function_start
 
-SIGNATURES_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'signatures')
-COMMANDS_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'commands')
+SIGNATURES_ROOT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'signatures')
+COMMANDS_ROOT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'commands')
 
 MULTILINE_PREFIX = '    '
 
 
-class FA:
+class FaInterp:
     __metaclass__ = ABCMeta
 
     def __init__(self, signatures_root=SIGNATURES_ROOT):
@@ -32,7 +35,8 @@ class FA:
     def list_projects(self):
         projects = []
         for project_dirname in os.listdir(self._signatures_root):
-            project_fullpath = os.path.join(self._signatures_root, project_dirname)
+            project_fullpath = os.path.join(
+                self._signatures_root, project_dirname)
 
             if os.path.isdir(project_fullpath):
                 projects.append(project_dirname)
@@ -48,13 +52,12 @@ class FA:
     def reload_segments(self):
         pass
 
-    def run_command(self, command, manners, current_ea, args):
-        command = command.replace('-', '_')
+    @staticmethod
+    def get_command(command):
         filename = os.path.join(COMMANDS_ROOT, "{}.py".format(command))
 
         if not os.path.exists(filename):
-            self.log("no such command: {}".format(command))
-            return -1
+            raise NotImplementedError("no such command: {}".format(command))
 
         if sys.version == '3':
             # TODO: support python 3.0-3.4
@@ -66,7 +69,20 @@ class FA:
             import imp
             module = imp.load_source(command, filename)
 
-        return module.run(self._segments, manners, current_ea, args, endianity=self._endianity)
+        return module
+
+    def run_command(self, command, addresses):
+        args = ''
+        if ' ' in command:
+            command, args = command.split(' ', 1)
+            command = command.replace('-', '_')
+            args = shlex.split(args)
+
+        module = self.get_command(command)
+        p = module.get_parser()
+        args = p.parse_args(args)
+        return module.run(self._segments, args, addresses,
+                          endianity=self._endianity)
 
     @staticmethod
     def get_alias():
@@ -87,30 +103,16 @@ class FA:
             if len(line) == 0:
                 continue
 
+            if line.startswith('#'):
+                # treat as comment
+                continue
+
             for k, v in self.get_alias().items():
                 # handle aliases
                 if line.startswith(k):
                     line = line.replace(k, v)
 
-            if ' ' in line:
-                command, args = line.split(' ', 1)
-            else:
-                command = line
-                args = ''
-
-            manners = {}
-            if '/' in command:
-                # parse manners
-                command, manners_raw = command.split('/', 1)
-                for manner_raw in manners_raw.split(','):
-                    manner = manner_raw
-                    manner_args = ''
-                    if '{' in manner:
-                        manner, manner_args = manner_raw.split('{')
-                        manner_args = manner_args.split('}')[0]
-                    manners[manner] = manner_args
-
-            new_addresses = self.run_command(command, manners, addresses, args)
+            new_addresses = self.run_command(line, addresses)
             if decremental and len(new_addresses) == 0 and len(addresses) > 0:
                 return addresses
 
@@ -161,13 +163,16 @@ class FA:
         results = []
         signatures = self.get_signatures(symbol_name)
         if len(signatures) == 0:
-            raise NotImplementedError('no signature found for: {}'.format(symbol_name))
+            raise NotImplementedError('no signature found for: {}'
+                                      .format(symbol_name))
 
         for sig in signatures:
-            sig_results = self.find_from_instructions_list(sig['instructions'], decremental=decremental)
+            sig_results = self.find_from_instructions_list(
+                sig['instructions'], decremental=decremental)
 
             if sig['type'] == 'function':
-                sig_results = [function_start.get_function_start(self._segments, ea) for ea in sig_results]
+                sig_results = [get_function_start(self._segments, ea)
+                               for ea in sig_results]
 
             results += sig_results
 

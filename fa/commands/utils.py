@@ -1,10 +1,9 @@
+import argparse
+
 IDA_MODULE = False
 
 try:
     import idc
-    import idaapi
-    import _idaapi
-    import idautils
 
     IDA_MODULE = True
 except ImportError:
@@ -43,13 +42,12 @@ def find_raw(segments, needle):
 
 
 def ida_find_all(payload):
-    import idc
-
     retval = []
-    ea = idc.FindBinary(0, idc.SEARCH_DOWN|idc.SEARCH_REGEX, payload)
+    ea = idc.FindBinary(0, idc.SEARCH_DOWN | idc.SEARCH_REGEX, payload)
     while ea != idc.BADADDR:
         retval.append(ea)
-        ea = idc.FindBinary(ea+1, idc.SEARCH_DOWN|idc.SEARCH_REGEX, payload)
+        ea = idc.FindBinary(ea + 1, idc.SEARCH_DOWN | idc.SEARCH_REGEX,
+                            payload)
 
     return retval
 
@@ -64,3 +62,8 @@ def read_memory(segments, ea, size):
 def verify_ida():
     if not IDA_MODULE:
         raise Exception("only available in IDA")
+
+
+class ArgumentParserNoExit(argparse.ArgumentParser):
+    def error(self, message):
+        raise ValueError(message)
