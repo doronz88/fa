@@ -4,7 +4,6 @@ import json
 import os
 
 import idautils
-import _idaapi
 import idaapi
 import idc
 
@@ -12,7 +11,7 @@ from fa import fainterp
 reload(fainterp)
 
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
-IS_BE = '>' if _idaapi.cvar.inf.mf else '<'
+IS_BE = '>' if idaapi.get_inf_structure().mf else '<'
 
 
 class StringParsingException(Exception):
@@ -229,7 +228,7 @@ class IdaLoader(fainterp.FaInterp):
                 print('0x{:08x} {}'.format(symbol_values.pop(), sig['name']))
 
     def set_input(self, input_):
-        self._endianity = '>' if _idaapi.cvar.inf.mf else '<'
+        self._endianity = '>' if idaapi.get_inf_structure().mf else '<'
         self._input = input_
         self.reload_segments()
 
