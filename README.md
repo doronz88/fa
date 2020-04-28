@@ -62,19 +62,19 @@ Available commands:
     * Searches for the specified bytes given as an hex string.
     * For example: 
         * `find-bytes --or '00 01 02 03'`
-* `keystone-find-opcodes --or [--bele] <arch> <mode> <opcodes>`
+* `keystone-find-opcodes --or [--bele] <arch> <mode> '<opcodes>'`
     * Searches for opcodes using keystone engine.
     * `bele` flags used to indicate the mode is extracted 
     implicit.
     * For example: 
         * `keystone-find-opcodes --or KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`
-* `keystone-verify-opcodes [--bele] <arch> <mode> <opcodes>`
+* `keystone-verify-opcodes [--bele] <arch> <mode> '<opcodes>'`
     * Reduces the search results to only those matching 
     PPC32 opcodes, seperated by `;`.
     * `bele` flags used to indicate the mode is extracted 
     implicit.
     * For example: 
-        * `keystone-verify-opcodes [--bele] KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`    
+        * `keystone-verify-opcodes [--bele] KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 'addi %r1, %r1, 4; addi %r1, %r1, 8;'`    
 * `offset <offset>`
     * Adds a constant offset to the search results.
     * For example: `offset 8`, `offset -8`, `offset 0x10`,...
@@ -86,7 +86,7 @@ Available commands:
     * Verifies the search results up until now match a const 
     expression given as hex string.
     * For example: 
-        * `verify-bytes 11 22 33 44`
+        * `verify-bytes '11 22 33 44'`
 * `xrefs-to [--and/or] [--until step] <--bytes bytes/--name name>`
     * Searches for function references to given expression.
      Equivalent to IDA's `Alt+B`.
