@@ -106,6 +106,8 @@ Available commands:
     * Sorts the search results from lower to upper.
 * `print`
     * Prints the results so far
+* `trace`
+    * Starts a pdb trace
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
