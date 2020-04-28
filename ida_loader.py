@@ -237,11 +237,20 @@ class IdaLoader(fainterp.FaInterp):
         Find the last create symbol signature.
         :return:
         """
-        for address in self.find_from_sig_path(
-                TEMP_SIG_FILENAME, decremental=True):
-            self.log('Search result: 0x{:x}'.format(address))
 
+        with open(TEMP_SIG_FILENAME) as f:
+            sig = json.load(f)
+
+        results = self.find_from_sig_json(sig, decremental=True)
+
+        for address in results:
+            self.log('Search result: 0x{:x}'.format(address))
         self.log('Search done')
+
+        if len(results) == 1:
+            if not sig['name'].startswith('sub_'):
+                if idc.AskYN(1, 'Only one result has been found. Rename?') == 1:
+                    idc.MakeName(results[0], str(sig['name']))
 
     def symbols(self):
         for sig in self.get_signatures():
@@ -273,6 +282,12 @@ Quick usage:
 fa_instance.set_project(project_name) # select project name
 print(fa_instance.list_projects()) # prints available projects
 print(fa_instance.find(symbol_name)) # searches for the specific symbol
+fa_instance.symbols() # searches for the symbols in the current project
+
+HotKeys:
+Ctrl-8: Create temporary signature
+Ctrl-Shift-8: Create temporary signature and open an editor
+Ctrl-9: Find temporary signature
 ---------------------------------''')
     fa_instance = IdaLoader()
     fa_instance.set_input('ida')
