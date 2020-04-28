@@ -1,6 +1,8 @@
+import subprocess
 import binascii
 import tempfile
 import json
+import sys
 import os
 
 import idautils
@@ -12,6 +14,22 @@ reload(fainterp)
 
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
 IS_BE = '>' if idaapi.get_inf_structure().mf else '<'
+
+
+def open_file(filename):
+    if sys.platform == "win32":
+        try:
+            os.startfile(filename)
+        except Exception, error_code:
+            if error_code[0] == 1155:
+                os.spawnl(os.P_NOWAIT,
+                          os.path.join(os.environ['WINDIR'], 'system32', 'Rundll32.exe'),
+                          'Rundll32.exe SHELL32.DLL, OpenAs_RunDLL {}'.format(filename))
+            else:
+                print "other error"
+    else:
+        opener = "open" if sys.platform == "darwin" else "xdg-open"
+        subprocess.call([opener, filename])
 
 
 class StringParsingException(Exception):
@@ -208,6 +226,11 @@ class IdaLoader(fainterp.FaInterp):
             json.dump(signature, f, indent=4)
 
         self.log('Signature created at {}'.format(TEMP_SIG_FILENAME))
+        return TEMP_SIG_FILENAME
+
+    def extended_create_symbol(self):
+        filename = self.create_symbol()
+        open_file(filename)
 
     def find_symbol(self):
         """
@@ -254,5 +277,7 @@ print(fa_instance.find(symbol_name)) # searches for the specific symbol
     fa_instance = IdaLoader()
     fa_instance.set_input('ida')
     fa_instance.set_project('test-project')
+
     idaapi.add_hotkey('Ctrl-8', fa_instance.create_symbol)
+    idaapi.add_hotkey('Ctrl-Shift-8', fa_instance.extended_create_symbol)
     idaapi.add_hotkey('Ctrl-9', fa_instance.find_symbol)
