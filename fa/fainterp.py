@@ -94,6 +94,17 @@ class FaInterp:
                 retval[k.strip()] = v.strip()
         return retval
 
+    def save_signature(self, signature):
+        filename = os.path.join(self._signatures_root, self._project, signature['name'] + '.sig')
+        i = 1
+        while os.path.exists(filename):
+            filename = os.path.join(self._signatures_root, self._project,
+                                    signature['name'] + '.{}.sig'.format(i))
+            i += 1
+
+        with open(filename, 'w') as f:
+            json.dump(signature, f, indent=4)
+
     def find_from_instructions_list(self, instructions, decremental=False):
         addresses = []
 

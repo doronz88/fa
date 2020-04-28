@@ -252,12 +252,34 @@ class IdaLoader(fainterp.FaInterp):
                 if idc.AskYN(1, 'Only one result has been found. Rename?') == 1:
                     idc.MakeName(results[0], str(sig['name']))
 
-    def symbols(self):
-        for sig in self.get_signatures():
-            symbol_values = self.find(sig['name'], decremental=True)
+    def prompt_save_signature(self):
+        with open(TEMP_SIG_FILENAME) as f:
+            sig = json.load(f)
 
-            if len(symbol_values) == 1:
-                print('0x{:08x} {}'.format(symbol_values.pop(), sig['name']))
+        if idc.AskYN(1, 'Are you sure you want to save this signature?') != 1:
+            return
+
+        self.save_signature(sig)
+
+    def symbols(self):
+        results = {}
+        for sig in self.get_signatures():
+            sig_results = self.find(sig['name'], decremental=True)
+
+            if len(sig_results) > 0:
+                if sig['name'] not in results.keys():
+                    results[sig['name']] = set()
+
+                results[sig['name']].update(sig_results)
+
+        errors = ''
+        for k, v in results.items():
+            if len(v) == 1:
+                print('0x{:08x} {}'.format(v.pop(), k))
+            else:
+                errors += '# {} had too many results\n'.format(k)
+
+        print(errors)
 
     def set_input(self, input_):
         self._endianity = '>' if idaapi.get_inf_structure().mf else '<'
@@ -288,6 +310,7 @@ HotKeys:
 Ctrl-8: Create temporary signature
 Ctrl-Shift-8: Create temporary signature and open an editor
 Ctrl-9: Find temporary signature
+Ctrl-0: Prompt for adding a new permanent signature
 ---------------------------------''')
     fa_instance = IdaLoader()
     fa_instance.set_input('ida')
@@ -296,3 +319,4 @@ Ctrl-9: Find temporary signature
     idaapi.add_hotkey('Ctrl-8', fa_instance.create_symbol)
     idaapi.add_hotkey('Ctrl-Shift-8', fa_instance.extended_create_symbol)
     idaapi.add_hotkey('Ctrl-9', fa_instance.find_symbol)
+    idaapi.add_hotkey('Ctrl-0', fa_instance.prompt_save_signature)
