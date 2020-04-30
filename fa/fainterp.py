@@ -78,6 +78,8 @@ class FaInterp:
             command = command.replace('-', '_')
             args = shlex.split(args)
 
+        command = command.replace('-', '_')
+
         module = self.get_command(command)
         p = module.get_parser()
         args = p.parse_args(args)

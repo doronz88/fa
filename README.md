@@ -108,6 +108,10 @@ Available commands:
     * Prints the results so far
 * `trace`
     * Starts a pdb trace
+* `name <name>`
+    * Rename symbol to `<name>`
+* `goto-ref`
+    * Goto first code reference from current result
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
