@@ -67,7 +67,7 @@ Available commands:
     * `bele` flags used to indicate the mode is extracted 
     implicit.
     * For example: 
-        * `keystone-find-opcodes --or KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 addi %r1, %r1, 4; addi %r1, %r1, 8;`
+        * `keystone-find-opcodes --or KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 'addi %r1, %r1, 4; addi %r1, %r1, 8;'`
 * `keystone-verify-opcodes [--bele] <arch> <mode> '<opcodes>'`
     * Reduces the search results to only those matching 
     PPC32 opcodes, seperated by `;`.
