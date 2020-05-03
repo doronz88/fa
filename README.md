@@ -44,7 +44,7 @@ Each line behaves like a shell command-line that gets the
 previous results as the input and outputs the next results
 to the next line.
 
-SIG syntax:
+SIG syntax (single):
 ```json
 {
     "type": "<function/global/number>",
@@ -54,14 +54,35 @@ SIG syntax:
         "command2"
     ]
 }
-``` 
+```
+SIG syntax (bundle):
+```json
+{
+    "type": "bundle",
+    "signatures": [
+        {
+            "type": "<function/global/number>",
+            "name": "name1",
+            "instructions" : [
+                "command1",
+                "command2"
+            ]
+        }, ...
+    ]
+}
+```
 
+ 
 Available commands:
 
 * `find-bytes --or '<bytes>'`
     * Searches for the specified bytes given as an hex string.
     * For example: 
         * `find-bytes --or '00 01 02 03'`
+* `find-str`
+    * Searches for the specified string.
+    * For example: 
+        * `find-str --or 'cyber cyber bitim bitim'`
 * `keystone-find-opcodes --or [--bele] <arch> <mode> '<opcodes>'`
     * Searches for opcodes using keystone engine.
     * `bele` flags used to indicate the mode is extracted 
@@ -87,6 +108,15 @@ Available commands:
     expression given as hex string.
     * For example: 
         * `verify-bytes '11 22 33 44'`
+* `verify-str [--until step] '<bytes>'`
+    * Verifies the search results up until now match a const 
+    string.
+    * For example: 
+        * `verify-str '11 22 33 44'`
+* `xref`
+    * Returns a list of all references into current result
+* `max-xref`
+    * Returns a singleton of the result with max xref count
 * `xrefs-to [--and/or] [--until step] <--bytes bytes/--name name>`
     * Searches for function references to given expression.
      Equivalent to IDA's `Alt+B`.
@@ -112,6 +142,7 @@ Available commands:
     * Rename symbol to `<name>`
 * `goto-ref`
     * Goto first code reference from current result
+
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 

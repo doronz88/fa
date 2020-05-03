@@ -75,7 +75,6 @@ class FaInterp:
         args = ''
         if ' ' in command:
             command, args = command.split(' ', 1)
-            command = command.replace('-', '_')
             args = shlex.split(args)
 
         command = command.replace('-', '_')
@@ -139,11 +138,16 @@ class FaInterp:
         :param dict signature_json: Data of signature's JSON.
         :param bool decremental:
         :return: Addresses of matching signatures.
-        :rtype: list
+        :rtype: dict if bundle, list otherwise
         """
-        return self.find_from_instructions_list(
-            signature_json['instructions'], decremental
-        )
+        if signature_json['type'] == 'bundle':
+            results = {}
+            for signature in signature_json['signatures']:
+                result = self.find_from_instructions_list(signature['instructions'],
+                                                          decremental)
+                results[signature['name']] = result
+        else:
+            return self.find_from_instructions_list(signature_json['instructions'], decremental)
 
     def find_from_sig_path(self, signature_path, decremental=False):
         """
@@ -153,6 +157,11 @@ class FaInterp:
         :return: Addresses of matching signatures.
         :rtype: list
         """
+        local_path = os.path.join(self._signatures_root, self._project, signature_path)
+        if os.path.exists(local_path):
+            # prefer local signatures, then external
+            signature_path = local_path
+
         with open(signature_path) as f:
             sig = json.load(f)
         return self.find_from_sig_json(sig, decremental)
