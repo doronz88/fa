@@ -248,7 +248,8 @@ class IdaLoader(fainterp.FaInterp):
         self.log('Search done')
 
         if len(results) == 1:
-            if not sig['name'].startswith('sub_'):
+            # if remote sig has a proper name, but current one is not
+            if not sig['name'].startswith('sub_') and idc.GetFunctionName(results[0]).startswith('sub_'):
                 if idc.AskYN(1, 'Only one result has been found. Rename?') == 1:
                     idc.MakeName(results[0], str(sig['name']))
 
