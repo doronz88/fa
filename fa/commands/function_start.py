@@ -57,14 +57,17 @@ def get_function_start(segments, ea):
 
 def get_parser():
     p = argparse.ArgumentParser()
+    p.add_argument('--not-unique', action='store_true')
     return p
+
+
+def function_start(addresses):
+    for ea in addresses:
+        if ea != idc.BADADDR:
+            yield idc.GetFunctionAttr(ea, idc.FUNCATTR_START)
 
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-    results = set()
-    for ea in addresses:
-        result = get_function_start(segments, ea)
-        if result != idc.BADADDR:
-            results.add(result)
-    return list(results)
+    results = function_start(addresses)
+    return list(results) if args.not_unique else list(set(results))

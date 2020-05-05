@@ -9,6 +9,16 @@ def get_parser():
     return p
 
 
+def find_str(string, null_terminated=False):
+    hex_str = binascii.hexlify(string)
+    if null_terminated:
+        hex_str += '00'
+    return find_bytes.find_bytes(hex_str)
+
+
 def run(segments, args, addresses, **kwargs):
-    setattr(args, 'hex_str', binascii.hexlify(args.hex_str) + '00' if args.null_terminated else '')
+    hex_str = binascii.hexlify(args.hex_str)
+    if args.null_terminated:
+        hex_str += '00'
+    setattr(args, 'hex_str', hex_str)
     return find_bytes.run(segments, args, addresses, **kwargs)

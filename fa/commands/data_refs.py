@@ -1,25 +1,22 @@
 from fa.commands import utils
 
 try:
-    import idc
+    import idautils
 except ImportError:
     pass
 
 
 def get_parser():
     p = utils.ArgumentParserNoExit()
-    p.add_argument('name')
     return p
 
 
-def set_name(address, name):
-    idc.MakeName(address, name)
+def data_refs(addresses):
+    for address in addresses:
+        for ref in idautils.DataRefsFrom(address):
+            yield ref
 
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-
-    for address in addresses:
-        set_name(address, args.name)
-
-    return addresses
+    return list(data_refs(addresses))

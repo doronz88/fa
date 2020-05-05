@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from fa.commands import utils
 
 
@@ -11,11 +9,13 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
-    retval = []
-
+@utils.yield_unique
+def add_offset_range(addresses, start, end, step):
     for ea in addresses:
-        for i in range(args.start, args.end, args.skip):
-            retval.append(ea + i)
+        for i in range(start, end, step):
+            yield ea + i
 
-    return list(OrderedDict.fromkeys(retval))
+
+def run(segments, args, addresses, **kwargs):
+    gen = add_offset_range(addresses, args.start, args.end, args.step)
+    return list(gen)

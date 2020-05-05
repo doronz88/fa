@@ -142,7 +142,18 @@ Available commands:
     * Rename symbol to `<name>`
 * `goto-ref`
     * Goto first code reference from current result
-
+* `verify-operand <operand_name> [--op0] [--op1] [--op2]`
+    * Verifies the opcode operands
+    * For example:
+        * `verify-operand addi --op0 '3,4'`
+        * Checks that the opcode is `addi` and that the first register in the operand
+        is either `r3` or `r4`.
+* `data-refs`
+    * Goto all data references
+* `most-common`
+    * Get the most common entry in the search results
+* `name-literal <>`
+    * Rename symbol to `<name>`  
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 

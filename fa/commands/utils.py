@@ -17,13 +17,16 @@ def index_of(needle, haystack):
         return -1
 
 
-def find_raw(segments, needle):
+def find_raw(needle, segments=None):
+    if segments is None:
+        segments = dict()
+
     if IDA_MODULE:
         # ida optimization
         payload = ' '.join(['{:02x}'.format(b) for b in needle])
-        return ida_find_all(payload)
-
-    addresses = []
+        for address in ida_find_all(payload):
+            yield address
+        return
 
     for segment_ea, data in segments.items():
         offset = index_of(needle, data)
@@ -31,25 +34,20 @@ def find_raw(segments, needle):
 
         while offset != -1:
             address = segment_ea + offset + extra_offset
-            addresses.append(address)
+            yield address
 
             extra_offset += offset+1
             data = data[offset+1:]
 
             offset = index_of(needle, data)
 
-    return addresses
-
 
 def ida_find_all(payload):
-    retval = []
     ea = idc.FindBinary(0, idc.SEARCH_DOWN | idc.SEARCH_REGEX, payload)
     while ea != idc.BADADDR:
-        retval.append(ea)
+        yield ea
         ea = idc.FindBinary(ea + 1, idc.SEARCH_DOWN | idc.SEARCH_REGEX,
                             payload)
-
-    return retval
 
 
 def read_memory(segments, ea, size):
@@ -62,6 +60,16 @@ def read_memory(segments, ea, size):
 def verify_ida():
     if not IDA_MODULE:
         raise Exception("only available in IDA")
+
+
+def yield_unique(func):
+    def wrapper(*args, **kwargs):
+        results = set()
+        for i in func(*args, **kwargs):
+            if i not in results:
+                yield i
+                results.add(i)
+    return wrapper
 
 
 class ArgumentParserNoExit(argparse.ArgumentParser):

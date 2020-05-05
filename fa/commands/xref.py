@@ -8,8 +8,12 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
-    xrefs = []
+@utils.yield_unique
+def xref(addresses):
     for address in addresses:
-        xrefs.extend(ref.frm for ref in idautils.XrefsTo(address))
-    return list(set(xrefs))
+        for ref in idautils.XrefsTo(address):
+            yield ref.frm
+
+
+def run(segments, args, addresses, **kwargs):
+    return list(xref(addresses))

@@ -27,7 +27,7 @@ def run(segments, args, addresses, **kwargs):
         ea = idc.LocByName(args.name)
         occurrences = [ea] if ea != idc.BADADDR else []
     else:
-        occurrences = utils.ida_find_all(args.bytes)
+        occurrences = list(utils.ida_find_all(args.bytes))
 
     frm = set()
     for ea in occurrences:
