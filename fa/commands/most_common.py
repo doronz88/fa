@@ -10,8 +10,10 @@ def get_parser():
 
 def most_common(addresses):
     addresses = list(addresses)
-    return max(set(addresses), key=addresses.count)
+    if len(addresses) == 0:
+        return []
+    return [max(set(addresses), key=addresses.count)]
 
 
 def run(segments, args, addresses, **kwargs):
-    return [most_common(addresses)]
+    return most_common(addresses)

@@ -42,11 +42,11 @@ def verify_operand(addresses, name, op0=None, op1=None, op2=None):
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-    regs_op0 = args.regs_op0.split(',') if args.regs_op0 else None
-    regs_op1 = args.regs_op1.split(',') if args.regs_op1 else None
-    regs_op2 = args.regs_op2.split(',') if args.regs_op2 else None
+    op0 = args.op0.split(',') if args.op0 else None
+    op1 = args.op1.split(',') if args.op1 else None
+    op2 = args.op2.split(',') if args.op2 else None
     return list(verify_operand(addresses,
                                args.name,
-                               op0=regs_op0,
-                               op1=regs_op1,
-                               op2=regs_op2))
+                               op0=op0,
+                               op1=op1,
+                               op2=op2))

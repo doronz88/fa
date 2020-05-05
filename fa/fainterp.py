@@ -53,23 +53,26 @@ class FaInterp:
         pass
 
     @staticmethod
-    def get_command(command):
-        filename = os.path.join(COMMANDS_ROOT, "{}.py".format(command))
-
+    def get_module(name, filename):
         if not os.path.exists(filename):
-            raise NotImplementedError("no such command: {}".format(command))
+            raise NotImplementedError("no such filename: {}".format(filename))
 
         if sys.version == '3':
             # TODO: support python 3.0-3.4
             import importlib.util
-            spec = importlib.util.spec_from_file_location(command, filename)
+            spec = importlib.util.spec_from_file_location(name, filename)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
         else:
             import imp
-            module = imp.load_source(command, filename)
+            module = imp.load_source(name, filename)
 
         return module
+
+    @staticmethod
+    def get_command(command):
+        filename = os.path.join(COMMANDS_ROOT, "{}.py".format(command))
+        return FaInterp.get_module(command, filename)
 
     def run_command(self, command, addresses):
         args = ''
@@ -146,6 +149,7 @@ class FaInterp:
                 result = self.find_from_instructions_list(signature['instructions'],
                                                           decremental)
                 results[signature['name']] = result
+            return results
         else:
             return self.find_from_instructions_list(signature_json['instructions'], decremental)
 
@@ -166,12 +170,31 @@ class FaInterp:
             sig = json.load(f)
         return self.find_from_sig_json(sig, decremental)
 
-    def get_signatures(self, symbol_name=None):
+    def get_python_symbols(self, symbol_name=None):
+        symbols = {}
+        project_root = os.path.join(self._signatures_root, self._project)
+
+        for root, dirs, files in os.walk(project_root):
+            for filename in files:
+                if not filename.lower().endswith('.py'):
+                    continue
+
+                name = os.path.splitext(filename)[0]
+                filename = os.path.join(project_root, filename)
+                m = FaInterp.get_module(name, filename)
+                symbols.update(m.run())
+
+        return symbols
+
+    def get_json_signatures(self, symbol_name=None):
         signatures = []
         project_root = os.path.join(self._signatures_root, self._project)
 
         for root, dirs, files in os.walk(project_root):
             for filename in files:
+                if not filename.lower().endswith('.sig'):
+                    continue
+
                 filename = os.path.join(project_root, filename)
                 with open(filename) as f:
                     signature = json.load(f)
@@ -183,19 +206,22 @@ class FaInterp:
 
     def find(self, symbol_name, decremental=False):
         results = []
-        signatures = self.get_signatures(symbol_name)
+        signatures = self.get_json_signatures(symbol_name)
         if len(signatures) == 0:
             raise NotImplementedError('no signature found for: {}'
                                       .format(symbol_name))
 
         for sig in signatures:
-            sig_results = self.find_from_instructions_list(
-                sig['instructions'], decremental=decremental)
+            sig_results = self.find_from_sig_json(sig)
 
             if sig['type'] == 'function':
                 sig_results = [get_function_start(self._segments, ea)
                                for ea in sig_results]
 
-            results += sig_results
+            if isinstance(sig_results, dict):
+                if symbol_name in sig_results:
+                    results += sig_results[symbol_name]
+            else:
+                results += sig_results
 
-        return list(OrderedDict.fromkeys(results))
+        return list(set(results))

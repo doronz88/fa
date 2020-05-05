@@ -20,13 +20,13 @@ def open_file(filename):
     if sys.platform == "win32":
         try:
             os.startfile(filename)
-        except Exception, error_code:
+        except Exception as error_code:
             if error_code[0] == 1155:
                 os.spawnl(os.P_NOWAIT,
                           os.path.join(os.environ['WINDIR'], 'system32', 'Rundll32.exe'),
                           'Rundll32.exe SHELL32.DLL, OpenAs_RunDLL {}'.format(filename))
             else:
-                print "other error"
+                print("other error")
     else:
         opener = "open" if sys.platform == "darwin" else "xdg-open"
         subprocess.call([opener, filename])
@@ -264,7 +264,8 @@ class IdaLoader(fainterp.FaInterp):
 
     def symbols(self):
         results = {}
-        for sig in self.get_signatures():
+        results.update(self.get_python_symbols())
+        for sig in self.get_json_signatures():
             sig_results = self.find(sig['name'], decremental=True)
 
             if len(sig_results) > 0:
@@ -275,10 +276,12 @@ class IdaLoader(fainterp.FaInterp):
 
         errors = ''
         for k, v in results.items():
-            if len(v) == 1:
-                print('0x{:08x} {}'.format(v.pop(), k))
-            else:
-                errors += '# {} had too many results\n'.format(k)
+            if isinstance(v, list) or isinstance(v, set):
+                if len(v) == 1:
+                    v = v.pop()
+                else:
+                    errors += '# {} had too many results\n'.format(k)
+            print('0x{:08x} {}'.format(v, k))
 
         print(errors)
 
