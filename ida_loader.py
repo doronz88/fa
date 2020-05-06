@@ -311,6 +311,8 @@ print(fa_instance.find(symbol_name)) # searches for the specific symbol
 fa_instance.symbols() # searches for the symbols in the current project
 
 HotKeys:
+Ctrl-6: Set current project
+Ctrl-7: Search project symbols
 Ctrl-8: Create temporary signature
 Ctrl-Shift-8: Create temporary signature and open an editor
 Ctrl-9: Find temporary signature
@@ -320,6 +322,8 @@ Ctrl-0: Prompt for adding a new permanent signature
     fa_instance.set_input('ida')
     fa_instance.set_project('test-project')
 
+    idaapi.add_hotkey('Ctrl-6', fa_instance.interactive_set_project)
+    idaapi.add_hotkey('Ctrl-7', fa_instance.symbols)
     idaapi.add_hotkey('Ctrl-8', fa_instance.create_symbol)
     idaapi.add_hotkey('Ctrl-Shift-8', fa_instance.extended_create_symbol)
     idaapi.add_hotkey('Ctrl-9', fa_instance.find_symbol)

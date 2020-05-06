@@ -5,6 +5,14 @@ import json
 import sys
 import os
 
+if sys.version_info[0] == 3:
+    # for Python3
+    from tkinter import *   ## notice lowercase 't' in tkinter here
+else:
+    # for Python2
+    from Tkinter import *   ## notice capitalized T in Tkinter
+    import ttk
+
 from fa.commands.function_start import get_function_start
 
 SIGNATURES_ROOT = os.path.join(
@@ -31,16 +39,31 @@ class FaInterp:
 
     def set_project(self, project):
         self._project = project
+        self.log('project set: {}'.format(project))
+
+    def interactive_set_project(self):
+        app = Tk()
+        # app.geometry('200x100')
+
+        label = ttk.Label(app,
+                          text="Choose current project")
+        label.grid(column=0, row=0)
+
+        combo = ttk.Combobox(app,
+                             values=self.list_projects())
+        combo.grid(column=0, row=1)
+
+        def combobox_change_project(event):
+            self.set_project(combo.get())
+
+        combo.bind("<<ComboboxSelected>>", combobox_change_project)
+
+        app.mainloop()
 
     def list_projects(self):
         projects = []
-        for project_dirname in os.listdir(self._signatures_root):
-            project_fullpath = os.path.join(
-                self._signatures_root, project_dirname)
-
-            if os.path.isdir(project_fullpath):
-                projects.append(project_dirname)
-
+        for root, dirs, files in os.walk(self._signatures_root):
+            projects += dirs
         return projects
 
     @staticmethod
