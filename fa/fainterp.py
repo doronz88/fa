@@ -109,8 +109,9 @@ class FaInterp:
         with open(filename, 'w') as f:
             json.dump(signature, f, indent=4)
 
-    def find_from_instructions_list(self, instructions, decremental=False):
-        addresses = []
+    def find_from_instructions_list(self, instructions, decremental=False, addresses=None):
+        if addresses is None:
+            addresses = []
 
         for line in instructions:
             line = line.strip()
@@ -143,11 +144,15 @@ class FaInterp:
         :return: Addresses of matching signatures.
         :rtype: dict if bundle, list otherwise
         """
-        if signature_json['type'] == 'bundle':
+        if signature_json['type'] in ['bundle', 'chain']:
             results = {}
+            result = []
             for signature in signature_json['signatures']:
+                if signature_json['type'] == 'bundle':
+                    result = None
                 result = self.find_from_instructions_list(signature['instructions'],
-                                                          decremental)
+                                                          decremental,
+                                                          addresses=result)
                 results[signature['name']] = result
             return results
         else:
@@ -159,7 +164,7 @@ class FaInterp:
         :param str signature_path: Path to a signature file.
         :param bool decremental:
         :return: Addresses of matching signatures.
-        :rtype: list
+        :rtype: dict if bundle or chain, list otherwise
         """
         local_path = os.path.join(self._signatures_root, self._project, signature_path)
         if os.path.exists(local_path):
