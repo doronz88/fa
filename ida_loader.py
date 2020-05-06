@@ -13,7 +13,7 @@ from fa import fainterp
 reload(fainterp)
 
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
-IS_BE = '>' if idaapi.get_inf_structure().mf else '<'
+IS_BE = '>' if idaapi.get_inf_structure().is_be() else '<'
 
 
 def open_file(filename):
@@ -286,7 +286,7 @@ class IdaLoader(fainterp.FaInterp):
         print(errors)
 
     def set_input(self, input_):
-        self._endianity = '>' if idaapi.get_inf_structure().mf else '<'
+        self._endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
         self._input = input_
         self.reload_segments()
 
