@@ -197,7 +197,11 @@ class FaInterp:
 
                 filename = os.path.join(project_root, filename)
                 with open(filename) as f:
-                    signature = json.load(f)
+                    try:
+                        signature = json.load(f)
+                    except ValueError as e:
+                        self.log('error in json: {}'.format(filename))
+                        raise e
 
                 if (symbol_name is None) or (signature['name'] == symbol_name):
                     signatures.append(signature)
