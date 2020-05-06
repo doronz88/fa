@@ -63,7 +63,7 @@ class FaInterp:
     def list_projects(self):
         projects = []
         for root, dirs, files in os.walk(self._signatures_root):
-            projects += dirs
+            projects += [os.path.relpath(os.path.join(root, filename), self._signatures_root) for filename in dirs]
         return projects
 
     @staticmethod
