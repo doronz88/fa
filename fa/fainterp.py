@@ -155,9 +155,8 @@ class FaInterp:
             new_addresses = []
             try:
                 new_addresses = self.run_command(line, addresses)
-            except Exception:
-                FaInterp.log('failed to run: {}'.format(line))
-                traceback.print_exc()
+            except ImportError as m:
+                FaInterp.log('failed to run: {}. error: {}'.format(line, str(m)))
 
             if decremental and len(new_addresses) == 0 and len(addresses) > 0:
                 return addresses
