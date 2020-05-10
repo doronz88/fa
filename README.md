@@ -11,7 +11,7 @@ other functionality with ease.
 In your IDA's python directory, install:
 * [keystone](http://www.keystone-engine.org/download/)
 * capstone (`pip install capstone`)
-
+* click (`pip install click`)
 
 ## How its used?
 
