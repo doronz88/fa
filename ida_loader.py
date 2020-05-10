@@ -5,6 +5,8 @@ import json
 import sys
 import os
 
+import click
+
 import idautils
 import idaapi
 import idc
@@ -262,7 +264,8 @@ class IdaLoader(fainterp.FaInterp):
 
         self.save_signature(sig)
 
-    def symbols(self):
+    def symbols(self, output_file=None):
+        output = ''
         results = {}
         results.update(self.get_python_symbols())
         for sig in self.get_json_signatures():
@@ -281,9 +284,16 @@ class IdaLoader(fainterp.FaInterp):
                     v = v.pop()
                 else:
                     errors += '# {} had too many results\n'.format(k)
-            print('0x{:08x} {}'.format(v, k))
+                    continue
+            line = '0x{:08x} {}\n'.format(v, k)
+            output += line
 
+        print(output)
         print(errors)
+
+        if output_file is not None:
+            output_file.write(output)
+            output_file.write(errors)
 
     def set_input(self, input_):
         self._endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
@@ -299,28 +309,35 @@ class IdaLoader(fainterp.FaInterp):
                 self.log('Loaded segment 0x{:x}'.format(segment_ea))
                 self._segments[segment_ea] = buf
 
+fa_instance = None
 
-if __name__ == '__main__':
-    IdaLoader.log('''---------------------------------
-FA Loaded successfully
+@click.command()
+@click.argument('project_name', default='test-project')
+@click.option('--symbols-file', default=None, type=click.File('wt'))
+def main(project_name, symbols_file=None):
+    global fa_instance
 
-Quick usage:
-fa_instance.set_project(project_name) # select project name
-print(fa_instance.list_projects()) # prints available projects
-print(fa_instance.find(symbol_name)) # searches for the specific symbol
-fa_instance.symbols() # searches for the symbols in the current project
-
-HotKeys:
-Ctrl-6: Set current project
-Ctrl-7: Search project symbols
-Ctrl-8: Create temporary signature
-Ctrl-Shift-8: Create temporary signature and open an editor
-Ctrl-9: Find temporary signature
-Ctrl-0: Prompt for adding a new permanent signature
----------------------------------''')
+    IdaLoader.log('''
+    ---------------------------------
+    FA Loaded successfully
+    
+    Quick usage:
+    fa_instance.set_project(project_name) # select project name
+    print(fa_instance.list_projects()) # prints available projects
+    print(fa_instance.find(symbol_name)) # searches for the specific symbol
+    fa_instance.symbols() # searches for the symbols in the current project
+    
+    HotKeys:
+    Ctrl-6: Set current project
+    Ctrl-7: Search project symbols
+    Ctrl-8: Create temporary signature
+    Ctrl-Shift-8: Create temporary signature and open an editor
+    Ctrl-9: Find temporary signature
+    Ctrl-0: Prompt for adding a new permanent signature
+    ---------------------------------''')
     fa_instance = IdaLoader()
     fa_instance.set_input('ida')
-    fa_instance.set_project('test-project')
+    fa_instance.set_project(project_name)
 
     idaapi.add_hotkey('Ctrl-6', fa_instance.interactive_set_project)
     idaapi.add_hotkey('Ctrl-7', fa_instance.symbols)
@@ -328,3 +345,11 @@ Ctrl-0: Prompt for adding a new permanent signature
     idaapi.add_hotkey('Ctrl-Shift-8', fa_instance.extended_create_symbol)
     idaapi.add_hotkey('Ctrl-9', fa_instance.find_symbol)
     idaapi.add_hotkey('Ctrl-0', fa_instance.prompt_save_signature)
+
+    if symbols_file is not None:
+        fa_instance.symbols(symbols_file)
+        idc.Exit(0)
+
+
+if __name__ == '__main__':
+    main(standalone_mode=False, args=idc.ARGV[1:])

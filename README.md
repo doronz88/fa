@@ -194,3 +194,9 @@ You should get a nice prompt inside the output window welcoming you
 into using FA. Also, a quick usage guide will also be printed so you 
 don't have to memorize everything.
 
+You can also run IDA in script mode just to extract symbols using:
+
+```sh
+ida -S"ida_loader.py <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
+```
+

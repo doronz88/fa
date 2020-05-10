@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
+import traceback
 import shlex
 import json
 import sys
@@ -43,7 +44,7 @@ class FaInterp:
 
     def interactive_set_project(self):
         app = Tk()
-        # app.geometry('200x100')
+        # app.geometry('200x30')
 
         label = ttk.Label(app,
                           text="Choose current project")
@@ -151,7 +152,13 @@ class FaInterp:
                 if line.startswith(k):
                     line = line.replace(k, v)
 
-            new_addresses = self.run_command(line, addresses)
+            new_addresses = []
+            try:
+                new_addresses = self.run_command(line, addresses)
+            except Exception:
+                FaInterp.log('failed to run: {}'.format(line))
+                traceback.print_exc()
+
             if decremental and len(new_addresses) == 0 and len(addresses) > 0:
                 return addresses
 
