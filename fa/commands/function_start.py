@@ -64,7 +64,9 @@ def get_parser():
 def function_start(addresses):
     for ea in addresses:
         if ea != idc.BADADDR:
-            yield idc.GetFunctionAttr(ea, idc.FUNCATTR_START)
+            func_start = idc.GetFunctionAttr(ea, idc.FUNCATTR_START)
+            if func_start != idc.BADADDR:
+                yield func_start
 
 
 def run(segments, args, addresses, **kwargs):

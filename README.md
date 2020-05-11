@@ -156,8 +156,14 @@ Available commands:
     * Goto all data references
 * `most-common`
     * Get the most common entry in the search results
-* `name-literal <>`
+* `name-literal`
     * Rename symbol to `<name>`  
+* `locate <name>`
+    * Locate symbol named `<name>`
+* `find-bytes-ida --or '<expression>'`
+    * Searches for the specified IDA expression (IDA's Find-Binary (`Alt+B`) syntax)
+    * For example:
+        * `find-bytes-ida --or '00 01 ?? 03 04'`
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 

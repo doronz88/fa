@@ -19,7 +19,7 @@ def run(segments, args, addresses, **kwargs):
     if len(results) > 0:
         return results
 
-    if 'until' in args:
+    if 'until' in args and args.until is not None:
         step = args.until
         while len(results) == 0:
             addresses = [ea + step for ea in addresses]

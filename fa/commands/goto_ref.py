@@ -11,13 +11,14 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
-
-    results = []
+@utils.yield_unique
+def goto_ref(addresses):
     for address in addresses:
         refs = list(idautils.CodeRefsFrom(address, 1))
         if len(refs) > 1:
-            results.append(refs[1])
+            yield refs[1]
 
-    return list(set(results))
+
+def run(segments, args, addresses, **kwargs):
+    utils.verify_ida()
+    return list(goto_ref(addresses))
