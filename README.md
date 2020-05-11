@@ -13,6 +13,10 @@ In your IDA's python directory, install:
 * capstone (`pip install capstone`)
 * click (`pip install click`)
 
+For Testing:
+* pytest
+* idalink
+
 ## How its used?
 
 Before using, one must understand the terminology for: 
