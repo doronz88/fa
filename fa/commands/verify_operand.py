@@ -19,7 +19,7 @@ def get_parser():
 def verify_operand(addresses, name, op0=None, op1=None, op2=None):
     for address in addresses:
         if idc.print_insn_mnem(address) == name:
-            if not (op0 and op1 and op2):
+            if not op0 and not op1 and not op2:
                 yield address
                 continue
 
@@ -42,9 +42,9 @@ def verify_operand(addresses, name, op0=None, op1=None, op2=None):
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-    op0 = args.op0.split(',') if args.op0 else None
-    op1 = args.op1.split(',') if args.op1 else None
-    op2 = args.op2.split(',') if args.op2 else None
+    op0 = [int(i) for i in args.op0.split(',')] if args.op0 else None
+    op1 = [int(i) for i in args.op1.split(',')] if args.op1 else None
+    op2 = [int(i) for i in args.op2.split(',')] if args.op2 else None
     return list(verify_operand(addresses,
                                args.name,
                                op0=op0,

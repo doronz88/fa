@@ -18,4 +18,4 @@ def locate(name):
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-    return locate(args.name)
+    return [locate(args.name)]
