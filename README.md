@@ -34,6 +34,15 @@ example won't be searched for Linux projects, which will result
 in a better directory organization layout, better performance and
 less rate for false-positives. 
 
+The signatures are located by default in the `signatures` directory.
+If one wishes to use a different location, you may create `config.ini`
+at FA's root with the following contents:
+
+```ini
+[global]
+signatures_root = /a/b/c
+```
+
 ### SIG format
 
 The SIG format is a core feature of FA regarding symbol searching.

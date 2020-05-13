@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
+from configparser import ConfigParser
 from collections import OrderedDict
-import traceback
 import shlex
 import json
 import sys
@@ -16,7 +16,9 @@ else:
 
 from fa.commands.function_start import get_function_start
 
-SIGNATURES_ROOT = os.path.join(
+CONFIG_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')
+DEFAULT_SIGNATURES_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'commands')
@@ -27,16 +29,25 @@ MULTILINE_PREFIX = '    '
 class FaInterp:
     __metaclass__ = ABCMeta
 
-    def __init__(self, signatures_root=SIGNATURES_ROOT):
-        self._signatures_root = signatures_root
+    def __init__(self, config_path=CONFIG_PATH):
         self._project = 'generic'
         self._input = None
         self._segments = OrderedDict()
         self._endianity = '<'
 
+        self._signatures_root = DEFAULT_SIGNATURES_ROOT
+
+        if (config_path is not None) and (os.path.exists(config_path)):
+            config = ConfigParser()
+            config.read_file(open(config_path))
+            self._signatures_root = os.path.expanduser(config.get('global', 'signatures_root'))
+
     @abstractmethod
     def set_input(self, input_):
         pass
+
+    def set_signatures_root(self, path):
+        self._signatures_root = path
 
     def set_project(self, project):
         self._project = project

@@ -347,6 +347,7 @@ def main(project_name, symbols_file=None):
     idaapi.add_hotkey('Ctrl-0', fa_instance.prompt_save_signature)
 
     if symbols_file is not None:
+        fa_instance.set_signatures_root('')
         fa_instance.symbols(symbols_file)
         idc.Exit(0)
 
