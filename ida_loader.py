@@ -264,7 +264,7 @@ class IdaLoader(fainterp.FaInterp):
 
         self.save_signature(sig)
 
-    def symbols(self, output_file=None):
+    def symbols(self, output_file_path=None):
         output = ''
         results = {}
         results.update(self.get_python_symbols())
@@ -291,9 +291,10 @@ class IdaLoader(fainterp.FaInterp):
         print(output)
         print(errors)
 
-        if output_file is not None:
-            output_file.write(output)
-            output_file.write(errors)
+        if output_file_path is not None:
+            with open(output_file_path, 'w') as output_file:
+                output_file.write(output)
+                output_file.write(errors)
 
     def set_input(self, input_):
         self._endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
@@ -309,11 +310,13 @@ class IdaLoader(fainterp.FaInterp):
                 self.log('Loaded segment 0x{:x}'.format(segment_ea))
                 self._segments[segment_ea] = buf
 
+
 fa_instance = None
+
 
 @click.command()
 @click.argument('project_name', default='test-project')
-@click.option('--symbols-file', default=None, type=click.File('wt'))
+@click.option('--symbols-file', default=None)
 def main(project_name, symbols_file=None):
     global fa_instance
 
