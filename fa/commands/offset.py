@@ -7,5 +7,10 @@ def get_parser():
     return p
 
 
+def offset(addresses, length):
+    for ea in addresses:
+        yield ea + length
+
+
 def run(segments, args, addresses, **kwargs):
-    return [ea + args.offset for ea in addresses]
+    return list(offset(addresses, args.offset))
