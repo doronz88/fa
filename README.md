@@ -136,6 +136,8 @@ Available commands:
     * Pops only a single result
 * `function-start`
     * Goto function's start
+* `function-end`
+    * Goto function's end
 * `sort`
     * Sorts the search results from lower to upper.
 * `print`
