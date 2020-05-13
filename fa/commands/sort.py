@@ -6,7 +6,7 @@ def get_parser():
     return p
 
 
-def run(segments, manners, addresses, args, **kwargs):
+def run(segments, args, addresses, **kwargs):
     addresses = list(addresses)
     addresses.sort()
     return addresses
