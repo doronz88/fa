@@ -8,12 +8,19 @@ except ImportError:
 
 def get_parser():
     p = utils.ArgumentParserNoExit()
+    p.add_argument('--code', action='store_true', default=False)
+    p.add_argument('--data', action='store_true', default=False)
     return p
 
 
-def goto_ref(addresses):
+def goto_ref(addresses, code=False, data=False):
     for address in addresses:
-        refs = list(idautils.CodeRefsFrom(address, 1))
+        refs = []
+        if code:
+            refs += list(idautils.CodeRefsFrom(address, 1))
+        if data:
+            refs += list(idautils.DataRefsFrom(address))
+
         if len(refs) == 0:
             continue
 
@@ -23,11 +30,11 @@ def goto_ref(addresses):
 
 
 @utils.yield_unique
-def goto_ref_unique(addresses):
-    for address in goto_ref(addresses):
+def goto_ref_unique(addresses, code=False, data=False):
+    for address in goto_ref(addresses, code=code, data=data):
         yield address
 
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-    return list(set(goto_ref(addresses)))
+    return list(set(goto_ref(addresses, code=args.code, data=args.data)))
