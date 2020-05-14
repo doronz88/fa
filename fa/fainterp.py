@@ -75,7 +75,8 @@ class FaInterp:
     def list_projects(self):
         projects = []
         for root, dirs, files in os.walk(self._signatures_root):
-            projects += [os.path.relpath(os.path.join(root, filename), self._signatures_root) for filename in dirs]
+            projects += [os.path.relpath(os.path.join(root, filename), self._signatures_root) for filename in dirs
+                         if not filename[0] == '.']
         return projects
 
     @staticmethod
@@ -215,7 +216,7 @@ class FaInterp:
             sig = json.load(f)
         return self.find_from_sig_json(sig, decremental)
 
-    def get_python_symbols(self, symbol_name=None):
+    def get_python_symbols(self):
         symbols = {}
         project_root = os.path.join(self._signatures_root, self._project)
 

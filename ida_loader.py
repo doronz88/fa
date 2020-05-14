@@ -264,8 +264,25 @@ class IdaLoader(fainterp.FaInterp):
 
         self.save_signature(sig)
 
-    def symbols(self, output_file_path=None):
+    @staticmethod
+    def extract_all_user_names(filename=None):
         output = ''
+
+        for ea, name in idautils.Names():
+            if '_' in name:
+                if name.split('_')[0] in ('def', 'sub', 'loc', 'jpt'):
+                    continue
+            flags = idc.GetFlags(ea)
+            if idc.hasUserName(flags):
+                output += '0x{:08x} {}\n'.format(ea, name)
+
+        print(output)
+
+        if filename is not None:
+            with open(filename, 'w') as f:
+                f.write(output)
+
+    def symbols(self, output_file_path=None):
         results = {}
         results.update(self.get_python_symbols())
         for sig in self.get_json_signatures():
@@ -280,21 +297,13 @@ class IdaLoader(fainterp.FaInterp):
         errors = ''
         for k, v in results.items():
             if isinstance(v, list) or isinstance(v, set):
-                if len(v) == 1:
-                    v = v.pop()
-                else:
+                if len(v) != 1:
                     errors += '# {} had too many results\n'.format(k)
                     continue
-            line = '0x{:08x} {}\n'.format(v, k)
-            output += line
 
-        print(output)
         print(errors)
 
-        if output_file_path is not None:
-            with open(output_file_path, 'w') as output_file:
-                output_file.write(output)
-                output_file.write(errors)
+        IdaLoader.extract_all_user_names(output_file_path)
 
     def set_input(self, input_):
         self._endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
