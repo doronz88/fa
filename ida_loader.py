@@ -274,7 +274,7 @@ class IdaLoader(fainterp.FaInterp):
                     continue
             flags = idc.GetFlags(ea)
             if idc.hasUserName(flags):
-                output += '0x{:08x} {}\n'.format(ea, name)
+                output += '{} = 0x{:08x};\n'.format(name, ea)
 
         print(output)
 
