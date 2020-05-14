@@ -148,6 +148,8 @@ class FaInterp:
         if addresses is None:
             addresses = []
 
+        history = []
+
         for line in instructions:
             line = line.strip()
 
@@ -156,6 +158,11 @@ class FaInterp:
 
             if line.startswith('#'):
                 # treat as comment
+                continue
+
+            if line.startswith('back '):
+                index = int(line.split()[-1])
+                addresses = history[index]
                 continue
 
             for k, v in self.get_alias().items():
@@ -173,6 +180,7 @@ class FaInterp:
                 return addresses
 
             addresses = new_addresses
+            history.append(addresses)
 
         return addresses
 

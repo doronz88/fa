@@ -173,6 +173,9 @@ Available commands:
     * Searches for the specified IDA expression (IDA's Find-Binary (`Alt+B`) syntax)
     * For example:
         * `find-bytes-ida --or '00 01 ?? 03 04'`
+* `back <index>`
+    * Allows to go back in history by an index amount to the previous search results.
+
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
