@@ -75,9 +75,8 @@ class FaInterp:
     def list_projects(self):
         projects = []
         for root, dirs, files in os.walk(self._signatures_root):
-            projects += [os.path.relpath(os.path.join(root, filename), self._signatures_root) for filename in dirs
-                         if not filename[0] == '.']
-        return projects
+            projects += [os.path.relpath(os.path.join(root, filename), self._signatures_root) for filename in dirs]
+        return [p for p in projects if p[0] != '.']
 
     @staticmethod
     def log(message):
