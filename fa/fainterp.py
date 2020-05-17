@@ -162,7 +162,7 @@ class FaInterp:
 
             if line.startswith('back '):
                 index = int(line.split()[-1])
-                addresses = history[index]
+                addresses = history[-index]
                 continue
 
             for k, v in self.get_alias().items():
