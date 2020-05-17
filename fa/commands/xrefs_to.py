@@ -37,7 +37,7 @@ def run(segments, args, addresses, **kwargs):
             froms = [function_start.get_function_start(segments, ea)
                      for ea in froms]
 
-        frm.update(froms)
+        frm.update(frm for frm in froms if frm != idc.BADADDR)
 
     retval = set()
     retval.update(addresses)
@@ -46,8 +46,6 @@ def run(segments, args, addresses, **kwargs):
         retval.update(frm)
 
     elif getattr(args, 'and'):
-        addresses_functions = set([idc.GetFunctionAttr(ea, idc.FUNCATTR_START)
-                                   for ea in addresses])
-        retval.intersection_update(addresses_functions)
+        retval.intersection_update(frm)
 
     return list(retval)
