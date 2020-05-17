@@ -159,7 +159,7 @@ Available commands:
     * Set symbol type to `<type_str>`
 * `goto-ref [--code] [--data]`
     * Goto code and/or data references 
-* `verify-operand <operand_name> [--op0] [--op1] [--op2]`
+* `verify-operand <mnemonic> [--op0 op0] [--op1 op1] [--op2 op2]`
     * Verifies the opcode operands
     * For example:
         * `verify-operand addi --op0 '3,4'`
