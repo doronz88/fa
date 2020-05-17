@@ -153,8 +153,10 @@ Available commands:
     * Prints the results so far
 * `trace`
     * Starts a pdb trace
-* `name <name>`
+* `set-name <name>`
     * Rename symbol to `<name>`
+* `set-type <type_str>`
+    * Set symbol type to `<type_str>`
 * `goto-ref [--code] [--data]`
     * Goto code and/or data references 
 * `verify-operand <operand_name> [--op0] [--op1] [--op2]`
@@ -175,7 +177,8 @@ Available commands:
         * `find-bytes-ida --or '00 01 ?? 03 04'`
 * `back <index>`
     * Allows to go back in history by an index amount to the previous search results.
-
+* `verify-name <name>`
+    * Verify symbol the named `<name>` appears in search results
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 
@@ -185,9 +188,9 @@ For example, you can test the following:
 
 ```
 find-bytes --or '11 22 33 44'
-add 20
+offset 20
 verify-bytes 'aa bb cc dd'
-add -20
+offset -20
 ```
 
 This will locate all places of `11 22 33 44`, whereas at offset `20`
