@@ -179,6 +179,8 @@ Available commands:
     * Allows to go back in history by an index amount to the previous search results.
 * `verify-name <name>`
     * Verify symbol the named `<name>` appears in search results
+* `verify-ref <name> [--code] [--data]`
+    * Verify symbol is referenced by `<name>`
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 

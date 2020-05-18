@@ -18,4 +18,5 @@ def locate(name):
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-    return [locate(args.name)]
+    address = locate(args.name)
+    return [address] if address != idc.BADADDR else []
