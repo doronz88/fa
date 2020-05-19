@@ -25,8 +25,10 @@ def open_file(filename):
         except Exception as error_code:
             if error_code[0] == 1155:
                 os.spawnl(os.P_NOWAIT,
-                          os.path.join(os.environ['WINDIR'], 'system32', 'Rundll32.exe'),
-                          'Rundll32.exe SHELL32.DLL, OpenAs_RunDLL {}'.format(filename))
+                          os.path.join(os.environ['WINDIR'],
+                                       'system32', 'Rundll32.exe'),
+                          'Rundll32.exe SHELL32.DLL, OpenAs_RunDLL {}'
+                          .format(filename))
             else:
                 print("other error")
     else:
@@ -251,8 +253,10 @@ class IdaLoader(fainterp.FaInterp):
 
         if len(results) == 1:
             # if remote sig has a proper name, but current one is not
-            if not sig['name'].startswith('sub_') and idc.GetFunctionName(results[0]).startswith('sub_'):
-                if idc.AskYN(1, 'Only one result has been found. Rename?') == 1:
+            if not sig['name'].startswith('sub_') and \
+                    idc.GetFunctionName(results[0]).startswith('sub_'):
+                if idc.AskYN(1, 'Only one result has been found. '
+                                'Rename?') == 1:
                     idc.MakeName(results[0], str(sig['name']))
 
     def prompt_save_signature(self):
@@ -332,13 +336,13 @@ def main(project_name, symbols_file=None):
     IdaLoader.log('''
     ---------------------------------
     FA Loaded successfully
-    
+
     Quick usage:
     fa_instance.set_project(project_name) # select project name
     print(fa_instance.list_projects()) # prints available projects
     print(fa_instance.find(symbol_name)) # searches for the specific symbol
     fa_instance.symbols() # searches for the symbols in the current project
-    
+
     HotKeys:
     Ctrl-6: Set current project
     Ctrl-7: Search project symbols

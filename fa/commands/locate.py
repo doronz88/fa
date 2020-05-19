@@ -7,7 +7,8 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('locate', description='goto label by name')
+    p = utils.ArgumentParserNoExit('locate',
+                                   description='goto label by name')
     p.add_argument('name')
     return p
 

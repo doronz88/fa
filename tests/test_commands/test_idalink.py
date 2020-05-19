@@ -28,7 +28,8 @@ class ImportInterceptor(object):
 
 
 if not hasattr(sys, 'frozen'):
-    sys.meta_path = [ImportInterceptor({'textwrap': True, 'Pathlib': False})] + sys.meta_path
+    sys.meta_path = [ImportInterceptor({'textwrap': True,
+                                        'Pathlib': False})] + sys.meta_path
 
 
 ida_namespace = None

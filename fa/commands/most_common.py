@@ -1,10 +1,10 @@
-import idautils
-
 from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('most-common', description='get the result apearing the most in the result-set')
+    p = utils.ArgumentParserNoExit('most-common',
+                                   description='get the result appearing the '
+                                               'most in the result-set')
     return p
 
 

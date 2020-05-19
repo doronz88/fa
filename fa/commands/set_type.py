@@ -7,7 +7,9 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('set-type', description='sets the type in the disassembler')
+    p = utils.ArgumentParserNoExit('set-type',
+                                   description='sets the type in '
+                                               'the disassembler')
     p.add_argument('type_str')
     return p
 

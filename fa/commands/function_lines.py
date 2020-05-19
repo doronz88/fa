@@ -7,7 +7,8 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('function-lines', description='get all function lines')
+    p = utils.ArgumentParserNoExit('function-lines',
+                                   description='get all function lines')
     return p
 
 

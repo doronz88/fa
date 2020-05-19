@@ -4,8 +4,10 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('find-bytes-ida', description='expands the search results by an '
-                                                                 'ida-bytes expression (Alt+B)')
+    p = utils.ArgumentParserNoExit('find-bytes-ida',
+                                   description='expands the search results '
+                                               'by an ida-bytes expression '
+                                               '(Alt+B)')
     p.add_argument('--or', action='store_true')
     p.add_argument('expression')
     return p

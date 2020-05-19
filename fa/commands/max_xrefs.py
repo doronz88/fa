@@ -7,14 +7,18 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('max-xrefs', description='get the result with most xrefs pointing at it')
+    p = utils.ArgumentParserNoExit('max-xrefs',
+                                   description='get the result with'
+                                               'most xrefs pointing '
+                                               'at it')
     return p
 
 
 def max_xrefs(addresses):
     xrefs = []
     for address in addresses:
-        xrefs.append((address, len([ref.frm for ref in idautils.XrefsTo(address)])))
+        xrefs.append((address, len([ref.frm for ref in
+                                    idautils.XrefsTo(address)])))
 
     if len(xrefs) > 0:
         address, _ = max(xrefs, key=lambda x: x[1])

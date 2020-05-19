@@ -1,14 +1,11 @@
 from fa.commands import utils
 from fa.commands.locate import locate
 
-try:
-    import idc
-except ImportError:
-    pass
-
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('verify-name', description='verifies the given name appears in result set')
+    p = utils.ArgumentParserNoExit('verify-name',
+                                   description='verifies the given name '
+                                               'appears in result set')
     p.add_argument('name')
     return p
 

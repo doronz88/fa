@@ -2,7 +2,8 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('offset', description='advance by a given offset')
+    p = utils.ArgumentParserNoExit('offset',
+                                   description='advance by a given offset')
     p.add_argument('offset', type=int)
     return p
 

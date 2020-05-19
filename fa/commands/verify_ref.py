@@ -9,9 +9,13 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('verify-ref', description='verifies a given reference exists to current result set')
-    p.add_argument('--code', action='store_true', default=False, help='include code references')
-    p.add_argument('--data', action='store_true', default=False, help='include data references')
+    p = utils.ArgumentParserNoExit('verify-ref',
+                                   description='verifies a given reference '
+                                               'exists to current result set')
+    p.add_argument('--code', action='store_true',
+                   default=False, help='include code references')
+    p.add_argument('--data', action='store_true',
+                   default=False, help='include data references')
     p.add_argument('name')
     return p
 
@@ -46,4 +50,5 @@ def verify_ref_unique(addresses, name, code=False, data=False):
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-    return list(set(verify_ref(addresses, args.name, code=args.code, data=args.data)))
+    return list(set(verify_ref(addresses, args.name,
+                               code=args.code, data=args.data)))

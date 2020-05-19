@@ -56,7 +56,8 @@ def get_function_start(segments, ea):
 
 
 def get_parser():
-    p = argparse.ArgumentParser('function-start', description='goto function prolog')
+    p = argparse.ArgumentParser('function-start',
+                                description='goto function prolog')
     p.add_argument('--not-unique', action='store_true')
     return p
 

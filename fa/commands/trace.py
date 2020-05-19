@@ -4,7 +4,8 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('trace', description='sets a pdb breakpoint')
+    p = utils.ArgumentParserNoExit('trace',
+                                   description='sets a pdb breakpoint')
     return p
 
 

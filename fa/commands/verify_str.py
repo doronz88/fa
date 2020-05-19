@@ -8,10 +8,14 @@ def get_parser():
     p.add_argument('--null-terminated', action='store_true')
 
     p.prog = 'verify-str'
-    p.description = 'reduces the search list to those matching the given string'
+    p.description = 'reduces the search list to those ' \
+                    'matching the given string'
     return p
 
 
 def run(segments, args, addresses, **kwargs):
-    setattr(args, 'hex_str', binascii.hexlify(args.hex_str) + '00' if args.null_terminated else '')
+    hex_str = binascii.hexlify(args.hex_str)
+    hex_str += '00' if args.null_terminated else ''
+
+    setattr(args, 'hex_str', hex_str)
     return verify_bytes.run(segments, args, addresses, **kwargs)

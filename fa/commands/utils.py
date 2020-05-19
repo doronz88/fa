@@ -128,9 +128,11 @@ class FaStruct(object):
         sid = idc.AddStrucEx(-1, self._name, 0)
 
         for f in self._fields:
-            idc.AddStrucMember(sid, f.name, -1, (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF, -1, 1)
+            idc.AddStrucMember(sid, f.name, -1,
+                               (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF, -1, 1)
             member_name = "{}.{}".format(self._name, f.name)
-            idc.SetType(idaapi.get_member_by_fullname(member_name)[0].id, f.type)
+            idc.SetType(idaapi.get_member_by_fullname(member_name)[0].id,
+                        f.type)
 
         idc.Wait()
 

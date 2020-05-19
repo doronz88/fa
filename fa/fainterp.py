@@ -1,5 +1,9 @@
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
+
 from abc import ABCMeta, abstractmethod
-from configparser import ConfigParser
 from collections import OrderedDict
 import shlex
 import json
@@ -8,10 +12,10 @@ import os
 
 if sys.version_info[0] == 3:
     # for Python3
-    from tkinter import *   ## notice lowercase 't' in tkinter here
+    from tkinter import *   # notice lowercase 't' in tkinter here
 else:
     # for Python2
-    from Tkinter import *   ## notice capitalized T in Tkinter
+    from Tkinter import *   # notice capitalized T in Tkinter
     import ttk
 
 from fa.commands.function_start import get_function_start
@@ -40,7 +44,8 @@ class FaInterp:
         if (config_path is not None) and (os.path.exists(config_path)):
             config = ConfigParser()
             config.read_file(open(config_path))
-            self._signatures_root = os.path.expanduser(config.get('global', 'signatures_root'))
+            self._signatures_root = os.path.expanduser(
+                config.get('global', 'signatures_root'))
 
     @abstractmethod
     def set_input(self, input_):
@@ -75,7 +80,9 @@ class FaInterp:
     def list_projects(self):
         projects = []
         for root, dirs, files in os.walk(self._signatures_root):
-            projects += [os.path.relpath(os.path.join(root, filename), self._signatures_root) for filename in dirs]
+            projects += \
+                [os.path.relpath(os.path.join(root, filename),
+                                 self._signatures_root) for filename in dirs]
         return [p for p in projects if p[0] != '.']
 
     @staticmethod
@@ -134,7 +141,10 @@ class FaInterp:
         return retval
 
     def save_signature(self, signature):
-        filename = os.path.join(self._signatures_root, self._project, signature['name'] + '.sig')
+        filename = os.path.join(
+            self._signatures_root,
+            self._project,
+            signature['name'] + '.sig')
         i = 1
         while os.path.exists(filename):
             filename = os.path.join(self._signatures_root, self._project,
@@ -144,7 +154,8 @@ class FaInterp:
         with open(filename, 'w') as f:
             json.dump(signature, f, indent=4)
 
-    def find_from_instructions_list(self, instructions, decremental=False, addresses=None):
+    def find_from_instructions_list(self, instructions,
+                                    decremental=False, addresses=None):
         if addresses is None:
             addresses = []
 
@@ -174,7 +185,8 @@ class FaInterp:
             try:
                 new_addresses = self.run_command(line, addresses)
             except ImportError as m:
-                FaInterp.log('failed to run: {}. error: {}'.format(line, str(m)))
+                FaInterp.log('failed to run: {}. error: {}'
+                             .format(line, str(m)))
 
             if decremental and len(new_addresses) == 0 and len(addresses) > 0:
                 return addresses
@@ -198,13 +210,15 @@ class FaInterp:
             for signature in signature_json['signatures']:
                 if signature_json['type'] == 'bundle':
                     result = None
-                result = self.find_from_instructions_list(signature['instructions'],
-                                                          decremental,
-                                                          addresses=result)
+                result = self.find_from_instructions_list(
+                    signature['instructions'],
+                    decremental,
+                    addresses=result)
                 results[signature['name']] = result
             return results
         else:
-            return self.find_from_instructions_list(signature_json['instructions'], decremental)
+            return self.find_from_instructions_list(
+                signature_json['instructions'], decremental)
 
     def find_from_sig_path(self, signature_path, decremental=False):
         """
@@ -214,7 +228,8 @@ class FaInterp:
         :return: Addresses of matching signatures.
         :rtype: dict if bundle or chain, list otherwise
         """
-        local_path = os.path.join(self._signatures_root, self._project, signature_path)
+        local_path = os.path.join(
+            self._signatures_root, self._project, signature_path)
         if os.path.exists(local_path):
             # prefer local signatures, then external
             signature_path = local_path
