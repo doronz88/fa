@@ -90,7 +90,8 @@ optional arguments:
 ```
 usage: aligned [-h] value
 
-reduces the list to only those align to a specific value
+reduces the
+ list to only those align to a specific value
 
 positional arguments:
   value
@@ -458,12 +459,18 @@ optional arguments:
 
 #### Finding a global struct
 
-```
-find-bytes --or '11 22 33 44'
-offset 20
-verify-bytes 'aa bb cc dd'
-offset -20
-name g_awsome_global
+```json
+{
+    "type": "global",
+	"name": "g_awsome_global",
+	"instructions": [
+            "find-bytes --or '11 22 33 44'",
+            "offset 20",
+            "verify-bytes 'aa bb cc dd'",
+            "offset -20",
+            "set-name g_awsome_global"
+	]
+}
 ```
 
 This will locate all places of `11 22 33 44`, whereas at offset `20`
@@ -474,13 +481,18 @@ then we can name it.
 
 #### Find function by reference to string
 
-
-```
-find-str --or 'free' --null-terminated
-xref
-function-start
-max-xrefs
-set-type 'void free(void *block)'
+```json
+{
+    "type": "global",
+	"name": "g_awsome_global",
+	"instructions": [
+            "find-str --or 'free' --null-terminated",
+            "xref",
+            "function-start",
+            "max-xrefs",
+            "set-type 'void free(void *block)'"
+	]
+}
 ```
 
 This will search for the string `free`, then goto to its xref, then to the 
