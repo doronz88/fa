@@ -483,8 +483,8 @@ then we can name it.
 
 ```json
 {
-    "type": "global",
-	"name": "g_awsome_global",
+    "type": "function",
+	"name": "free",
 	"instructions": [
             "find-str --or 'free' --null-terminated",
             "xref",
