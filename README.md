@@ -8,6 +8,8 @@ other functionality with ease.
 
 ## Requirements
 
+Supported IDA 7.x.
+
 In your IDA's python directory, install:
 * [keystone](http://www.keystone-engine.org/download/)
 * capstone (`pip install capstone`)
