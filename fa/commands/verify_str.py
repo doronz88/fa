@@ -4,7 +4,12 @@ from fa.commands import verify_bytes
 
 
 def get_parser():
-    return verify_bytes.get_parser()
+    p = verify_bytes.get_parser()
+    p.add_argument('--null-terminated', action='store_true')
+
+    p.prog = 'verify-str'
+    p.description = 'reduces the search list to those matching the given string'
+    return p
 
 
 def run(segments, args, addresses, **kwargs):

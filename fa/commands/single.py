@@ -2,7 +2,7 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('single', description='reduces the result list into a singleton')
     return p
 
 

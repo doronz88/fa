@@ -1,19 +1,23 @@
-# flake8: noqa
+try:
+    # flake8: noqa
+    from keystone import *
+except ImportError:
+    print('keystone-engine module not installed')
+
 
 import binascii
-
-from keystone import *
 
 from fa.commands import verify_bytes, utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
-    p.add_argument('--bele', action='store_true')
-    p.add_argument('--until', type=int)
-    p.add_argument('arch')
-    p.add_argument('mode')
-    p.add_argument('code')
+    p = utils.ArgumentParserNoExit('keystone-verify-opcodes', description='use keystone engine to verify the given '
+                                                                          'results match the supplied code')
+    p.add_argument('--bele', action='store_true', help='figure out the endianity from IDA instead of explicit mode')
+    p.add_argument('--until', type=int, help='keep going onwards opcode-opcode until verified')
+    p.add_argument('arch', help='keystone architecture const (evaled)')
+    p.add_argument('mode', help='keystone mode const (evald)')
+    p.add_argument('code', help='keystone architecture const (opcodes to compile)')
     return p
 
 

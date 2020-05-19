@@ -4,7 +4,8 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('find-bytes-ida', description='expands the search results by an '
+                                                                 'ida-bytes expression (Alt+B)')
     p.add_argument('--or', action='store_true')
     p.add_argument('expression')
     return p
@@ -22,8 +23,6 @@ def run(segments, args, addresses, **kwargs):
     retval = set(addresses)
     if getattr(args, 'or'):
         retval.update(results)
-    elif getattr(args, 'and'):
-        raise ValueError("not supported")
     else:
         raise ValueError("must specify or manner")
 

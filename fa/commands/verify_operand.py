@@ -7,7 +7,7 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('verify-operand', description='verifies the ven opcode\'s operands')
     p.add_argument('name')
     p.add_argument('--op0')
     p.add_argument('--op1')

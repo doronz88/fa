@@ -7,7 +7,7 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('set-name', description='set name in disassembler')
     p.add_argument('name')
     return p
 

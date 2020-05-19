@@ -7,8 +7,7 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
-    p.add_argument('--null-terminated', action='store_true')
+    p = utils.ArgumentParserNoExit('max-xrefs', description='get the result with most xrefs pointing at it')
     return p
 
 

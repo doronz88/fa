@@ -5,9 +5,8 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('find-bytes', description='expands the search results by the given bytes set')
     p.add_argument('--or', action='store_true')
-    p.add_argument('--and', action='store_true')
     p.add_argument('hex_str')
     return p
 
@@ -24,8 +23,6 @@ def run(segments, args, addresses, **kwargs):
     retval = set(addresses)
     if getattr(args, 'or'):
         retval.update(results)
-    elif getattr(args, 'and'):
-        raise ValueError("Use 'verify-bytes' instead of 'find-bytes --and!")
     else:
         raise ValueError("must specify or manner")
 

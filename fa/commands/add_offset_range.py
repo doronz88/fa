@@ -2,7 +2,8 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('add-offset-range', description='adds a python-range of offsets, '
+                                                                   'to the current search results')
     p.add_argument('start', type=int)
     p.add_argument('end', type=int)
     p.add_argument('step', type=int)

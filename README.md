@@ -69,120 +69,423 @@ SIG syntax (single):
 }
 ```
  
-Available commands:
+### Available commands
 
-* `find-bytes --or '<bytes>'`
-    * Searches for the specified bytes given as an hex string.
-    * For example: 
-        * `find-bytes --or '00 01 02 03'`
-* `find-str`
-    * Searches for the specified string.
-    * For example: 
-        * `find-str --or 'cyber cyber bitim bitim'`
-* `keystone-find-opcodes --or [--bele] <arch> <mode> '<opcodes>'`
-    * Searches for opcodes using keystone engine.
-    * `bele` flags used to indicate the mode is extracted 
-    implicit.
-    * For example: 
-        * `keystone-find-opcodes --or KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 'addi %r1, %r1, 4; addi %r1, %r1, 8;'`
-* `keystone-verify-opcodes [--bele] <arch> <mode> '<opcodes>'`
-    * Reduces the search results to only those matching 
-    PPC32 opcodes, seperated by `;`.
-    * `bele` flags used to indicate the mode is extracted 
-    implicit.
-    * For example: 
-        * `keystone-verify-opcodes [--bele] KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32 'addi %r1, %r1, 4; addi %r1, %r1, 8;'`    
-* `offset <offset>`
-    * Adds a constant offset to the search results.
-    * For example: `offset 8`, `offset -8`, `offset 0x10`,...
-* `add-offset-range <start> <end> <skip>`
-    * Adds a range of offsets to the search.
-    * For example: 
-        * `add-offset-range 0 10 2` will add all offsets in range: `(0, 10, 2)`
-* `verify-bytes [--until step] '<bytes>'`
-    * Verifies the search results up until now match a const 
-    expression given as hex string.
-    * For example: 
-        * `verify-bytes '11 22 33 44'`
-* `verify-str [--until step] '<bytes>'`
-    * Verifies the search results up until now match a const 
-    string.
-    * For example: 
-        * `verify-str '11 22 33 44'`
-* `xref`
-    * Returns a list of all references into current result
-* `max-xref`
-    * Returns a singleton of the result with max xref count
-* `xrefs-to [--and/or] [--until step] <--bytes bytes/--name name>`
-    * Searches for function references to given expression.
-     Equivalent to IDA's `Alt+B`.
-    * For example: 
-        `xrefs-to --or --bytes '"11 22" 00'`
-* `unique`
-    * Verifies the number of search results == 1.
-* `aligned <immediate>`
-    * Verifies the results align a specific value.
-    * For example: 
-        * `aligned 4`
-* `single`
-    * Pops only a single result
-* `function-start`
-    * Goto function's start
-* `function-end`
-    * Goto function's end
-* `sort`
-    * Sorts the search results from lower to upper.
-* `print`
-    * Prints the results so far
-* `trace`
-    * Starts a pdb trace
-* `set-name <name>`
-    * Rename symbol to `<name>`
-* `set-type <type_str>`
-    * Set symbol type to `<type_str>`
-* `goto-ref [--code] [--data]`
-    * Goto code and/or data references 
-* `verify-operand <mnemonic> [--op0 op0] [--op1 op1] [--op2 op2]`
-    * Verifies the opcode operands
-    * For example:
-        * `verify-operand addi --op0 '3,4'`
-        * Checks that the opcode is `addi` and that the first register in the operand
-        is either `r3` or `r4`.
-* `most-common`
-    * Get the most common entry in the search results
-* `name-literal`
-    * Rename symbol to `<name>`  
-* `locate <name>`
-    * Locate symbol named `<name>`
-* `find-bytes-ida --or '<expression>'`
-    * Searches for the specified IDA expression (IDA's Find-Binary (`Alt+B`) syntax)
-    * For example:
-        * `find-bytes-ida --or '00 01 ?? 03 04'`
-* `back <index>`
-    * Allows to go back in history by an index amount to the previous search results.
-* `verify-name <name>`
-    * Verify symbol the named `<name>` appears in search results
-* `verify-ref <name> [--code] [--data]`
-    * Verify symbol is referenced by `<name>`
-* `function-lines`
-    * Get all function lines
+#### add-offset-range
+```
+usage: add-offset-range [-h] start end step
 
-You might be wondering for what reason is the `add` and/or `verify` 
-commands. Their purpose is to remove false-positives and verify 
-a given result. 
+adds a python-range of offsets, to the current search results
 
-For example, you can test the following:
+positional arguments:
+  start
+  end
+  step
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### aligned
+```
+usage: aligned [-h] value
+
+reduces the list to only those align to a specific value
+
+positional arguments:
+  value
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### find-bytes
+```
+usage: find-bytes [-h] [--or] hex_str
+
+expands the search results by the given bytes set
+
+positional arguments:
+  hex_str
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --or
+```
+
+#### find-bytes-ida
+```
+usage: find-bytes-ida [-h] [--or] expression
+
+expands the search results by an ida-bytes expression (Alt+B)
+
+positional arguments:
+  expression
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --or
+```
+
+#### find-str
+```
+usage: find-str [-h] [--or] [--null-terminated] hex_str
+
+expands the search results by the given string
+
+positional arguments:
+  hex_str
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --or
+  --null-terminated
+```
+
+#### function-end
+```
+usage: function-end [-h] [--not-unique]
+
+goto function end
+
+optional arguments:
+  -h, --help    show this help message and exit
+  --not-unique
+```
+
+#### function-lines
+```
+usage: function-lines [-h]
+
+get all function lines
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### function-start
+```
+usage: function-start [-h] [--not-unique]
+
+goto function prolog
+
+optional arguments:
+  -h, --help    show this help message and exit
+  --not-unique
+```
+
+#### goto-ref
+```
+usage: goto-ref [-h] [--code] [--data]
+
+goto reference
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --code      include code references
+  --data      include data references
+```
+
+keystone-engine module not installed
+#### keystone-find-opcodes
+```
+usage: keystone-find-opcodes [-h] [--bele] [--or] arch mode code
+
+use keystone to search for the suppliedopcodes
+
+positional arguments:
+  arch        keystone architecture const (evaled)
+  mode        keystone mode const (evald)
+  code        keystone architecture const (opcodes to compile)
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --bele      figure out the endianity from IDA instead of explicit mode
+  --or        mandatory. expands search results
+```
+
+keystone-engine module not installed
+#### keystone-verify-opcodes
+```
+usage: keystone-verify-opcodes [-h] [--bele] [--until UNTIL] arch mode code
+
+use keystone engine to verify the given results match the supplied code
+
+positional arguments:
+  arch           keystone architecture const (evaled)
+  mode           keystone mode const (evald)
+  code           keystone architecture const (opcodes to compile)
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --bele         figure out the endianity from IDA instead of explicit mode
+  --until UNTIL  keep going onwards opcode-opcode until verified
+```
+
+#### locate
+```
+usage: locate [-h] name
+
+goto label by name
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### max-xrefs
+```
+usage: max-xrefs [-h]
+
+get the result with most xrefs pointing at it
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### most-common
+```
+usage: most-common [-h]
+
+get the result apearing the most in the result-set
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### name-literal
+```
+usage: name-literal [-h]
+
+convert into a literal
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### offset
+```
+usage: offset [-h] offset
+
+advance by a given offset
+
+positional arguments:
+  offset
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### print
+```
+usage: print [-h]
+
+prints the current search results
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### set-name
+```
+usage: set-name [-h] name
+
+set name in disassembler
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### set-type
+```
+usage: set-type [-h] type_str
+
+sets the type in the disassembler
+
+positional arguments:
+  type_str
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### single
+```
+usage: single [-h]
+
+reduces the result list into a singleton
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### sort
+```
+usage: sort [-h]
+
+performs a python-sort on the current result list
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### trace
+```
+usage: trace [-h]
+
+sets a pdb breakpoint
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### unique
+```
+usage: unique [-h]
+
+verifies the result-list contains a single value
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### verify-bytes
+```
+usage: verify-bytes [-h] [--until UNTIL] hex_str
+
+reduces the search list to those matching the givenbytes
+
+positional arguments:
+  hex_str
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --until UNTIL  keep advancing by a given size until a match
+```
+
+#### verify-name
+```
+usage: verify-name [-h] name
+
+verifies the given name appears in result set
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### verify-operand
+```
+usage: verify-operand [-h] [--op0 OP0] [--op1 OP1] [--op2 OP2] name
+
+verifies the ven opcode's operands
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --op0 OP0
+  --op1 OP1
+  --op2 OP2
+```
+
+#### verify-ref
+```
+usage: verify-ref [-h] [--code] [--data] name
+
+verifies a given reference exists to current result set
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --code      include code references
+  --data      include data references
+```
+
+#### verify-str
+```
+usage: verify-str [-h] [--until UNTIL] [--null-terminated] hex_str
+
+reduces the search list to those matching the given string
+
+positional arguments:
+  hex_str
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --until UNTIL      keep advancing by a given size until a match
+  --null-terminated
+```
+
+#### xref
+```
+usage: xref [-h]
+
+goto xrefs pointing at current search results
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### xrefs-to
+```
+usage: xrefs-to [-h] [--function-start] [--or] [--and] [--name NAME]
+                [--bytes BYTES]
+
+search for xrefs pointing at given parameter
+
+optional arguments:
+  -h, --help        show this help message and exit
+  --function-start  goto function prolog for each xref
+  --or              expand the current result set
+  --and             reduce the current result set
+  --name NAME       parameter as label name
+  --bytes BYTES     parameter as bytesv
+```
+
+
+### Examples
+
+#### Finding a global struct
 
 ```
 find-bytes --or '11 22 33 44'
 offset 20
 verify-bytes 'aa bb cc dd'
 offset -20
+name g_awsome_global
 ```
 
 This will locate all places of `11 22 33 44`, whereas at offset `20`
 from them, there exists `aa bb cc dd`. Finally, the cursor will point
-back to `11 22 33 44` by reducing the `-20` from the search cursor. 
+back to `11 22 33 44` by reducing the `-20` from the search cursor - 
+then we can name it. 
+
+
+#### Find function by reference to string
+
+
+```
+find-str --or 'free' --null-terminated
+xref
+function-start
+max-xrefs
+set-type 'void free(void *block)'
+```
+
+This will search for the string `free`, then goto to its xref, then to the 
+function-prolog, then reduce the search results to the one with the most references 
+to it. Finally, it will set its signature.
 
 
 ### Aliases

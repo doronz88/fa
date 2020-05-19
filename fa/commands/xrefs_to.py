@@ -11,12 +11,12 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit(prog='xrefs-to')
-    p.add_argument('--function-start', action='store_true')
-    p.add_argument('--or', action='store_true')
-    p.add_argument('--and', action='store_true')
-    p.add_argument('--name')
-    p.add_argument('--bytes')
+    p = utils.ArgumentParserNoExit(prog='xrefs-to', description='search for xrefs pointing at given parameter')
+    p.add_argument('--function-start', action='store_true', help='goto function prolog for each xref')
+    p.add_argument('--or', action='store_true', help='expand the current result set')
+    p.add_argument('--and', action='store_true', help='reduce the current result set')
+    p.add_argument('--name', help='parameter as label name')
+    p.add_argument('--bytes', help='parameter as bytesv')
     return p
 
 

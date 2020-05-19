@@ -5,6 +5,8 @@ from fa.commands import find_bytes
 
 def get_parser():
     p = find_bytes.get_parser()
+    p.prog = 'find-str'
+    p.description = 'expands the search results by the given string'
     p.add_argument('--null-terminated', action='store_true')
     return p
 

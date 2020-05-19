@@ -7,9 +7,9 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
-    p.add_argument('--code', action='store_true', default=False)
-    p.add_argument('--data', action='store_true', default=False)
+    p = utils.ArgumentParserNoExit('goto-ref', description='goto reference')
+    p.add_argument('--code', action='store_true', default=False, help='include code references')
+    p.add_argument('--data', action='store_true', default=False, help='include data references')
     return p
 
 

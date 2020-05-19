@@ -7,7 +7,7 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('xref', description='goto xrefs pointing at current search results')
     return p
 
 

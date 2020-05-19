@@ -4,8 +4,9 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
-    p.add_argument('--until', type=int)
+    p = utils.ArgumentParserNoExit('verify-bytes', description='reduces the search list to those matching the given'
+                                                               'bytes')
+    p.add_argument('--until', type=int, help='keep advancing by a given size until a match')
     p.add_argument('hex_str')
     return p
 

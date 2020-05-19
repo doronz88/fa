@@ -8,7 +8,7 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('verify-name', description='verifies the given name appears in result set')
     p.add_argument('name')
     return p
 

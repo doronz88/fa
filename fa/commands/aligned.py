@@ -2,7 +2,8 @@ from fa.commands import utils
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('aligned', description='reduces the list to only those align to '
+                                                          'a specific value')
     p.add_argument('value', type=int)
     return p
 

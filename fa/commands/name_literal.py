@@ -7,7 +7,7 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit()
+    p = utils.ArgumentParserNoExit('name-literal', description='convert into a literal')
     return p
 
 
