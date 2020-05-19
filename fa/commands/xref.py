@@ -1,6 +1,9 @@
-import idautils
-
 from fa.commands import utils
+
+try:
+    import idautils
+except ImportError:
+    pass
 
 
 def get_parser():
@@ -16,4 +19,5 @@ def xref(addresses):
 
 
 def run(segments, args, addresses, **kwargs):
+    utils.verify_ida()
     return list(xref(addresses))

@@ -33,8 +33,8 @@ def verify_ref(addresses, name, code=False, data=False):
             continue
 
         for ref in refs:
-            if address + 4 != ref:
-                yield ref
+            if address + 4 != ref and symbol == ref:
+                yield address
                 break
 
 

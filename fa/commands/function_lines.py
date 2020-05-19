@@ -12,7 +12,7 @@ def get_parser():
 
 
 @utils.yield_unique
-def function_opcodes(addresses):
+def function_lines(addresses):
     for address in addresses:
         for item in idautils.FuncItems(address):
             yield item
@@ -20,4 +20,4 @@ def function_opcodes(addresses):
 
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
-    return list(function_opcodes(addresses))
+    return list(function_lines(addresses))

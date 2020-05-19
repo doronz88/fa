@@ -223,7 +223,7 @@ class FaInterp:
             sig = json.load(f)
         return self.find_from_sig_json(sig, decremental)
 
-    def get_python_symbols(self):
+    def get_python_symbols(self, file_name=None):
         symbols = {}
         project_root = os.path.join(self._signatures_root, self._project)
 
@@ -232,10 +232,11 @@ class FaInterp:
                 if not filename.lower().endswith('.py'):
                     continue
 
-                name = os.path.splitext(filename)[0]
-                filename = os.path.join(project_root, filename)
-                m = FaInterp.get_module(name, filename)
-                symbols.update(m.run())
+                if not file_name or file_name == filename:
+                    name = os.path.splitext(filename)[0]
+                    filename = os.path.join(project_root, filename)
+                    m = FaInterp.get_module(name, filename)
+                    symbols.update(m.run())
 
         return symbols
 

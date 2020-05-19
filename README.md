@@ -20,7 +20,7 @@ For Testing:
 ## How its used?
 
 Before using, one must understand the terminology for: 
-Projects, SIG files and loaders. 
+Projects, SIG files and Loaders. 
 
 ### Projects
 
@@ -47,9 +47,9 @@ signatures_root = /a/b/c
 
 The SIG format is a core feature of FA regarding symbol searching.
 
-The format is JSON based and used to describe the algorithms used for 
+The format is JSON based and is used to describe the algorithms for 
 different symbols.
-The algorithms is preformed are very linear, performed line by line, 
+The algorithms are preformed *very linearly*, line by line, 
 whereas each line can either extend or reduce the possible search
 results.
 
@@ -68,23 +68,6 @@ SIG syntax (single):
     ]
 }
 ```
-SIG syntax (bundle):
-```json
-{
-    "type": "bundle",
-    "signatures": [
-        {
-            "type": "<function/global/number>",
-            "name": "name1",
-            "instructions" : [
-                "command1",
-                "command2"
-            ]
-        }, ...
-    ]
-}
-```
-
  
 Available commands:
 
@@ -181,6 +164,8 @@ Available commands:
     * Verify symbol the named `<name>` appears in search results
 * `verify-ref <name> [--code] [--data]`
     * Verify symbol is referenced by `<name>`
+* `function-lines`
+    * Get all function lines
 
 You might be wondering for what reason is the `add` and/or `verify` 
 commands. Their purpose is to remove false-positives and verify 

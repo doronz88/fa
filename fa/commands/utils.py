@@ -133,3 +133,6 @@ class FaStruct(object):
             idc.SetType(idaapi.get_member_by_fullname(member_name)[0].id, f.type)
 
         idc.Wait()
+
+    def exists(self):
+        return -1 != idc.GetStrucIdByName(self._name)
