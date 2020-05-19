@@ -226,6 +226,7 @@ class FaInterp:
     def get_python_symbols(self, file_name=None):
         symbols = {}
         project_root = os.path.join(self._signatures_root, self._project)
+        sys.path.append(project_root)
 
         for root, dirs, files in os.walk(project_root):
             for filename in files:
