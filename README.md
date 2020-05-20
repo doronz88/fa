@@ -332,9 +332,12 @@ optional arguments:
 
 #### single
 ```
-usage: single [-h]
+usage: single [-h] index
 
 reduces the result list into a singleton
+
+positional arguments:
+  index       get item by an index
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -468,6 +471,7 @@ optional arguments:
   --name NAME       parameter as label name
   --bytes BYTES     parameter as bytesv
 ```
+
 
 ### Examples
 
