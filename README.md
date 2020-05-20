@@ -20,14 +20,17 @@ For Testing:
 * pytest
 * idalink
 
-## How its used?
+## I wanna start using, but where do I start?
 
 Before using, one must understand the terminology for: 
-Projects, SIG files and Loaders. 
+Projects, SIG files and Loaders.
+
+So, grab a cup of coffee, listen to some [nice music](https://www.youtube.com/watch?v=5rrIx7yrxwQ), and please devote 
+a few minutes of your time to reading this README.
 
 ### Projects
 
-The project is kind of a namespace for different signatures.
+The "project" is kind of the namespace for different signatures.
 For example, either: linux, linux_x86, linux_arm etc... are good 
 project names that can be specified if you are working on either 
 platforms. 
@@ -63,16 +66,46 @@ to the next line.
 SIG syntax (single):
 ```hjson
 {
-    "type": "<function/global/number>",
-    "name": "name",
-    "instructions" : [
+    type: function/global/number
+    name: name
+    instructions : [
         # Available commands are listed below
-        "command1",
-        "command2"
+        command1
+        command2
     ]
 }
 ```
- 
+
+User may also use his own python script files to perform 
+the search. Just create a new `.py` file in your project 
+directory and implement the `run()` method. Also, the project's
+path is appended to python's `sys.path` so you may import
+different your scripts from one another.
+
+For example:
+
+```python
+from fa.commands.find_str import find_str 
+from fa.commands.set_name import set_name
+from fa.commands import utils
+
+def run():
+    # throw an exception if not running within ida context
+    utils.verify_ida()
+
+    # locate the global string
+    results = find_str('hello world', null_terminated=True)
+    if len(results) != 1:
+        # no results
+        return {}
+    
+    # set symbol name in idb
+    set_name(results[0], 'g_hello_world_string')
+    
+    # return a dictionary of the found symbols
+    return {'g_hello_world_string': results[0]}
+```
+
 ### Available commands
 
 #### back
@@ -593,6 +626,11 @@ Go to: `File->Script File... (ALT+F7)` and select `ida_loader.py`.
 You should get a nice prompt inside the output window welcoming you
 into using FA. Also, a quick usage guide will also be printed so you 
 don't have to memorize everything.
+
+A QuickStart Tip:
+
+`Ctrl+6` to select your project, then `Ctrl+7` to find all its defined symbols.
+
 
 You can also run IDA in script mode just to extract symbols using:
 
