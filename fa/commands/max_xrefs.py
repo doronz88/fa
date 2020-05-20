@@ -9,7 +9,7 @@ except ImportError:
 def get_parser():
     p = utils.ArgumentParserNoExit('max-xrefs',
                                    description='get the result with'
-                                               'most xrefs pointing '
+                                               ' most xrefs pointing '
                                                'at it')
     return p
 

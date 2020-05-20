@@ -8,7 +8,7 @@ except ImportError:
 
 def get_parser():
     p = utils.ArgumentParserNoExit('function-end',
-                                   description='goto function end')
+                                   description='goto function\'s end')
     p.add_argument('--not-unique', action='store_true')
     return p
 

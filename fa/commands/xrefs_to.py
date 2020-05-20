@@ -1,7 +1,5 @@
 from fa.commands import utils
 from fa.commands import function_start
-reload(function_start)
-reload(utils)
 
 try:
     import idc

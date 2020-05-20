@@ -12,7 +12,7 @@ from fa.commands import find_bytes, utils
 def get_parser():
     p = utils.ArgumentParserNoExit('keystone-find-opcodes',
                                    description='use keystone to search for the supplied'
-                                               'opcodes')
+                                               ' opcodes')
     p.add_argument('--bele', action='store_true',
                    help='figure out the endianity from IDA instead of explicit mode')
     p.add_argument('--or', action='store_true',

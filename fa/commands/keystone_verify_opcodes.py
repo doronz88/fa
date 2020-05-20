@@ -12,7 +12,7 @@ from fa.commands import verify_bytes, utils
 
 def get_parser():
     p = utils.ArgumentParserNoExit('keystone-verify-opcodes',
-                                   description='use keystone engine to verify the given '
+                                   description='use keystone-engine to verify the given '
                                                'results match the supplied code')
     p.add_argument('--bele', action='store_true',
                    help='figure out the endianity from IDA instead of explicit mode')

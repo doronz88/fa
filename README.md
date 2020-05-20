@@ -92,8 +92,7 @@ optional arguments:
 ```
 usage: aligned [-h] value
 
-reduces the
- list to only those align to a specific value
+reduces the list to only those aligned to a specific value
 
 positional arguments:
   value
@@ -149,7 +148,7 @@ optional arguments:
 ```
 usage: function-end [-h] [--not-unique]
 
-goto function end
+goto function's end
 
 optional arguments:
   -h, --help    show this help message and exit
@@ -170,7 +169,7 @@ optional arguments:
 ```
 usage: function-start [-h] [--not-unique]
 
-goto function prolog
+goto function's prolog
 
 optional arguments:
   -h, --help    show this help message and exit
@@ -194,7 +193,7 @@ keystone-engine module not installed
 ```
 usage: keystone-find-opcodes [-h] [--bele] [--or] arch mode code
 
-use keystone to search for the suppliedopcodes
+use keystone to search for the supplied opcodes
 
 positional arguments:
   arch        keystone architecture const (evaled)
@@ -212,7 +211,7 @@ keystone-engine module not installed
 ```
 usage: keystone-verify-opcodes [-h] [--bele] [--until UNTIL] arch mode code
 
-use keystone engine to verify the given results match the supplied code
+use keystone-engine to verify the given results match the supplied code
 
 positional arguments:
   arch           keystone architecture const (evaled)
@@ -252,7 +251,7 @@ optional arguments:
 ```
 usage: most-common [-h]
 
-get the result apearing the most in the result-set
+get the result appearing the most in the result-set
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -361,7 +360,7 @@ optional arguments:
 ```
 usage: verify-bytes [-h] [--until UNTIL] hex_str
 
-reduces the search list to those matching the givenbytes
+reduces the search list to those matching the given bytes
 
 positional arguments:
   hex_str
@@ -388,7 +387,7 @@ optional arguments:
 ```
 usage: verify-operand [-h] [--op0 OP0] [--op1 OP1] [--op2 OP2] name
 
-verifies the ven opcode's operands
+verifies the given opcode's operands
 
 positional arguments:
   name
@@ -455,7 +454,6 @@ optional arguments:
   --name NAME       parameter as label name
   --bytes BYTES     parameter as bytesv
 ```
-
 
 ### Examples
 

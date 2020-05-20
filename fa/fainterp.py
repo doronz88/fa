@@ -1,3 +1,5 @@
+from fa.commands.function_start import get_function_start
+
 try:
     from configparser import ConfigParser
 except ImportError:
@@ -12,13 +14,11 @@ import os
 
 if sys.version_info[0] == 3:
     # for Python3
-    from tkinter import *   # notice lowercase 't' in tkinter here
+    from tkinter import ttk, Tk
 else:
     # for Python2
-    from Tkinter import *   # notice capitalized T in Tkinter
+    from Tkinter import Tk
     import ttk
-
-from fa.commands.function_start import get_function_start
 
 CONFIG_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')
