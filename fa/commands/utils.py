@@ -113,7 +113,7 @@ class FaStruct(object):
         self._size = 0
 
     def add_field(self, name, type_, size=0, offset=0):
-        if offset != 0:
+        if (offset != 0) and (offset != self._size):
             self.add_field('padd_{:x}'.format(self._size),
                            'unsigned char[{}]'.format(offset - self._size),
                            offset - self._size)
