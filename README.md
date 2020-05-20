@@ -202,7 +202,6 @@ optional arguments:
   --data      include data references
 ```
 
-keystone-engine module not installed
 #### keystone-find-opcodes
 ```
 usage: keystone-find-opcodes [-h] [--bele] [--or] arch mode code
@@ -220,7 +219,6 @@ optional arguments:
   --or        mandatory. expands search results
 ```
 
-keystone-engine module not installed
 #### keystone-verify-opcodes
 ```
 usage: keystone-verify-opcodes [-h] [--bele] [--until UNTIL] arch mode code
