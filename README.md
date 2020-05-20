@@ -75,6 +75,18 @@ SIG syntax (single):
  
 ### Available commands
 
+#### back
+
+```
+usage: back amount
+
+goes back in history of search results to those returned
+from a previous command
+
+positional arguments:
+  amount    amount of command results to go back by
+```
+
 #### add-offset-range
 ```
 usage: add-offset-range [-h] start end step
