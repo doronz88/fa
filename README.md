@@ -462,8 +462,8 @@ optional arguments:
 ```json
 {
     "type": "global",
-	"name": "g_awsome_global",
-	"instructions": [
+    "name": "g_awsome_global",
+    "instructions": [
             "find-bytes --or '11 22 33 44'",
             "offset 20",
             "verify-bytes 'aa bb cc dd'",
@@ -484,8 +484,8 @@ then we can name it.
 ```json
 {
     "type": "function",
-	"name": "free",
-	"instructions": [
+    "name": "free",
+    "instructions": [
             "find-str --or 'free' --null-terminated",
             "xref",
             "function-start",
