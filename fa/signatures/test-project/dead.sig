@@ -6,6 +6,6 @@
 		"offset 4",
 		"verify-bytes '00 00 00 05'",
 		"offset -4",
-		"set-name dead"
+		"name dead"
 	]
 }

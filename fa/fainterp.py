@@ -131,14 +131,24 @@ class FaInterp:
         return module.run(self._segments, args, addresses,
                           endianity=self._endianity)
 
-    @staticmethod
-    def get_alias():
+    def get_alias(self):
         retval = {}
         with open(os.path.join(COMMANDS_ROOT, 'alias')) as f:
             for line in f.readlines():
                 line = line.strip()
                 k, v = line.split('=')
                 retval[k.strip()] = v.strip()
+
+        # include also project alias
+        project_root = os.path.join(self._signatures_root, self._project)
+        project_alias_filename = os.path.join(project_root, 'alias')
+        if os.path.exists(project_alias_filename):
+            with open(project_alias_filename) as f:
+                for line in f.readlines():
+                    line = line.strip()
+                    k, v = line.split('=')
+                    retval[k.strip()] = v.strip()
+
         return retval
 
     def save_signature(self, signature):

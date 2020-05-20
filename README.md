@@ -519,13 +519,15 @@ to it. Finally, it will set its signature.
 ### Aliases
 
 Each command and mnemonic can be aliases using the file 
-found in `fa/commands/alias`.
+found in `fa/commands/alias` or in `<project_root>/alias`
 
 Syntax for each line is as follows: `alias_command = command`
 For example:
 ```
 ppc32-verify = keystone-verify-opcodes --bele KS_ARCH_PPC KS_MODE_PPC32
 ```
+
+Project aliases have higher priority.
 
 ### Loaders
 
