@@ -14,6 +14,7 @@ In your IDA's python directory, install:
 * [keystone](http://www.keystone-engine.org/download/)
 * capstone (`pip install capstone`)
 * click (`pip install click`)
+* hjson (`pip install hjson`)
 
 For Testing:
 * pytest
@@ -49,7 +50,7 @@ signatures_root = /a/b/c
 
 The SIG format is a core feature of FA regarding symbol searching.
 
-The format is JSON based and is used to describe the algorithms for 
+The format is Hjson based and is used to describe the algorithms for 
 different symbols.
 The algorithms are preformed *very linearly*, line by line, 
 whereas each line can either extend or reduce the possible search
@@ -60,11 +61,12 @@ previous results as the input and outputs the next results
 to the next line.
 
 SIG syntax (single):
-```json
+```hjson
 {
     "type": "<function/global/number>",
     "name": "name",
     "instructions" : [
+        # Available commands are listed below
         "command1",
         "command2"
     ]
@@ -459,7 +461,7 @@ optional arguments:
 
 #### Finding a global struct
 
-```json
+```hjson
 {
     "type": "global",
     "name": "g_awsome_global",
@@ -481,7 +483,7 @@ then we can name it.
 
 #### Find function by reference to string
 
-```json
+```hjson
 {
     "type": "function",
     "name": "free",

@@ -1,10 +1,10 @@
 import subprocess
 import binascii
 import tempfile
-import json
 import sys
 import os
 
+import hjson
 import click
 
 import idautils
@@ -226,7 +226,7 @@ class IdaLoader(fainterp.FaInterp):
         )
 
         with open(TEMP_SIG_FILENAME, 'w') as f:
-            json.dump(signature, f, indent=4)
+            hjson.dump(signature, f, indent=4)
 
         self.log('Signature created at {}'.format(TEMP_SIG_FILENAME))
         return TEMP_SIG_FILENAME
@@ -242,7 +242,7 @@ class IdaLoader(fainterp.FaInterp):
         """
 
         with open(TEMP_SIG_FILENAME) as f:
-            sig = json.load(f)
+            sig = hjson.load(f)
 
         results = self.find_from_sig_json(sig, decremental=True)
 
@@ -260,7 +260,7 @@ class IdaLoader(fainterp.FaInterp):
 
     def prompt_save_signature(self):
         with open(TEMP_SIG_FILENAME) as f:
-            sig = json.load(f)
+            sig = hjson.load(f)
 
         if idc.AskYN(1, 'Are you sure you want to save this signature?') != 1:
             return

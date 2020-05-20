@@ -8,7 +8,6 @@ except ImportError:
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 import shlex
-import json
 import sys
 import os
 
@@ -19,6 +18,8 @@ else:
     # for Python2
     from Tkinter import Tk
     import ttk
+
+import hjson
 
 CONFIG_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')
@@ -152,7 +153,7 @@ class FaInterp:
             i += 1
 
         with open(filename, 'w') as f:
-            json.dump(signature, f, indent=4)
+            hjson.dump(signature, f, indent=4)
 
     def find_from_instructions_list(self, instructions,
                                     decremental=False, addresses=None):
@@ -235,7 +236,7 @@ class FaInterp:
             signature_path = local_path
 
         with open(signature_path) as f:
-            sig = json.load(f)
+            sig = hjson.load(f)
         return self.find_from_sig_json(sig, decremental)
 
     def get_python_symbols(self, file_name=None):
@@ -268,7 +269,7 @@ class FaInterp:
                 filename = os.path.join(project_root, filename)
                 with open(filename) as f:
                     try:
-                        signature = json.load(f)
+                        signature = hjson.load(f)
                     except ValueError as e:
                         self.log('error in json: {}'.format(filename))
                         raise e
