@@ -477,44 +477,99 @@ optional arguments:
 
 ```hjson
 {
-    "type": "global",
-    "name": "g_awsome_global",
-    "instructions": [
-            "find-bytes --or '11 22 33 44'",
-            "offset 20",
-            "verify-bytes 'aa bb cc dd'",
-            "offset -20",
-            "set-name g_awsome_global"
+    type: global,
+    name: g_awsome_global,
+    instructions: [
+            # find the byte sequence '11 22 33 44'
+            find-bytes --or '11 22 33 44'
+
+            # advance offset by 20
+            offset 20
+
+            # verify the current bytes are 'aa bb cc dd'
+            verify-bytes 'aa bb cc dd'
+
+            # go back by 20 bytes offset
+            offset -20
+
+            # set global name
+            set-name g_awsome_global
 	]
 }
 ```
-
-This will locate all places of `11 22 33 44`, whereas at offset `20`
-from them, there exists `aa bb cc dd`. Finally, the cursor will point
-back to `11 22 33 44` by reducing the `-20` from the search cursor - 
-then we can name it. 
-
 
 #### Find function by reference to string
 
 ```hjson
 {
-    "type": "function",
-    "name": "free",
-    "instructions": [
-            "find-str --or 'free' --null-terminated",
-            "xref",
-            "function-start",
-            "max-xrefs",
-            "set-type 'void free(void *block)'"
+    type: function
+    name: free
+    instructions: [
+            # search the string "free"
+            find-str --or 'free' --null-terminated
+
+            # goto xref
+            xref
+
+            # goto function's prolog
+            function-start
+
+            # reduce to the singletone with most xrefs to
+            max-xrefs
+
+            # set name and type
+            set-name free
+            set-type 'void free(void *block)'
 	]
 }
 ```
 
-This will search for the string `free`, then goto to its xref, then to the 
-function-prolog, then reduce the search results to the one with the most references 
-to it. Finally, it will set its signature.
+#### Finding several functions in a row
 
+```hjson
+{
+    type: function
+    name: cool_functions
+    instructions: [
+            # find string
+            find-str --or 'init_stuff' --null-terminated
+
+            # goto to xref
+            xref
+    
+            # goto function start
+            function-start
+
+            # verify only one single result
+            unique
+
+            # iterating every 4-byte opcode            
+            add-offset-range 0 80 4
+
+            # if mnemonic is bl
+            verify-operand bl
+
+            # sort results
+            sort
+
+            # set first bl to malloc function
+            single 0
+            goto-ref --code 
+            set-name malloc
+            set-type 'void *malloc(unsigned int size)'
+
+            # go back to the results from 4 commands ago 
+            # (the sort results)
+            back 4
+
+            # rename next symbol :)
+            single 1
+            goto-ref --code
+            set-name free
+            set-type 'void free(void *block)'
+	]
+}
+```
 
 ### Aliases
 
