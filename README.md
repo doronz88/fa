@@ -80,7 +80,7 @@ SIG syntax (single):
 
 User may also use his own python script files to perform 
 the search. Just create a new `.py` file in your project 
-directory and implement the `run()` method. Also, the project's
+directory and implement the `run(**kwargs)` method. Also, the project's
 path is appended to python's `sys.path` so you may import
 different your scripts from one another.
 
@@ -193,7 +193,7 @@ from fa.commands.find_str import find_str
 from fa.commands.set_name import set_name
 from fa.commands import utils
 
-def run():
+def run(**kwargs):
     # throw an exception if not running within ida context
     utils.verify_ida()
 
@@ -208,6 +208,31 @@ def run():
     
     # return a dictionary of the found symbols
     return {'g_hello_world_string': results[0]}
+```
+
+#### Python script to automate SIG files interpretor
+
+```python
+
+TEMPLATE = '''
+find-str '{unique_string}'
+xref
+function-start
+unique
+set-name '{function_name}'
+'''
+
+def run(**kwargs):
+    results = {}
+    interp = kwargs['interpretor']
+
+    for function_name in ['func1', 'func2', 'func3']:
+        instructions = TEMPLATE.format(unique_string=function_name, 
+                                       function_name=function_name).split('\n')
+        
+        results[function_name] = interp.find_from_instructions_list(instructions)
+
+    return results
 ```
 
 ### Aliases
