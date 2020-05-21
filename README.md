@@ -51,7 +51,9 @@ signatures_root = /a/b/c
 
 ### SIG format
 
-The SIG format is a core feature of FA regarding symbol searching.
+The SIG format is a core feature of FA regarding symbol searching. Each
+SIG file is residing within the project directory and is automatically search
+when requested to generate the project's symbol list.
 
 The format is Hjson based and is used to describe the algorithms for 
 different symbols.
@@ -82,7 +84,109 @@ directory and implement the `run()` method. Also, the project's
 path is appended to python's `sys.path` so you may import
 different your scripts from one another.
 
-For example:
+To view the list of available commands, [view the list below](#available-commands)
+
+### Examples
+
+#### Finding a global struct
+
+```hjson
+{
+    type: global,
+    name: g_awsome_global,
+    instructions: [
+            # find the byte sequence '11 22 33 44'
+            find-bytes --or '11 22 33 44'
+
+            # advance offset by 20
+            offset 20
+
+            # verify the current bytes are 'aa bb cc dd'
+            verify-bytes 'aa bb cc dd'
+
+            # go back by 20 bytes offset
+            offset -20
+
+            # set global name
+            set-name g_awsome_global
+	]
+}
+```
+
+#### Find function by reference to string
+
+```hjson
+{
+    type: function
+    name: free
+    instructions: [
+            # search the string "free"
+            find-str --or 'free' --null-terminated
+
+            # goto xref
+            xref
+
+            # goto function's prolog
+            function-start
+
+            # reduce to the singletone with most xrefs to
+            max-xrefs
+
+            # set name and type
+            set-name free
+            set-type 'void free(void *block)'
+	]
+}
+```
+
+#### Finding several functions in a row
+
+```hjson
+{
+    type: function
+    name: cool_functions
+    instructions: [
+            # find string
+            find-str --or 'init_stuff' --null-terminated
+
+            # goto to xref
+            xref
+    
+            # goto function start
+            function-start
+
+            # verify only one single result
+            unique
+
+            # iterating every 4-byte opcode            
+            add-offset-range 0 80 4
+
+            # if mnemonic is bl
+            verify-operand bl
+
+            # sort results
+            sort
+
+            # set first bl to malloc function
+            single 0
+            goto-ref --code 
+            set-name malloc
+            set-type 'void *malloc(unsigned int size)'
+
+            # go back to the results from 4 commands ago 
+            # (the sort results)
+            back 4
+
+            # rename next symbol :)
+            single 1
+            goto-ref --code
+            set-name free
+            set-type 'void free(void *block)'
+	]
+}
+```
+
+#### Python script to find a list of symbols
 
 ```python
 from fa.commands.find_str import find_str 
@@ -105,6 +209,45 @@ def run():
     # return a dictionary of the found symbols
     return {'g_hello_world_string': results[0]}
 ```
+
+### Aliases
+
+Each command can be "alias"ed using the file 
+found in `fa/commands/alias` or in `<project_root>/alias`
+
+Syntax for each line is as follows: `alias_command = command`
+For example:
+```
+ppc32-verify = keystone-verify-opcodes --bele KS_ARCH_PPC KS_MODE_PPC32
+```
+
+Project aliases have higher priority.
+
+### Loaders
+
+Loaders are the entry point into running FA. Currently only IDA loader exists, 
+but in the future we'll possibly add Ghidra and other tools.
+
+#### IDA
+
+Go to: `File->Script File... (ALT+F7)` and select `ida_loader.py`.
+
+You should get a nice prompt inside the output window welcoming you
+into using FA. Also, a quick usage guide will also be printed so you 
+don't have to memorize everything.
+
+A QuickStart Tip:
+
+`Ctrl+6` to select your project, then `Ctrl+7` to find all its defined symbols.
+
+
+You can also run IDA in script mode just to extract symbols using:
+
+```sh
+ida -S"ida_loader.py <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
+```
+
+
 
 ### Available commands
 
@@ -501,140 +644,5 @@ optional arguments:
   --and             reduce the current result set
   --name NAME       parameter as label name
   --bytes BYTES     parameter as bytesv
-```
-
-
-### Examples
-
-#### Finding a global struct
-
-```hjson
-{
-    type: global,
-    name: g_awsome_global,
-    instructions: [
-            # find the byte sequence '11 22 33 44'
-            find-bytes --or '11 22 33 44'
-
-            # advance offset by 20
-            offset 20
-
-            # verify the current bytes are 'aa bb cc dd'
-            verify-bytes 'aa bb cc dd'
-
-            # go back by 20 bytes offset
-            offset -20
-
-            # set global name
-            set-name g_awsome_global
-	]
-}
-```
-
-#### Find function by reference to string
-
-```hjson
-{
-    type: function
-    name: free
-    instructions: [
-            # search the string "free"
-            find-str --or 'free' --null-terminated
-
-            # goto xref
-            xref
-
-            # goto function's prolog
-            function-start
-
-            # reduce to the singletone with most xrefs to
-            max-xrefs
-
-            # set name and type
-            set-name free
-            set-type 'void free(void *block)'
-	]
-}
-```
-
-#### Finding several functions in a row
-
-```hjson
-{
-    type: function
-    name: cool_functions
-    instructions: [
-            # find string
-            find-str --or 'init_stuff' --null-terminated
-
-            # goto to xref
-            xref
-    
-            # goto function start
-            function-start
-
-            # verify only one single result
-            unique
-
-            # iterating every 4-byte opcode            
-            add-offset-range 0 80 4
-
-            # if mnemonic is bl
-            verify-operand bl
-
-            # sort results
-            sort
-
-            # set first bl to malloc function
-            single 0
-            goto-ref --code 
-            set-name malloc
-            set-type 'void *malloc(unsigned int size)'
-
-            # go back to the results from 4 commands ago 
-            # (the sort results)
-            back 4
-
-            # rename next symbol :)
-            single 1
-            goto-ref --code
-            set-name free
-            set-type 'void free(void *block)'
-	]
-}
-```
-
-### Aliases
-
-Each command and mnemonic can be aliases using the file 
-found in `fa/commands/alias` or in `<project_root>/alias`
-
-Syntax for each line is as follows: `alias_command = command`
-For example:
-```
-ppc32-verify = keystone-verify-opcodes --bele KS_ARCH_PPC KS_MODE_PPC32
-```
-
-Project aliases have higher priority.
-
-### Loaders
-
-#### IDA
-
-Go to: `File->Script File... (ALT+F7)` and select `ida_loader.py`.
-
-You should get a nice prompt inside the output window welcoming you
-into using FA. Also, a quick usage guide will also be printed so you 
-don't have to memorize everything.
-
-A QuickStart Tip:
-
-`Ctrl+6` to select your project, then `Ctrl+7` to find all its defined symbols.
-
-
-You can also run IDA in script mode just to extract symbols using:
-
-```sh
-ida -S"ida_loader.py <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
 ```
 
