@@ -213,23 +213,10 @@ class FaInterp:
         :param dict signature_json: Data of signature's JSON.
         :param bool decremental:
         :return: Addresses of matching signatures.
-        :rtype: dict if bundle, list otherwise
+        :rtype: result list of last returns instruction
         """
-        if signature_json['type'] in ['bundle', 'chain']:
-            results = {}
-            result = []
-            for signature in signature_json['signatures']:
-                if signature_json['type'] == 'bundle':
-                    result = None
-                result = self.find_from_instructions_list(
-                    signature['instructions'],
-                    decremental,
-                    addresses=result)
-                results[signature['name']] = result
-            return results
-        else:
-            return self.find_from_instructions_list(
-                signature_json['instructions'], decremental)
+        return self.find_from_instructions_list(
+            signature_json['instructions'], decremental)
 
     def find_from_sig_path(self, signature_path, decremental=False):
         """
@@ -237,7 +224,7 @@ class FaInterp:
         :param str signature_path: Path to a signature file.
         :param bool decremental:
         :return: Addresses of matching signatures.
-        :rtype: dict if bundle or chain, list otherwise
+        :rtype: result list of last returns instruction
         """
         local_path = os.path.join(
             self._signatures_root, self._project, signature_path)

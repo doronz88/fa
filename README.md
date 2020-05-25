@@ -355,6 +355,16 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
+#### clear
+```
+usage: clear [-h]
+
+clears the current search results
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
 #### find-bytes
 ```
 usage: find-bytes [-h] [--or] hex_str
@@ -442,6 +452,7 @@ optional arguments:
   --data      include data references
 ```
 
+keystone-engine module not installed
 #### keystone-find-opcodes
 ```
 usage: keystone-find-opcodes [-h] [--bele] [--or] arch mode code
@@ -459,6 +470,7 @@ optional arguments:
   --or        mandatory. expands search results
 ```
 
+keystone-engine module not installed
 #### keystone-verify-opcodes
 ```
 usage: keystone-verify-opcodes [-h] [--bele] [--until UNTIL] arch mode code
@@ -709,4 +721,3 @@ optional arguments:
   --name NAME       parameter as label name
   --bytes BYTES     parameter as bytesv
 ```
-
