@@ -14,7 +14,13 @@ def get_parser():
     return p
 
 
-def set_type(address, type_str):
+def set_type(address, type_):
+    if isinstance(type_, utils.FaStruct) or \
+            isinstance(type_, utils.FaEnum):
+        type_str = type_.get_name()
+    else:
+        type_str = type_
+
     idc.SetType(address, type_str)
     idc.Wait()
 

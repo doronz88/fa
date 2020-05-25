@@ -96,12 +96,27 @@ def find_or_create_struct(name):
     return sid
 
 
-def add_const(name, value):
-    id = idc.GetEnum('FA_CONSTS')
-    if idc.BADADDR == id:
-        id = idc.AddEnum(-1, 'FA_CONSTS', idaapi.decflag())
+class FaEnum(object):
+    def __init__(self, name):
+        self._name = name
+        self._values = {}
 
-    idc.AddConstEx(id, name, value, -1)
+    def add_value(self, name, value):
+        self._values[value] = name
+
+    def get_name(self):
+        return self._name
+
+    def update_idb(self):
+        id = idc.GetEnum(self._name)
+        if idc.BADADDR == id:
+            id = idc.AddEnum(-1, self._name, idaapi.decflag())
+
+        keys = self._values.keys()
+        keys.sort()
+
+        for k in keys:
+            idc.AddConstEx(id, self._values[k], k, -1)
 
 
 class FaStruct(object):
@@ -111,6 +126,9 @@ class FaStruct(object):
         self._name = name
         self._fields = []
         self._size = 0
+
+    def get_name(self):
+        return self._name
 
     def add_field(self, name, type_, size=0, offset=0):
         if (offset != 0) and (offset != self._size):
@@ -138,3 +156,9 @@ class FaStruct(object):
 
     def exists(self):
         return -1 != idc.GetStrucIdByName(self._name)
+
+
+def add_const(name, value):
+    fa_consts = FaEnum('FA_CONSTS')
+    fa_consts.add_value(name, value)
+    fa_consts.update_idb()
