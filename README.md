@@ -213,7 +213,6 @@ def run(**kwargs):
 #### Python script to automate SIG files interpretor
 
 ```python
-
 TEMPLATE = '''
 find-str '{unique_string}'
 xref
@@ -233,6 +232,46 @@ def run(**kwargs):
         results[function_name] = interp.find_from_instructions_list(instructions)
 
     return results
+```
+
+#### Python script to set struct
+
+```python
+from fa.commands.set_type import set_type
+from fa.commands import utils
+
+TEMPLATE = '''
+find-str '{unique_string}'
+xref
+'''
+
+def run(**kwargs):
+    interp = kwargs['interpretor']
+
+    utils.add_const('CONST7', 7)
+    utils.add_const('CONST8', 8)
+
+    foo_e = utils.FaEnum('foo_e')
+    foo_e.add_value('val2', 2)
+    foo_e.add_value('val1', 1)
+    foo_e.update_idb()
+
+    special_struct_t = utils.FaStruct('special_struct_t')
+    special_struct_t.add_field('member1', 'const char *', size=4)
+    special_struct_t.add_field('member2', 'const char *', size=4, offset=0x20)
+    special_struct_t.update_idb()
+
+    for function_name in ['unique_magic1', 'unique_magic2']:
+        instructions = TEMPLATE.format(unique_string=function_name, 
+                                       function_name=function_name).split('\n')
+        
+        results = interp.find_from_instructions_list(instructions)
+        for ea in results:
+            # the set_type can receive either a string, FaStruct
+            # or FaEnum :-)
+            set_type(ea, special_struct_t)
+
+    return {}
 ```
 
 ### Aliases
