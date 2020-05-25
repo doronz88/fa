@@ -234,7 +234,7 @@ def run(**kwargs):
     return results
 ```
 
-#### Python script to set struct
+#### Python script to dynamically add structs
 
 ```python
 from fa.commands.set_type import set_type
