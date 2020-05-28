@@ -3,7 +3,7 @@
 ## What is it?
 
 FA stands for Firmware Analysis.
-FA allows one to easily perform code exploration, symbol finding and 
+FA allows one to easily perform code exploration, symbol searching and 
 other functionality with ease.
 
 ## Requirements
