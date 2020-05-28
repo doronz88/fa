@@ -167,6 +167,9 @@ To view the list of available commands, [view the list below](#available-command
             # sort results
             sort
 
+            # mark resultset checkpoint
+            checkpoint BLs
+
             # set first bl to malloc function
             single 0
             goto-ref --code 
@@ -175,7 +178,7 @@ To view the list of available commands, [view the list below](#available-command
 
             # go back to the results from 4 commands ago 
             # (the sort results)
-            back 4
+            back-to-checkpoint BLs
 
             # rename next symbol :)
             single 1
@@ -325,6 +328,29 @@ from a previous command
 
 positional arguments:
   amount    amount of command results to go back by
+```
+
+#### checkpoint
+
+```
+usage: checkpoint name
+
+saves current resultset in checkpoint named 'name'
+
+positional arguments:
+  name      name of checkpoint to use
+```
+
+#### back-to-checkpoint
+
+```
+usage: back-to-checkpoint
+
+goes back in history to the resultset saved by a previous
+checkpoint
+
+positional arguments:
+  name    name of checkpoint in history to go back to
 ```
 
 #### add-offset-range
