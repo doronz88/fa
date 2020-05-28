@@ -2,6 +2,10 @@
     "type": "function",
 	"name": "printf",
 	"instructions": [
-		"xrefs-to --or --bytes '\"printf\" 00'"
+		find-str --or 'printf' --null-terminated
+		xref
+		print
+		function-start
+		single 0
 	]
 }

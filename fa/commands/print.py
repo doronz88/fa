@@ -9,8 +9,8 @@ def get_parser():
 
 
 def run(segments, args, addresses, **kwargs):
-    log_line = 'FA Debug Print: '
+    log_line = 'FA Debug Print: \n'
     for ea in addresses:
-        log_line += '0x{:x} '.format(ea)
+        log_line += '\t0x{:x}\n'.format(ea)
     print(log_line)
     return addresses

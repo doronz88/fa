@@ -26,6 +26,6 @@ def run(segments, args, addresses, **kwargs):
     if getattr(args, 'or'):
         retval.update(results)
     else:
-        raise ValueError("must specify or manner")
+        raise ValueError("must specify --or option")
 
     return list(OrderedDict.fromkeys(retval))

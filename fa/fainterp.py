@@ -171,6 +171,7 @@ class FaInterp:
             addresses = []
 
         history = []
+        checkpoints = {}
 
         for line in instructions:
             line = line.strip()
@@ -182,10 +183,24 @@ class FaInterp:
                 # treat as comment
                 continue
 
+            # builtin commands
+
             if line.startswith('back '):
                 index = int(line.split()[-1])
                 addresses = history[-index]
                 continue
+
+            if line.startswith('checkpoint '):
+                checkpoint_name = line.split(' ', 1)[1]
+                checkpoints[checkpoint_name] = addresses
+                continue
+
+            if line.startswith('back-to-checkpoint '):
+                checkpoint_name = line.split(' ', 1)[1]
+                addresses = checkpoints[checkpoint_name]
+                continue
+
+            # normal commands
 
             for k, v in self.get_alias().items():
                 # handle aliases
