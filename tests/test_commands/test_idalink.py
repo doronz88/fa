@@ -10,7 +10,8 @@ class ImportInterceptor(object):
         self.package_permissions = package_permissions
 
     def find_module(self, fullname, path=None):
-        if fullname in dir(ida_namespace):
+        last = fullname.split('.')[-1]
+        if last in dir(ida_namespace):
             return self
         if fullname in self.package_permissions:
             if self.package_permissions[fullname]:
@@ -19,8 +20,9 @@ class ImportInterceptor(object):
                 raise ImportError("Package import was not allowed")
 
     def load_module(self, fullname):
-        if fullname in dir(ida_namespace):
-            return getattr(ida_namespace, fullname)
+        last = fullname.split('.')[-1]
+        if last in dir(ida_namespace):
+            return getattr(ida_namespace, last)
         sys.meta_path = [x for x in sys.meta_path[1:] if x is not self]
         module = importlib.import_module(fullname)
         sys.meta_path = [self] + sys.meta_path

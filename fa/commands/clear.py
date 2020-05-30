@@ -1,4 +1,4 @@
-from fa.commands import utils
+from fa import utils
 
 
 def get_parser():

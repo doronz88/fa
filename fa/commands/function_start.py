@@ -3,7 +3,7 @@
 from capstone import *
 import argparse
 
-from fa.commands import utils
+from fa import utils
 
 try:
     import idc

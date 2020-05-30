@@ -194,7 +194,7 @@ To view the list of available commands, [view the list below](#available-command
 ```python
 from fa.commands.find_str import find_str 
 from fa.commands.set_name import set_name
-from fa.commands import utils
+from fa import utils
 
 def run(**kwargs):
     # throw an exception if not running within ida context
@@ -241,7 +241,7 @@ def run(**kwargs):
 
 ```python
 from fa.commands.set_type import set_type
-from fa.commands import utils
+from fa import types
 
 TEMPLATE = '''
 find-str '{unique_string}'
@@ -251,15 +251,15 @@ xref
 def run(**kwargs):
     interp = kwargs['interpretor']
 
-    utils.add_const('CONST7', 7)
-    utils.add_const('CONST8', 8)
+    types.add_const('CONST7', 7)
+    types.add_const('CONST8', 8)
 
-    foo_e = utils.FaEnum('foo_e')
+    foo_e = types.FaEnum('foo_e')
     foo_e.add_value('val2', 2)
     foo_e.add_value('val1', 1)
     foo_e.update_idb()
 
-    special_struct_t = utils.FaStruct('special_struct_t')
+    special_struct_t = types.FaStruct('special_struct_t')
     special_struct_t.add_field('member1', 'const char *', size=4)
     special_struct_t.add_field('member2', 'const char *', size=4, offset=0x20)
     special_struct_t.update_idb()

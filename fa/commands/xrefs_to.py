@@ -1,4 +1,4 @@
-from fa.commands import utils
+from fa import utils
 from fa.commands import function_start
 
 try:

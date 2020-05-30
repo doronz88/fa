@@ -6,7 +6,8 @@ except ImportError:
 
 import binascii
 
-from fa.commands import find_bytes, utils
+from fa.commands import find_bytes
+from fa import utils
 
 
 def get_parser():
