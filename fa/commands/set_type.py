@@ -15,7 +15,7 @@ def get_parser():
     return p
 
 
-def set_type(address, type_):
+def set_type_single(address, type_):
     if isinstance(type_, types.FaStruct) or \
             isinstance(type_, types.FaEnum):
         type_str = type_.get_name()
@@ -26,10 +26,13 @@ def set_type(address, type_):
     ida_auto.auto_wait()
 
 
+def set_type(addresses, type_):
+    for ea in addresses:
+        set_type_single(ea, type_)
+    return addresses
+
+
 def run(segments, args, addresses, **kwargs):
     utils.verify_ida()
 
-    for address in addresses:
-        set_type(address, args.type_str)
-
-    return addresses
+    return set_type(addresses, args.type_str)

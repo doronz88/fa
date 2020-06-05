@@ -10,6 +10,10 @@ def get_parser():
     return p
 
 
+def aligned(addresses, value):
+    return [ea for ea in addresses if ea % value == 0]
+
+
 def run(segments, args, addresses, **kwargs):
     args, rest = args
-    return [ea for ea in addresses if ea % args.value == 0]
+    return list(aligned(addresses, args.value))

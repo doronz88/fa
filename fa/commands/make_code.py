@@ -15,6 +15,7 @@ def get_parser():
 def make_code(addresses):
     for ea in addresses:
         idc.create_insn(ea, idc.BADADDR)
+    return addresses
 
 
 def run(segments, args, addresses, **kwargs):

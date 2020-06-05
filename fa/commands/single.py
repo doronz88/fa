@@ -9,8 +9,12 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
-    if args.index + 1 > len(addresses):
+def single(addresses, index):
+    if index + 1 > len(addresses):
         return []
     else:
-        return [addresses[args.index]]
+        return [addresses[index]]
+
+
+def run(segments, args, addresses, **kwargs):
+    return single(addresses, args.index)

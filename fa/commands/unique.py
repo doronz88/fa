@@ -8,5 +8,9 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
+def unique(addresses):
     return addresses if len(addresses) == 1 else []
+
+
+def run(segments, args, addresses, **kwargs):
+    return unique(addresses)

@@ -8,7 +8,10 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
-    addresses = list(addresses)
+def sort(addresses):
     addresses.sort()
     return addresses
+
+
+def run(segments, args, addresses, **kwargs):
+    return sort(addresses)

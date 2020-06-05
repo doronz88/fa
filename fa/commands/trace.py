@@ -9,6 +9,10 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
+def trace(addresses):
     pdb.set_trace()
     return addresses
+
+
+def run(segments, args, addresses, **kwargs):
+    return trace(addresses)
