@@ -1,5 +1,3 @@
-from fa.commands.function_start import get_function_start
-
 try:
     from configparser import ConfigParser
 except ImportError:
@@ -300,10 +298,6 @@ class FaInterp:
 
         for sig in signatures:
             sig_results = self.find_from_sig_json(sig)
-
-            if sig['type'] == 'function':
-                sig_results = [get_function_start(self._segments, ea)
-                               for ea in sig_results]
 
             if isinstance(sig_results, dict):
                 if symbol_name in sig_results:

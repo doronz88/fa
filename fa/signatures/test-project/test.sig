@@ -5,4 +5,3 @@
 		"find-bytes --or 'DE AD 12 34'"
 	]
 }
-
