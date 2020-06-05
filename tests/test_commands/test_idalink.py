@@ -29,10 +29,7 @@ class ImportInterceptor(object):
         return module
 
 
-if not hasattr(sys, 'frozen'):
-    sys.meta_path = [ImportInterceptor({'textwrap': True,
-                                        'Pathlib': False})] + sys.meta_path
-
+sys.meta_path.append(ImportInterceptor({'textwrap': True, 'Pathlib': False}))
 
 ida_namespace = None
 
@@ -43,6 +40,11 @@ def test_ida_symbols(ida, idb):
         pytest.skip("--ida and --idb params must be passed for this test")
     with IDALink(ida, idb) as s:
         ida_namespace = s
+
+        from fa import utils
+        reload(utils)
+        utils.verify_ida()
+
         import ida_loader
         fa_instance = ida_loader.IdaLoader()
         fa_instance.set_input('ida')
