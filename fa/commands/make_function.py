@@ -1,21 +1,21 @@
 from fa import utils
 
 try:
-    import idc
+    import ida_funcs
 except ImportError:
     pass
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('make-code',
-                                   description='convert into a code block')
+    p = utils.ArgumentParserNoExit('make-function',
+                                   description='convert into a function')
     return p
 
 
 def make_code(addresses):
     utils.verify_ida()
     for ea in addresses:
-        idc.create_insn(ea)
+        ida_funcs.add_func(ea)
     return addresses
 
 

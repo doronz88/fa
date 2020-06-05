@@ -139,6 +139,25 @@ To view the list of available commands, [view the list below](#available-command
 }
 ```
 
+#### Performing code exploration
+
+```hjson
+{
+    type: function-list
+    name: arm_explorer
+    instructions: [
+            # search for some potential function prologs
+            arm-find-all 'push {r4, lr}'
+            arm-find-all 'push {r4, r5, lr}'
+            thumb-find-all 'push {r4, lr}'
+            thumb-find-all 'push {r4, r5, lr}'
+
+            # convert into functions
+            make-function
+	]
+}
+```
+
 #### Finding several functions in a row
 
 ```hjson
@@ -527,11 +546,21 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
-#### make-literal
+#### make-code
 ```
-usage: make-literal [-h]
+usage: make-code [-h]
 
-convert into a literal
+convert into a code block
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### make-function
+```
+usage: make-function [-h]
+
+convert into a function
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -539,9 +568,9 @@ optional arguments:
 
 #### make-literal
 ```
-usage: make-code [-h]
+usage: make-literal [-h]
 
-convert into a code block
+convert into a literal
 
 optional arguments:
   -h, --help  show this help message and exit
