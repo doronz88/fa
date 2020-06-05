@@ -4,23 +4,29 @@
 
 FA stands for Firmware Analysis.
 FA allows one to easily perform code exploration, symbol searching and 
-other functionality with ease.
+other functionality with ease. 
 
-Pull Requests are more then welcome :smirk:.
+The current codebase very IDA-plugin-oriented. In the future I'll
+consider adding more versatile approach to allow loading via
+other disassemblers such as Ghidra, Radare and etc...
+
+
+Pull Requests are of course more than welcome :smirk:.
 
 ## Requirements
 
 Supported IDA 7.x.
 
-In your IDA's python directory, install:
-* [keystone](http://www.keystone-engine.org/download/)
-* capstone (`pip install capstone`)
-* click (`pip install click`)
-* hjson (`pip install hjson`)
+In your IDA's python directory, run:
 
-For Testing:
-* pytest
-* idalink
+```sh
+python -m pip install -r requirements.txt
+```
+
+And for testing:
+```sh
+python -m pip install -r requirements_testing.txt
+```
 
 ## I wanna start using, but where do I start?
 
@@ -70,7 +76,7 @@ to the next line.
 SIG syntax (single):
 ```hjson
 {
-    type: function/global/number
+    type: function/global/number # doesn't really have meaning
     name: name
     instructions : [
         # Available commands are listed below
@@ -222,7 +228,8 @@ def run(**kwargs):
     # throw an exception if not running within ida context
     utils.verify_ida()
 
-    # locate the global string
+    # locate the global string, verify it's unique, and set it's 
+    # name within the idb 
     results = set_name(unique(find_str('hello world', null_terminated=True)),
                        'g_hello_world_string')
 
