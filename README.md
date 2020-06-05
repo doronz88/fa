@@ -527,6 +527,26 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
+#### make-literal
+```
+usage: make-literal [-h]
+
+convert into a literal
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### make-literal
+```
+usage: make-literal [-h]
+
+convert into a literal
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
 #### max-xrefs
 ```
 usage: max-xrefs [-h]
@@ -542,16 +562,6 @@ optional arguments:
 usage: most-common [-h]
 
 get the result appearing the most in the result-set
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-
-#### name-literal
-```
-usage: name-literal [-h]
-
-convert into a literal
 
 optional arguments:
   -h, --help  show this help message and exit

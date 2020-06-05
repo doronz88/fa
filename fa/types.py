@@ -5,6 +5,9 @@ from collections import namedtuple
 try:
     import idc
     import idaapi
+    import ida_auto
+    import ida_enum
+    import ida_struct
 
     IDA_MODULE = True
 except ImportError:
@@ -19,7 +22,7 @@ class FaType(object):
         return self._name
 
     def exists(self):
-        return -1 != idc.GetStrucIdByName(self._name)
+        return -1 != ida_struct.get_struc_id(self._name)
 
     @abstractmethod
     def update_idb(self):
@@ -35,15 +38,15 @@ class FaEnum(FaType):
         self._values[value] = name
 
     def update_idb(self):
-        id = idc.GetEnum(self._name)
+        id = ida_enum.get_enum(self._name)
         if idc.BADADDR == id:
-            id = idc.AddEnum(-1, self._name, idaapi.decflag())
+            id = ida_enum.add_enum(-1, self._name, idaapi.decflag())
 
         keys = self._values.keys()
         keys.sort()
 
         for k in keys:
-            idc.AddConstEx(id, self._values[k], k, -1)
+            idc.add_enum_member(id, self._values[k], k, -1)
 
 
 class FaStruct(FaType):
@@ -64,19 +67,19 @@ class FaStruct(FaType):
         self._size += size
 
     def update_idb(self):
-        sid = idc.GetStrucIdByName(self._name)
+        sid = ida_struct.get_struc_id(self._name)
         if sid != -1:
-            idc.DelStruc(sid)
-        sid = idc.AddStrucEx(-1, self._name, 0)
+            idc.del_struc(sid)
+        sid = idc.add_struc(-1, self._name, 0)
 
         for f in self._fields:
-            idc.AddStrucMember(sid, f.name, -1,
+            idc.add_struc_member(sid, f.name, -1,
                                (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF, -1, 1)
             member_name = "{}.{}".format(self._name, f.name)
             idc.SetType(idaapi.get_member_by_fullname(member_name)[0].id,
                         f.type)
 
-        idc.Wait()
+        ida_auto.auto_wait()
 
 
 def add_const(name, value):

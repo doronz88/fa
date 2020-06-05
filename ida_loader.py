@@ -7,7 +7,11 @@ import os
 import hjson
 import click
 
+import ida_kernwin
+import ida_bytes
+import ida_name
 import idautils
+import ida_pro
 import idaapi
 import idc
 
@@ -49,12 +53,11 @@ class String(object):
               "ULEN4"]
 
     def __init__(self, xref, addr):
-        type_ = idc.GetStringType(addr)
+        type_ = idc.get_str_type(addr)
         if type_ < 0 or type_ >= len(String.ASCSTR):
             raise StringParsingException()
 
-        CALC_MAX_LEN = -1
-        string = str(idc.GetString(addr, CALC_MAX_LEN, type_))
+        string = str(ida_bytes.get_strlit_contents(addr, 0xffff, type_))
 
         self.xref = xref
         self.addr = addr
@@ -79,11 +82,11 @@ def create_signature_ppc32(start, end, inf, verify=True):
     command = 'find-bytes --or' if not verify else 'verify-bytes'
 
     for ea in range(start, end, opcode_size):
-        mnemonic = idc.GetMnem(ea)
+        mnemonic = idc.print_insn_mnem(ea)
         if mnemonic in ('lis', 'lwz', 'bl') or mnemonic.startswith('b'):
             pass
         else:
-            b = binascii.hexlify(idc.GetManyBytes(ea, opcode_size))
+            b = binascii.hexlify(idc.get_bytes(ea, opcode_size))
             signature.append('{} {}'.format(command, b))
             if first:
                 first = False
@@ -110,7 +113,7 @@ def create_signature_arm(start, end, inf, verify=True):
     instructions = []
     ea = start
     while ea < end:
-        mnemonic = idc.GetMnem(ea)
+        mnemonic = idc.print_insn_mnem(ea)
         opcode_size = idautils.DecodeInstruction(ea).size
         # Skip memory accesses and branches.
         if mnemonic not in \
@@ -119,7 +122,7 @@ def create_signature_arm(start, end, inf, verify=True):
                 if not verify and ea == start else 'verify-bytes'
             instructions.append('{} {}'.format(
                 command,
-                binascii.hexlify(idc.GetManyBytes(ea, opcode_size)))
+                binascii.hexlify(idc.get_bytes(ea, opcode_size)))
             )
         ea += opcode_size
         instructions.append('offset {}'.format(opcode_size))
@@ -135,7 +138,7 @@ SIGNATURE_CREATION_BY_ARCH = {
 
 
 def find_function_strings(func_ea):
-    end_ea = idc.FindFuncEnd(func_ea)
+    end_ea = idc.find_func_end(func_ea)
     if end_ea == idaapi.BADADDR:
         return []
 
@@ -152,7 +155,7 @@ def find_function_strings(func_ea):
 
 
 def find_function_code_references(func_ea):
-    end_ea = idc.FindFuncEnd(func_ea)
+    end_ea = idc.find_func_end(func_ea)
     if end_ea == idaapi.BADADDR:
         return []
 
@@ -175,11 +178,11 @@ class IdaLoader(fainterp.FaInterp):
         IDA screen.
         """
         self.log('creating temporary signature')
-        func_start = idc.GetFunctionAttr(idc.ScreenEA(), idc.FUNCATTR_START)
-        func_end = idc.GetFunctionAttr(idc.ScreenEA(), idc.FUNCATTR_END)
+        func_start = idc.get_func_attr(idc.get_screen_ea(), idc.FUNCATTR_START)
+        func_end = idc.get_func_attr(idc.get_screen_ea(), idc.FUNCATTR_END)
 
         signature = {
-            'name': idc.GetFunctionName(idc.ScreenEA()),
+            'name': idc.get_func_name(idc.get_screen_ea()),
             'type': 'function',
             'instructions': []
         }
@@ -201,7 +204,7 @@ class IdaLoader(fainterp.FaInterp):
                 )
 
         for ea in code_references:
-            name = idc.Name(ea)
+            name = idc.get_name(ea, ida_name.GN_VISIBLE)
             if (name != idc.BADADDR) and \
                     not (name.startswith('loc_')) and \
                     not (name.startswith('sub_')) and \
@@ -253,16 +256,16 @@ class IdaLoader(fainterp.FaInterp):
         if len(results) == 1:
             # if remote sig has a proper name, but current one is not
             if not sig['name'].startswith('sub_') and \
-                    idc.GetFunctionName(results[0]).startswith('sub_'):
-                if idc.AskYN(1, 'Only one result has been found. '
-                                'Rename?') == 1:
-                    idc.MakeName(results[0], str(sig['name']))
+                    idc.get_func_name(results[0]).startswith('sub_'):
+                if ida_kernwin.ask_yn(1, 'Only one result has been found. '
+                                         'Rename?') == 1:
+                    idc.set_name(results[0], str(sig['name']), idc.SN_CHECK)
 
     def prompt_save_signature(self):
         with open(TEMP_SIG_FILENAME) as f:
             sig = hjson.load(f)
 
-        if idc.AskYN(1, 'Are you sure you want to save this signature?') != 1:
+        if ida_kernwin.ask_yn(1, 'Are you sure you want to save this signature?') != 1:
             return
 
         self.save_signature(sig)
@@ -275,7 +278,7 @@ class IdaLoader(fainterp.FaInterp):
             if '_' in name:
                 if name.split('_')[0] in ('def', 'sub', 'loc', 'jpt'):
                     continue
-            flags = idc.GetFlags(ea)
+            flags = ida_bytes.get_full_flags(ea)
             if idc.hasUserName(flags):
                 output += '{} = 0x{:08x};\n'.format(name, ea)
 
@@ -315,8 +318,8 @@ class IdaLoader(fainterp.FaInterp):
 
     def reload_segments(self):
         for segment_ea in idautils.Segments():
-            buf = idc.GetManyBytes(
-                segment_ea, idc.SegEnd(segment_ea) - segment_ea
+            buf = idc.get_bytes(
+                segment_ea, idc.get_segm_end(segment_ea) - segment_ea
             )
             if buf is not None:
                 self.log('Loaded segment 0x{:x}'.format(segment_ea))
@@ -364,7 +367,7 @@ def main(project_name, symbols_file=None):
     if symbols_file is not None:
         fa_instance.set_signatures_root('')
         fa_instance.symbols(symbols_file)
-        idc.Exit(0)
+        ida_pro.qexit(0)
 
 
 if __name__ == '__main__':

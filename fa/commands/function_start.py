@@ -1,5 +1,4 @@
 # flake8: noqa
-
 from capstone import *
 import argparse
 
@@ -42,7 +41,7 @@ LOCATE_START_BY_ARCH = {
 
 
 def get_function_start(segments, ea):
-    start = idc.GetFunctionAttr(ea, idc.FUNCATTR_START)
+    start = idc.get_func_attr(ea, idc.FUNCATTR_START)
     return start
 
     # TODO: consider add support locate of function heads manually
@@ -65,7 +64,7 @@ def get_parser():
 def function_start(addresses):
     for ea in addresses:
         if ea != idc.BADADDR:
-            func_start = idc.GetFunctionAttr(ea, idc.FUNCATTR_START)
+            func_start = idc.get_func_attr(ea, idc.FUNCATTR_START)
             if func_start != idc.BADADDR:
                 yield func_start
 

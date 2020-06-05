@@ -14,7 +14,7 @@ def get_parser():
 
 
 def set_name(address, name):
-    idc.MakeName(address, name)
+    idc.set_name(address, name, idc.SN_CHECK)
 
 
 def run(segments, args, addresses, **kwargs):

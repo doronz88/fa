@@ -7,5 +7,6 @@
 		print
 		function-start
 		single 0
+		set-type 'void printf(const char *fmt, ...)'
 	]
 }

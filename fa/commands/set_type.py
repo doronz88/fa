@@ -2,6 +2,7 @@ from fa import utils, types
 
 try:
     import idc
+    import ida_auto
 except ImportError:
     pass
 
@@ -22,7 +23,7 @@ def set_type(address, type_):
         type_str = type_
 
     idc.SetType(address, type_str)
-    idc.Wait()
+    ida_auto.auto_wait()
 
 
 def run(segments, args, addresses, **kwargs):

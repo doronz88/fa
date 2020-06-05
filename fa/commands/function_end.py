@@ -16,7 +16,7 @@ def get_parser():
 def function_end(addresses):
     for ea in addresses:
         if ea != idc.BADADDR:
-            func_end = idc.GetFunctionAttr(ea, idc.FUNCATTR_END)
+            func_end = idc.get_func_attr(ea, idc.FUNCATTR_END)
             if func_end != idc.BADADDR:
                 yield func_end
 

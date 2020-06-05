@@ -7,9 +7,13 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('name-literal',
+    p = utils.ArgumentParserNoExit('make-literal',
                                    description='convert into a literal')
     return p
+
+
+def make_literal(address):
+    idc.create_strlit(address, idc.BADADDR)
 
 
 def run(segments, args, addresses, **kwargs):

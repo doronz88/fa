@@ -14,7 +14,7 @@ def get_parser():
 
 
 def locate(name):
-    return idc.LocByName(name)
+    return idc.get_name_ea_simple(name)
 
 
 def run(segments, args, addresses, **kwargs):

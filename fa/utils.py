@@ -4,6 +4,7 @@ IDA_MODULE = False
 
 try:
     import idc
+    import ida_struct
 
     IDA_MODULE = True
 except ImportError:
@@ -43,11 +44,11 @@ def find_raw(needle, segments=None):
 
 
 def ida_find_all(payload):
-    ea = idc.FindBinary(0, idc.SEARCH_DOWN | idc.SEARCH_REGEX, payload)
+    ea = idc.find_binary(0, idc.SEARCH_DOWN | idc.SEARCH_REGEX, payload)
     while ea != idc.BADADDR:
         yield ea
-        ea = idc.FindBinary(ea + 1, idc.SEARCH_DOWN | idc.SEARCH_REGEX,
-                            payload)
+        ea = idc.find_binary(ea + 1, idc.SEARCH_DOWN | idc.SEARCH_REGEX,
+                             payload)
 
 
 def read_memory(segments, ea, size):
@@ -78,13 +79,13 @@ class ArgumentParserNoExit(argparse.ArgumentParser):
 
 
 def add_struct_to_idb(name):
-    idc.Til2Idb(-1, name)
+    idc.import_type(-1, name)
 
 
 def find_or_create_struct(name):
-    sid = idc.GetStrucIdByName(name)
+    sid = ida_struct.get_struc_id(name)
     if sid == idc.BADADDR:
-        sid = idc.AddStrucEx(-1, name, 0)
+        sid = idc.add_struc(-1, name, 0)
         print("added struct \"{0}\", id: {1}".format(name, sid))
     else:
         print("struct \"{0}\" already exists, id: ".format(name, sid))
