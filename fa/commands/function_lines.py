@@ -14,11 +14,11 @@ def get_parser():
 
 @utils.yield_unique
 def function_lines(addresses):
+    utils.verify_ida()
     for address in addresses:
         for item in idautils.FuncItems(address):
             yield item
 
 
 def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
     return list(function_lines(addresses))

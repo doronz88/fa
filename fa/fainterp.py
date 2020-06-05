@@ -11,6 +11,8 @@ import shlex
 import sys
 import os
 
+import hjson
+
 if sys.version_info[0] == 3:
     # for Python3
     from tkinter import ttk, Tk
@@ -18,8 +20,6 @@ else:
     # for Python2
     from Tkinter import Tk
     import ttk
-
-import hjson
 
 CONFIG_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')

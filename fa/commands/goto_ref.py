@@ -17,6 +17,7 @@ def get_parser():
 
 
 def goto_ref(addresses, code=False, data=False):
+    utils.verify_ida()
     for address in addresses:
         refs = []
         if code:
@@ -39,5 +40,4 @@ def goto_ref_unique(addresses, code=False, data=False):
 
 
 def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
     return list(set(goto_ref(addresses, code=args.code, data=args.data)))

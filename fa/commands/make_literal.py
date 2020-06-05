@@ -13,12 +13,11 @@ def get_parser():
 
 
 def make_literal(addresses):
+    utils.verify_ida()
     for ea in addresses:
         idc.create_strlit(ea, idc.BADADDR)
     return addresses
 
 
 def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
-
     return make_literal(addresses)

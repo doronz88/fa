@@ -265,7 +265,8 @@ class IdaLoader(fainterp.FaInterp):
         with open(TEMP_SIG_FILENAME) as f:
             sig = hjson.load(f)
 
-        if ida_kernwin.ask_yn(1, 'Are you sure you want to save this signature?') != 1:
+        if ida_kernwin.ask_yn(1, 'Are you sure you want '
+                                 'to save this signature?') != 1:
             return
 
         self.save_signature(sig)

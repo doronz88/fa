@@ -14,6 +14,7 @@ def get_parser():
 
 
 def function_end(addresses):
+    utils.verify_ida()
     for ea in addresses:
         if ea != idc.BADADDR:
             func_end = idc.get_func_attr(ea, idc.FUNCATTR_END)
@@ -22,6 +23,5 @@ def function_end(addresses):
 
 
 def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
     results = function_end(addresses)
     return list(results) if args.not_unique else list(set(results))

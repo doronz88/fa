@@ -15,6 +15,7 @@ def get_parser():
 
 
 def max_xrefs(addresses):
+    utils.verify_ida()
     xrefs = []
     for address in addresses:
         xrefs.append((address, len([ref.frm for ref in

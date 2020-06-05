@@ -74,7 +74,8 @@ class FaStruct(FaType):
 
         for f in self._fields:
             idc.add_struc_member(sid, f.name, -1,
-                               (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF, -1, 1)
+                                 (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF,
+                                 -1, 1)
             member_name = "{}.{}".format(self._name, f.name)
             idc.SetType(idaapi.get_member_by_fullname(member_name)[0].id,
                         f.type)

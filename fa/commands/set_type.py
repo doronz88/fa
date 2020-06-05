@@ -27,12 +27,11 @@ def set_type_single(address, type_):
 
 
 def set_type(addresses, type_):
+    utils.verify_ida()
     for ea in addresses:
         set_type_single(ea, type_)
     return addresses
 
 
 def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
-
     return set_type(addresses, args.type_str)

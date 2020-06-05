@@ -14,10 +14,10 @@ def get_parser():
 
 
 def locate(name):
+    utils.verify_ida()
     return idc.get_name_ea_simple(name)
 
 
 def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
     address = locate(args.name)
     return [address] if address != idc.BADADDR else []

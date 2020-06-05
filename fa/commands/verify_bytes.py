@@ -37,4 +37,5 @@ def run(segments, args, addresses, **kwargs):
     until = None
     if 'until' in args and args.until is not None:
         until = args.until
-    return verify_bytes(addresses, args.hex_str, segments=segments, until=until)
+    return verify_bytes(addresses, args.hex_str,
+                        segments=segments, until=until)

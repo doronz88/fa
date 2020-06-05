@@ -13,14 +13,12 @@ def get_parser():
     return p
 
 
-def set_name(address, name):
-    idc.set_name(address, name, idc.SN_CHECK)
+def set_name(addresses, name):
+    utils.verify_ida()
+    for ea in addresses:
+        idc.set_name(ea, name, idc.SN_CHECK)
+    return addresses
 
 
 def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
-
-    for address in addresses:
-        set_name(address, args.name)
-
-    return addresses
+    return set_name(addresses, args.name)

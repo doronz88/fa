@@ -13,14 +13,11 @@ def get_parser():
 
 
 def make_code(addresses):
+    utils.verify_ida()
     for ea in addresses:
         idc.create_insn(ea, idc.BADADDR)
     return addresses
 
 
 def run(segments, args, addresses, **kwargs):
-    utils.verify_ida()
-
-    make_code(addresses)
-
-    return addresses
+    return make_code(addresses)
