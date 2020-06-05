@@ -6,6 +6,8 @@ FA stands for Firmware Analysis.
 FA allows one to easily perform code exploration, symbol searching and 
 other functionality with ease.
 
+Pull Requests are more then welcome :smirk:.
+
 ## Requirements
 
 Supported IDA 7.x.
