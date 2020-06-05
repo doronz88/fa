@@ -7,8 +7,8 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('make-literal',
-                                   description='convert into a literal')
+    p = utils.ArgumentParserNoExit('make-code',
+                                   description='convert into a code block')
     return p
 
 

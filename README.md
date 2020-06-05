@@ -539,9 +539,9 @@ optional arguments:
 
 #### make-literal
 ```
-usage: make-literal [-h]
+usage: make-code [-h]
 
-convert into a literal
+convert into a code block
 
 optional arguments:
   -h, --help  show this help message and exit
