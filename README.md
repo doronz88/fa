@@ -194,6 +194,7 @@ To view the list of available commands, [view the list below](#available-command
 ```python
 from fa.commands.find_str import find_str 
 from fa.commands.set_name import set_name
+from fa.commands.unique import unique
 from fa import utils
 
 def run(**kwargs):
@@ -201,13 +202,12 @@ def run(**kwargs):
     utils.verify_ida()
 
     # locate the global string
-    results = find_str('hello world', null_terminated=True)
+    results = set_name(unique(find_str('hello world', null_terminated=True)),
+                       'g_hello_world_string')
+
     if len(results) != 1:
         # no results
         return {}
-    
-    # set symbol name in idb
-    set_name(results[0], 'g_hello_world_string')
     
     # return a dictionary of the found symbols
     return {'g_hello_world_string': results[0]}
