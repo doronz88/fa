@@ -320,8 +320,8 @@ Project aliases have higher priority.
 
 ### Loaders
 
-Loaders are the entry point into running FA. Currently only IDA loader exists, 
-but in the future we'll possibly add Ghidra and other tools.
+Loaders are the entry point into running FA. 
+In the future we'll possibly add Ghidra and other tools.
 
 #### IDA
 
@@ -342,7 +342,13 @@ You can also run IDA in script mode just to extract symbols using:
 ida -S"ida_loader.py <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
 ```
 
+#### ELF
 
+In order to use FA on a RAW ELF file, simply use the following command-line:
+
+```sh
+python elf_loader.py <elf-file> <signatures_root> <project>
+```
 
 ### Available commands
 
