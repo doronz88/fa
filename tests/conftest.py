@@ -22,6 +22,7 @@ def ida(request):
 def idb(request):
     return request.config.getoption("--idb")
 
+
 @pytest.fixture
 def elf(request):
     return request.config.getoption("--elf")
