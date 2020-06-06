@@ -15,5 +15,4 @@ def aligned(addresses, value):
 
 
 def run(segments, args, addresses, **kwargs):
-    args, rest = args
     return list(aligned(addresses, args.value))
