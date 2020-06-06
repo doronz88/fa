@@ -52,6 +52,9 @@ def ida_find_all(payload):
 
 
 def read_memory(segments, ea, size):
+    if IDA_MODULE:
+        return idc.get_bytes(ea, size)
+
     for segment_ea, data in segments.items():
         if (ea <= segment_ea + len(data)) and (ea >= segment_ea):
             offset = ea - segment_ea

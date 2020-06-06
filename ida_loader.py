@@ -318,13 +318,9 @@ class IdaLoader(fainterp.FaInterp):
         self.reload_segments()
 
     def reload_segments(self):
-        for segment_ea in idautils.Segments():
-            buf = idc.get_bytes(
-                segment_ea, idc.get_segm_end(segment_ea) - segment_ea
-            )
-            if buf is not None:
-                self.log('Loaded segment 0x{:x}'.format(segment_ea))
-                self._segments[segment_ea] = buf
+        # memory searches will use IDA's API instead
+        # which is much faster
+        return
 
 
 fa_instance = None
