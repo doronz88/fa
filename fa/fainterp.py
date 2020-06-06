@@ -57,6 +57,28 @@ class FaInterp:
         self._project = project
         self.log('project set: {}'.format(project))
 
+    def symbols(self, output_file_path=None):
+        results = {}
+        results.update(self.get_python_symbols())
+        for sig in self.get_json_signatures():
+            sig_results = self.find(sig['name'], decremental=True)
+
+            if len(sig_results) > 0:
+                if sig['name'] not in results.keys():
+                    results[sig['name']] = set()
+
+                results[sig['name']].update(sig_results)
+
+        errors = ''
+        for k, v in results.items():
+            if isinstance(v, list) or isinstance(v, set):
+                if len(v) != 1:
+                    errors += '# {} had too many results\n'.format(k)
+                    continue
+
+        print(errors)
+        return results
+
     def interactive_set_project(self):
         app = Tk()
         # app.geometry('200x30')

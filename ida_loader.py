@@ -290,26 +290,7 @@ class IdaLoader(fainterp.FaInterp):
                 f.write(output)
 
     def symbols(self, output_file_path=None):
-        results = {}
-        results.update(self.get_python_symbols())
-        for sig in self.get_json_signatures():
-            sig_results = self.find(sig['name'], decremental=True)
-
-            if len(sig_results) > 0:
-                if sig['name'] not in results.keys():
-                    results[sig['name']] = set()
-
-                results[sig['name']].update(sig_results)
-
-        errors = ''
-        for k, v in results.items():
-            if isinstance(v, list) or isinstance(v, set):
-                if len(v) != 1:
-                    errors += '# {} had too many results\n'.format(k)
-                    continue
-
-        print(errors)
-
+        super(IdaLoader, self).symbols(output_file_path=output_file_path)
         IdaLoader.extract_all_user_names(output_file_path)
 
     def set_input(self, input_):
@@ -327,7 +308,7 @@ fa_instance = None
 
 
 @click.command()
-@click.argument('project_name', default='test-project')
+@click.argument('project_name', default='test-project-ida')
 @click.option('--symbols-file', default=None)
 def main(project_name, symbols_file=None):
     global fa_instance

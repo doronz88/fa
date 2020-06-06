@@ -48,5 +48,5 @@ def test_ida_symbols(ida, idb):
         import ida_loader
         fa_instance = ida_loader.IdaLoader()
         fa_instance.set_input('ida')
-        fa_instance.set_project('test-project')
+        fa_instance.set_project('test-project-ida')
         fa_instance.symbols()
