@@ -1,7 +1,5 @@
-try:
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import ConfigParser
+from tkinter import ttk, Tk
+from configparser import ConfigParser
 
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
@@ -10,14 +8,6 @@ import sys
 import os
 
 import hjson
-
-if sys.version_info[0] == 3:
-    # for Python3
-    from tkinter import ttk, Tk
-else:
-    # for Python2
-    from Tkinter import Tk
-    import ttk
 
 CONFIG_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')
