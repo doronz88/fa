@@ -21,7 +21,7 @@ def goto_ref(addresses, code=False, data=False):
     for address in addresses:
         refs = []
         if code:
-            refs += list(idautils.CodeRefsFrom(address, 1))
+            refs += list(idautils.CodeRefsFrom(address, 0))
         if data:
             refs += list(idautils.DataRefsFrom(address))
 

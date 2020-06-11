@@ -512,7 +512,6 @@ optional arguments:
   --data      include data references
 ```
 
-keystone-engine module not installed
 #### keystone-find-opcodes
 ```
 usage: keystone-find-opcodes [-h] [--bele] [--or] arch mode code
@@ -530,7 +529,6 @@ optional arguments:
   --or        mandatory. expands search results
 ```
 
-keystone-engine module not installed
 #### keystone-verify-opcodes
 ```
 usage: keystone-verify-opcodes [-h] [--bele] [--until UNTIL] arch mode code
@@ -596,6 +594,16 @@ optional arguments:
 usage: max-xrefs [-h]
 
 get the result with most xrefs pointing at it
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### min-xrefs
+```
+usage: min-xrefs [-h]
+
+get the result with least xrefs pointing at it
 
 optional arguments:
   -h, --help  show this help message and exit
