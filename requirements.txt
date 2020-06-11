@@ -1,4 +1,4 @@
 keystone-engine
 capstone
-idalink
-pytest
+click
+hjson

@@ -1,2 +1,6 @@
+keystone-engine
+capstone
 click
 hjson
+idalink
+pytest
