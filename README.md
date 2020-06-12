@@ -6,9 +6,9 @@ FA stands for Firmware Analysis.
 FA allows one to easily perform code exploration, symbol searching and 
 other functionality with ease. 
 
-The current codebase very IDA-plugin-oriented. In the future I'll
-consider adding more versatile approach to allow loading via
-other disassemblers such as Ghidra, Radare and etc...
+The current codebase is very IDA-plugin-oriented. In the future I'll
+consider adding compatibility for other disassemblers such as:
+Ghidra, Radare and etc...
 
 
 Pull Requests are of course more than welcome :smirk:.
