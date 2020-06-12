@@ -308,9 +308,10 @@ fa_instance = None
 
 
 @click.command()
+@click.argument('signatures_root', default='.')
 @click.argument('project_name', default='test-project-ida')
 @click.option('--symbols-file', default=None)
-def main(project_name, symbols_file=None):
+def main(signatures_root, project_name, symbols_file=None):
     global fa_instance
 
     IdaLoader.log('''
@@ -333,6 +334,7 @@ def main(project_name, symbols_file=None):
     ---------------------------------''')
     fa_instance = IdaLoader()
     fa_instance.set_input('ida')
+    fa_instance.set_signatures_root(signatures_root)
     fa_instance.set_project(project_name)
 
     idaapi.add_hotkey('Ctrl-6', fa_instance.interactive_set_project)
