@@ -152,7 +152,7 @@ To view the list of available commands, [view the list below](#available-command
 ```hjson
 {
     type: function-list
-    name: arm_explorer
+    name: arm-explorer
     instructions: [
             # search for some potential function prologs
             arm-find-all 'push {r4, lr}'
@@ -162,6 +162,34 @@ To view the list of available commands, [view the list below](#available-command
 
             # convert into functions
             make-function
+	]
+}
+```
+
+#### Performing string exploration
+
+```hjson
+{
+    type: explorer
+    name: arm-string-explorer
+    instructions: [
+            # goto printf
+            locate printf
+
+            # iterate every xref
+            xref
+
+            # and for each, go word-word backwards
+            add-offset-range 0 -40 -4
+
+            # if ldr to r0
+            verify-operand ldr --op0 r0
+
+            # go to the global string
+            goto-ref --data
+
+            # and make it literal
+            make-literal
 	]
 }
 ```
