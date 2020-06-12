@@ -322,6 +322,7 @@ def main(signatures_root, project_name, symbols_file=None):
     fa_instance.set_project(project_name) # select project name
     print(fa_instance.list_projects()) # prints available projects
     print(fa_instance.find(symbol_name)) # searches for the specific symbol
+    fa_instance.get_python_symbols() # run all project's python scripts
     fa_instance.symbols() # searches for the symbols in the current project
 
     HotKeys:
