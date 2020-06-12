@@ -14,7 +14,6 @@ import idaapi
 import idc
 
 from fa import fainterp
-reload(fainterp)
 
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
 

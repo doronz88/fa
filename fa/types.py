@@ -77,7 +77,8 @@ class FaStruct(FaType):
 
         for f in self._fields:
             ida_struct.add_struc_member(sptr, f.name, idc.BADADDR,
-                                        (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF,
+                                        (idc.FF_BYTE | idc.FF_DATA)
+                                        & 0xFFFFFFFF,
                                         None, 1)
             member_name = "{}.{}".format(self._name, f.name)
             idc.SetType(idaapi.get_member_by_fullname(member_name)[0].id,
