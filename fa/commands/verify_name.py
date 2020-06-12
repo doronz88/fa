@@ -18,6 +18,6 @@ def verify_name(addresses, name):
             yield address
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     utils.verify_ida()
     return list(verify_name(addresses, args.name))

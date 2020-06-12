@@ -12,5 +12,5 @@ def unique(addresses):
     return addresses if len(addresses) == 1 else []
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return unique(addresses)

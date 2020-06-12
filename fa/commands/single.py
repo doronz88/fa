@@ -16,5 +16,5 @@ def single(addresses, index):
         return [addresses[index]]
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return single(addresses, args.index)

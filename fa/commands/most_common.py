@@ -15,5 +15,5 @@ def most_common(addresses):
     return [max(set(addresses), key=addresses.count)]
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return most_common(addresses)

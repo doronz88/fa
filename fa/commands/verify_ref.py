@@ -48,7 +48,7 @@ def verify_ref_unique(addresses, name, code=False, data=False):
         yield address
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     utils.verify_ida()
     return list(set(verify_ref(addresses, args.name,
                                code=args.code, data=args.data)))

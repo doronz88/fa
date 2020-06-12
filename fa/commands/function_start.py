@@ -31,6 +31,6 @@ def function_start(addresses):
                 yield func_start
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     results = function_start(addresses)
     return list(results) if args.not_unique else list(set(results))

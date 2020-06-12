@@ -19,7 +19,7 @@ def find_bytes(hex_str, segments=None):
     return utils.find_raw(needle, segments=segments)
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     results = list(find_bytes(args.hex_str, segments=segments))
 
     retval = set(addresses)

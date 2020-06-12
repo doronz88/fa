@@ -19,7 +19,7 @@ def find_bytes_ida(expression, segments=None):
         yield address
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     results = find_bytes_ida(args.expression)
 
     retval = set(addresses)

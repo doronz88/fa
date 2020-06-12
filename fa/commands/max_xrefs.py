@@ -28,5 +28,5 @@ def max_xrefs(addresses):
     return []
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return max_xrefs(addresses)

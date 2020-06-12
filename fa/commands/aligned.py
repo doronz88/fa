@@ -14,5 +14,5 @@ def aligned(addresses, value):
     return [ea for ea in addresses if ea % value == 0]
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return list(aligned(addresses, args.value))

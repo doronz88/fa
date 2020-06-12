@@ -42,7 +42,7 @@ def verify_operand(addresses, name, op0=None, op1=None, op2=None):
                 yield address
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     utils.verify_ida()
     op0 = [int(i) for i in args.op0.split(',')] if args.op0 else None
     op1 = [int(i) for i in args.op1.split(',')] if args.op1 else None

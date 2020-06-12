@@ -18,7 +18,7 @@ def find_str(string, null_terminated=False):
     return find_bytes.find_bytes(hex_str)
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     hex_str = binascii.hexlify(args.hex_str)
     if args.null_terminated:
         hex_str += '00'

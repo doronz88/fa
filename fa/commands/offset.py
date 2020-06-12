@@ -13,5 +13,5 @@ def offset(addresses, length):
         yield ea + length
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return list(offset(addresses, args.offset))

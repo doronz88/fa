@@ -22,6 +22,6 @@ def function_end(addresses):
                 yield func_end
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     results = function_end(addresses)
     return list(results) if args.not_unique else list(set(results))

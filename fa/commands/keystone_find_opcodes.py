@@ -27,14 +27,13 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     arch = eval(args.arch)
     mode = eval(args.mode)
 
     if args.bele:
-        if 'endianity' in kwargs:
-            mode |= KS_MODE_BIG_ENDIAN if \
-                kwargs['endianity'] == '>' else KS_MODE_LITTLE_ENDIAN
+        mode |= KS_MODE_BIG_ENDIAN if \
+            interpreter.endianity == '>' else KS_MODE_LITTLE_ENDIAN
 
     ks = Ks(arch, mode)
     compiled_buf = bytearray(ks.asm(args.code)[0])

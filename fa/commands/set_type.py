@@ -33,5 +33,5 @@ def set_type(addresses, type_):
     return addresses
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return set_type(addresses, args.type_str)

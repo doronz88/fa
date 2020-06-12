@@ -33,7 +33,7 @@ def verify_bytes(addresses, hex_str, segments=None, until=None):
     return results
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     until = None
     if 'until' in args and args.until is not None:
         until = args.until

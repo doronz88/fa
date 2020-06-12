@@ -19,6 +19,6 @@ def add_offset_range(addresses, start, end, step):
             yield ea + i
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     gen = add_offset_range(addresses, args.start, args.end, args.step)
     return list(gen)

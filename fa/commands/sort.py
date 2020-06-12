@@ -13,5 +13,5 @@ def sort(addresses):
     return addresses
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return sort(addresses)

@@ -20,5 +20,5 @@ def function_lines(addresses):
             yield item
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return list(function_lines(addresses))

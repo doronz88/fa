@@ -20,6 +20,6 @@ def xref(addresses):
             yield ref.frm
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     utils.verify_ida()
     return list(xref(addresses))

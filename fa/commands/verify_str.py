@@ -13,7 +13,7 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     hex_str = binascii.hexlify(args.hex_str)
     hex_str += '00' if args.null_terminated else ''
 

@@ -4,8 +4,10 @@
 	"instructions": [
 		find-str --or 'printf' --null-terminated
 		xref
+		back 2
+		xref
+
 		sort
-		print
 		function-start
 		most-common
 		max-xrefs

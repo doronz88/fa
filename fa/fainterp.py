@@ -27,8 +27,9 @@ class FaInterp:
         self._input = None
         self._segments = OrderedDict()
         self._endianity = '<'
-
         self._signatures_root = DEFAULT_SIGNATURES_ROOT
+        self._history = []
+        self._checkpoints = {}
 
         if (config_path is not None) and (os.path.exists(config_path)):
             config = ConfigParser()
@@ -39,6 +40,10 @@ class FaInterp:
     @abstractmethod
     def set_input(self, input_):
         pass
+
+    @property
+    def endianity(self):
+        return self._endianity
 
     def set_signatures_root(self, path):
         self._signatures_root = path
@@ -139,7 +144,7 @@ class FaInterp:
         p = module.get_parser()
         args = p.parse_args(args)
         return module.run(self._segments, args, addresses,
-                          endianity=self._endianity)
+                          interpreter=self)
 
     def get_alias(self):
         retval = {}
@@ -180,8 +185,8 @@ class FaInterp:
         if addresses is None:
             addresses = []
 
-        history = []
-        checkpoints = {}
+        self._history = []
+        self._checkpoints = {}
 
         for line in instructions:
             line = line.strip()
@@ -195,19 +200,14 @@ class FaInterp:
 
             # builtin commands
 
-            if line.startswith('back '):
-                index = int(line.split()[-1])
-                addresses = history[-index]
-                continue
-
             if line.startswith('checkpoint '):
                 checkpoint_name = line.split(' ', 1)[1]
-                checkpoints[checkpoint_name] = addresses
+                self._checkpoints[checkpoint_name] = addresses
                 continue
 
             if line.startswith('back-to-checkpoint '):
                 checkpoint_name = line.split(' ', 1)[1]
-                addresses = checkpoints[checkpoint_name]
+                addresses = self._checkpoints[checkpoint_name]
                 continue
 
             # normal commands
@@ -228,7 +228,7 @@ class FaInterp:
                 return addresses
 
             addresses = new_addresses
-            history.append(addresses)
+            self._history.append(addresses)
 
         return addresses
 

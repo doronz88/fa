@@ -18,6 +18,6 @@ def locate(name):
     return idc.get_name_ea_simple(name)
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     address = locate(args.name)
     return [address] if address != idc.BADADDR else []

@@ -28,5 +28,5 @@ def min_xrefs(addresses):
     return []
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return min_xrefs(addresses)

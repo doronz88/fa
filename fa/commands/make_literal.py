@@ -19,5 +19,5 @@ def make_literal(addresses):
     return addresses
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return make_literal(addresses)

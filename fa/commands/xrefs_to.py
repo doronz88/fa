@@ -23,7 +23,7 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     utils.verify_ida()
 
     if args.name:

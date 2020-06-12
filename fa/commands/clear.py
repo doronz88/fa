@@ -8,5 +8,5 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return []

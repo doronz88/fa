@@ -20,5 +20,5 @@ def set_name(addresses, name):
     return addresses
 
 
-def run(segments, args, addresses, **kwargs):
+def run(segments, args, addresses, interpreter=None, **kwargs):
     return set_name(addresses, args.name)
