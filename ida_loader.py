@@ -1,5 +1,4 @@
 import subprocess
-import binascii
 import tempfile
 import sys
 import os
@@ -9,13 +8,13 @@ import click
 
 import ida_kernwin
 import ida_bytes
-import ida_name
 import idautils
 import ida_pro
 import idaapi
 import idc
 
 from fa import fainterp
+reload(fainterp)
 
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
 
@@ -73,69 +72,6 @@ class String(object):
         return retval
 
 
-def create_signature_ppc32(start, end, inf, verify=True):
-    signature = []
-    opcode_size = 4
-    first = True
-
-    command = 'find-bytes --or' if not verify else 'verify-bytes'
-
-    for ea in range(start, end, opcode_size):
-        mnemonic = idc.print_insn_mnem(ea)
-        if mnemonic in ('lis', 'lwz', 'bl') or mnemonic.startswith('b'):
-            pass
-        else:
-            b = binascii.hexlify(idc.get_bytes(ea, opcode_size))
-            signature.append('{} {}'.format(command, b))
-            if first:
-                first = False
-                command = 'verify-bytes'
-
-        signature.append('offset {}'.format(opcode_size))
-
-    signature.append('offset {}'.format(start - end))
-
-    return signature
-
-
-def create_signature_arm(start, end, inf, verify=True):
-    """
-    Create a signature for ARM processors.
-    :param int start: Function's start address.
-    :param int end: Function's end address.
-    :param inf: IDA info object.
-    :param bool verify: True of only verification required.
-    False if searching is required too.
-    :return: Signature steps to validate the function
-    :rtype: list
-    """
-    instructions = []
-    ea = start
-    while ea < end:
-        mnemonic = idc.print_insn_mnem(ea)
-        opcode_size = idautils.DecodeInstruction(ea).size
-        # Skip memory accesses and branches.
-        if mnemonic not in \
-                ('LDR', 'STR', 'BL', 'B', 'BLX', 'BX', 'BXJ'):
-            command = 'find-bytes --or' \
-                if not verify and ea == start else 'verify-bytes'
-            instructions.append('{} {}'.format(
-                command,
-                binascii.hexlify(idc.get_bytes(ea, opcode_size)))
-            )
-        ea += opcode_size
-        instructions.append('offset {}'.format(opcode_size))
-
-    instructions.append('offset {}'.format(start - end))
-    return instructions
-
-
-SIGNATURE_CREATION_BY_ARCH = {
-    'PPC': create_signature_ppc32,
-    'ARM': create_signature_arm,
-}
-
-
 def find_function_strings(func_ea):
     end_ea = idc.find_func_end(func_ea)
     if end_ea == idaapi.BADADDR:
@@ -177,55 +113,12 @@ class IdaLoader(fainterp.FaInterp):
         IDA screen.
         """
         self.log('creating temporary signature')
-        func_start = idc.get_func_attr(idc.get_screen_ea(), idc.FUNCATTR_START)
-        func_end = idc.get_func_attr(idc.get_screen_ea(), idc.FUNCATTR_END)
 
         signature = {
             'name': idc.get_func_name(idc.get_screen_ea()),
             'type': 'function',
             'instructions': []
         }
-
-        # first try adding references to strings
-        strings = find_function_strings(func_start)
-        code_references = find_function_code_references(func_start)
-
-        strings_addr_set = set()
-        code_references_set = set()
-
-        for s in strings:
-            if s.addr not in strings_addr_set:
-                # link each string ref only once
-                strings_addr_set.add(s.addr)
-                signature['instructions'].append(
-                    'xrefs-to --or --function-start '
-                    '--bytes "{}"'.format(s.get_bytes_for_find())
-                )
-
-        for ea in code_references:
-            name = idc.get_name(ea, ida_name.GN_VISIBLE)
-            if (name != idc.BADADDR) and \
-                    not (name.startswith('loc_')) and \
-                    not (name.startswith('sub_')) and \
-                    (ea not in code_references_set):
-                # link each string ref only once
-                code_references_set.add(ea)
-                signature['instructions'].append(
-                    'xrefs-to --or --function-start '
-                    '--name "{}"'.format(name)
-                )
-
-        inf = idaapi.get_inf_structure()
-        proc_name = inf.procName
-
-        if proc_name not in SIGNATURE_CREATION_BY_ARCH:
-            if len(signature) == 0:
-                self.log('failed to create signature')
-                return
-
-        signature['instructions'] += SIGNATURE_CREATION_BY_ARCH[proc_name](
-            func_start, func_end, inf, verify=len(signature) != 0
-        )
 
         with open(TEMP_SIG_FILENAME, 'w') as f:
             hjson.dump(signature, f, indent=4)
@@ -334,7 +227,6 @@ def main(signatures_root, project_name, symbols_file=None):
     ---------------------------------''')
     fa_instance = IdaLoader()
     fa_instance.set_input('ida')
-    fa_instance.set_signatures_root(signatures_root)
     fa_instance.set_project(project_name)
 
     idaapi.add_hotkey('Ctrl-6', fa_instance.interactive_set_project)
@@ -345,7 +237,7 @@ def main(signatures_root, project_name, symbols_file=None):
     idaapi.add_hotkey('Ctrl-0', fa_instance.prompt_save_signature)
 
     if symbols_file is not None:
-        fa_instance.set_signatures_root('')
+        fa_instance.set_signatures_root(signatures_root)
         fa_instance.symbols(symbols_file)
         ida_pro.qexit(0)
 
