@@ -40,13 +40,13 @@ class FaEnum(FaType):
     def update_idb(self):
         id = ida_enum.get_enum(self._name)
         if idc.BADADDR == id:
-            id = ida_enum.add_enum(-1, self._name, idaapi.decflag())
+            id = ida_enum.add_enum(idc.BADADDR, self._name, idaapi.decflag())
 
         keys = self._values.keys()
         keys.sort()
 
         for k in keys:
-            idc.add_enum_member(id, self._values[k], k, -1)
+            ida_enum.add_enum_member(id, self._values[k], k)
 
 
 class FaStruct(FaType):
@@ -69,13 +69,16 @@ class FaStruct(FaType):
     def update_idb(self):
         sid = ida_struct.get_struc_id(self._name)
         if sid != -1:
-            idc.del_struc(sid)
-        sid = idc.add_struc(-1, self._name, 0)
+            sptr = ida_struct.get_struc(sid)
+            ida_struct.del_struc(sptr)
+
+        sid = ida_struct.add_struc(idc.BADADDR, self._name, 0)
+        sptr = ida_struct.get_struc(sid)
 
         for f in self._fields:
-            idc.add_struc_member(sid, f.name, -1,
-                                 (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF,
-                                 -1, 1)
+            ida_struct.add_struc_member(sptr, f.name, idc.BADADDR,
+                                        (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF,
+                                        None, 1)
             member_name = "{}.{}".format(self._name, f.name)
             idc.SetType(idaapi.get_member_by_fullname(member_name)[0].id,
                         f.type)
