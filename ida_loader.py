@@ -18,7 +18,6 @@ import idc
 from fa import fainterp
 
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
-IS_BE = '>' if idaapi.get_inf_structure().is_be() else '<'
 
 
 def open_file(filename):
