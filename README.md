@@ -90,7 +90,7 @@ User may also use his own python script files to perform
 the search. Just create a new `.py` file in your project 
 directory and implement the `run(**kwargs)` method. Also, the project's
 path is appended to python's `sys.path` so you may import
-different your scripts from one another.
+your scripts from one another.
 
 To view the list of available commands, [view the list below](#available-commands)
 
