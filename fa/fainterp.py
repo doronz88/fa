@@ -259,7 +259,7 @@ class FaInterp:
                     name = os.path.splitext(filename)[0]
                     filename = os.path.join(project_root, filename)
                     m = FaInterp.get_module(name, filename)
-                    symbols.update(m.run(interpretor=self))
+                    symbols.update(m.run(interpreter=self))
 
         return symbols
 

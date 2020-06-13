@@ -269,7 +269,7 @@ def run(**kwargs):
     return {'g_hello_world_string': results[0]}
 ```
 
-#### Python script to automate SIG files interpretor
+#### Python script to automate SIG files interpreter
 
 ```python
 TEMPLATE = '''
@@ -282,7 +282,7 @@ set-name '{function_name}'
 
 def run(**kwargs):
     results = {}
-    interp = kwargs['interpretor']
+    interp = kwargs['interpreter']
 
     for function_name in ['func1', 'func2', 'func3']:
         instructions = TEMPLATE.format(unique_string=function_name, 
@@ -305,7 +305,7 @@ xref
 '''
 
 def run(**kwargs):
-    interp = kwargs['interpretor']
+    interp = kwargs['interpreter']
 
     types.add_const('CONST7', 7)
     types.add_const('CONST8', 8)
