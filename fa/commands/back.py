@@ -13,4 +13,4 @@ def get_parser():
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return interpreter._history[-args.amount]
+    return interpreter.history[-args.amount]

@@ -26,10 +26,10 @@ class FaInterp:
         self._project = 'generic'
         self._input = None
         self._segments = OrderedDict()
-        self._endianity = '<'
         self._signatures_root = DEFAULT_SIGNATURES_ROOT
-        self._history = []
-        self._checkpoints = {}
+        self.history = []
+        self.checkpoints = {}
+        self.endianity = '<'
 
         if (config_path is not None) and (os.path.exists(config_path)):
             config = ConfigParser()
@@ -40,10 +40,6 @@ class FaInterp:
     @abstractmethod
     def set_input(self, input_):
         pass
-
-    @property
-    def endianity(self):
-        return self._endianity
 
     def set_signatures_root(self, path):
         self._signatures_root = path
@@ -185,8 +181,8 @@ class FaInterp:
         if addresses is None:
             addresses = []
 
-        self._history = []
-        self._checkpoints = {}
+        self.history = []
+        self.checkpoints = {}
 
         for line in instructions:
             line = line.strip()
@@ -196,18 +192,6 @@ class FaInterp:
 
             if line.startswith('#'):
                 # treat as comment
-                continue
-
-            # builtin commands
-
-            if line.startswith('checkpoint '):
-                checkpoint_name = line.split(' ', 1)[1]
-                self._checkpoints[checkpoint_name] = addresses
-                continue
-
-            if line.startswith('back-to-checkpoint '):
-                checkpoint_name = line.split(' ', 1)[1]
-                addresses = self._checkpoints[checkpoint_name]
                 continue
 
             # normal commands
@@ -228,7 +212,7 @@ class FaInterp:
                 return addresses
 
             addresses = new_addresses
-            self._history.append(addresses)
+            self.history.append(addresses)
 
         return addresses
 

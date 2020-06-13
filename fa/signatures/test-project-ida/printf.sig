@@ -21,7 +21,6 @@
         clear
 		locate printf
 		checkpoint printf
-		back-to-checkpoint printf
 		function-lines
 		verify-operand bl
 		goto-ref --code
@@ -29,6 +28,6 @@
 		offset 4
 		offset -4
 
-		locate printf
+		back-to-checkpoint printf
 	]
 }
