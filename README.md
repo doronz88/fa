@@ -2,9 +2,16 @@
 
 ## What is it?
 
-FA stands for Firmware Analysis.
+FA stands for Firmware Analysis and intended **For Humans**.
+
 FA allows one to easily perform code exploration, symbol searching and 
-other functionality with ease. 
+other functionality with ease.
+
+Usually such tasks would require you to understand complicated APIs,
+write machine-dependant code and perform other tedious tasks.
+FA is meant to replace the steps one usually performs like a robot 
+(find X string, goto xref, find the next call function, ...) in 
+a much friendlier and maintainable manner. 
 
 The current codebase is very IDA-plugin-oriented. In the future I'll
 consider adding compatibility for other disassemblers such as:
@@ -30,11 +37,11 @@ python -m pip install -r requirements_testing.txt
 
 ## I wanna start using, but where do I start?
 
-Before using, one must understand the terminology for: 
+Before using, you should understand the terminology for: 
 Projects, SIG files and Loaders.
 
 So, grab a cup of coffee, listen to some [nice music](https://www.youtube.com/watch?v=5rrIx7yrxwQ), and please devote 
-a few minutes of your time to reading this README.
+a few minutes of your time into reading this README.
 
 ### Projects
 
@@ -60,18 +67,12 @@ signatures_root = /a/b/c
 ### SIG format
 
 The SIG format is a core feature of FA regarding symbol searching. Each
-SIG file is residing within the project directory and is automatically search
+SIG file is residing within the project directory and is automatically searched
 when requested to generate the project's symbol list.
 
-The format is Hjson based and is used to describe the algorithms for 
-different symbols.
-The algorithms are preformed *very linearly*, line by line, 
-whereas each line can either extend or reduce the possible search
-results.
-
-Each line behaves like a shell command-line that gets the 
-previous results as the input and outputs the next results
-to the next line.
+The format is Hjson-based and is used to describe what you, 
+**as a human**, would do in order to perform the given task (symbol searching
+or binary exploration).
 
 SIG syntax (single):
 ```hjson
@@ -85,6 +86,13 @@ SIG syntax (single):
     ]
 }
 ```
+
+Each line in the `instructions` list behaves like a shell
+command-line that gets the previous results as the input 
+and outputs the next results
+to the next line.
+
+Confused? That's alright :grinning:. [Just look at the examples below](#examples)
 
 User may also use his own python script files to perform 
 the search. Just create a new `.py` file in your project 
@@ -273,7 +281,7 @@ def run(**kwargs):
 
 ```python
 TEMPLATE = '''
-find-str '{unique_string}'
+find-str --or '{unique_string}'
 xref
 function-start
 unique
@@ -300,7 +308,7 @@ from fa.commands.set_type import set_type
 from fa import types
 
 TEMPLATE = '''
-find-str '{unique_string}'
+find-str --or '{unique_string}'
 xref
 '''
 
@@ -358,6 +366,31 @@ Go to: `File->Script File... (ALT+F7)` and select `ida_loader.py`.
 You should get a nice prompt inside the output window welcoming you
 into using FA. Also, a quick usage guide will also be printed so you 
 don't have to memorize everything.
+
+The prompt should look like:
+```
+FA> 
+FA>     ---------------------------------
+FA>     FA Loaded successfully
+FA> 
+FA>     Quick usage:
+FA>     fa_instance.set_project(project_name) # select project name
+FA>     print(fa_instance.list_projects()) # prints available projects
+FA>     print(fa_instance.find(symbol_name)) # searches for the specific symbol
+FA>     fa_instance.get_python_symbols(filename=None) # run project's python scripts (all or single)
+FA>     fa_instance.symbols() # searches for the symbols in the current project
+FA> 
+FA>     HotKeys:
+FA>     Ctrl-6: Set current project
+FA>     Ctrl-7: Search project symbols
+FA>     Ctrl-8: Create temporary signature
+FA>     Ctrl-Shift-8: Create temporary signature and open an editor
+FA>     Ctrl-9: Find temporary signature
+FA>     Ctrl-0: Prompt for adding the temporary signature as permanent
+FA>     ---------------------------------
+FA> project set: test-project-ida
+
+```
 
 A QuickStart Tip:
 
