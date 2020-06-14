@@ -185,7 +185,7 @@ class IdaLoader(fainterp.FaInterp):
         IdaLoader.extract_all_user_names(output_file_path)
 
     def set_input(self, input_):
-        self._endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
+        self.endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
         self._input = input_
         self.reload_segments()
 
