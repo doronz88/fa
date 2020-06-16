@@ -4,3 +4,4 @@ click
 hjson
 idalink
 pytest
+simpleelf
