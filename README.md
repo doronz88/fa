@@ -413,6 +413,15 @@ python elf_loader.py <elf-file> <signatures_root> <project>
 
 ### Available commands
 
+#### stop-if-empty
+
+```
+usage: stop-if-empty
+
+builtin interpreter command. stops parsing current SIG if 
+current resultset is empty 
+```
+
 #### back
 
 ```

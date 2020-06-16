@@ -33,5 +33,7 @@
 
         # return the correct symbol
 		back-to-checkpoint 11223344
+
+		set-name magic
 	]
 }

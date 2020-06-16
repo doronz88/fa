@@ -14,6 +14,7 @@ class ElfLoader(fainterp.FaInterp):
 
     def set_input(self, input_):
         self._elf = elffile.ELFFile(input_)
+        self.endianity = '<' if self._elf.little_endian else '>'
 
         self._segments = {}
         for s in self._elf.iter_segments():

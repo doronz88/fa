@@ -18,3 +18,4 @@ def test_elf_symbols(sample_elf):
         symbols[k] = v.pop()
 
     assert symbols['magic'] == 0x1240
+    assert symbols['eloop'] == 0x123c

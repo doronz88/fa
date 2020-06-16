@@ -1,3 +1,4 @@
+from keystone import KS_MODE_BIG_ENDIAN, KS_MODE_ARM, KS_ARCH_ARM, Ks
 import pytest
 
 
@@ -19,12 +20,10 @@ def sample_elf(request):
     from simpleelf.elf_builder import ElfBuilder
     from simpleelf import elf_consts
 
-    with tempfile.NamedTemporaryFile() as f:
+    with tempfile.NamedTemporaryFile(suffix='.elf', delete=False) as f:
         e = ElfBuilder()
         e.set_endianity('>')
         e.set_machine(elf_consts.EM_ARM)
-
-        from keystone import *
 
         # add a segment
         text_address = 0x1234
@@ -40,6 +39,12 @@ def sample_elf(request):
         data:
             .word 0x11223344
             .word 0x55667788
+        .code 32
+        main:
+            push {r4-r7, lr}
+            bl 0x1234-8
+            ldr r0, =data
+            pop {r4-r7, pc}
         ''', text_address)[0]
         text_buffer = bytearray(text_buffer)
 

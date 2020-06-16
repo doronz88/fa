@@ -194,6 +194,12 @@ class FaInterp:
                 # treat as comment
                 continue
 
+            if line == 'stop-if-empty':
+                if len(addresses) == 0:
+                    return addresses
+                else:
+                    continue
+
             # normal commands
 
             for k, v in self.get_alias().items():

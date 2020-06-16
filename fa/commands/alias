@@ -4,3 +4,4 @@ ppc32-big-verify = keystone-verify-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MOD
 ppc32-verify = keystone-verify-opcodes --bele KS_ARCH_PPC KS_MODE_PPC32
 arm-find-all = keystone-find-opcodes --bele --or KS_ARCH_ARM KS_MODE_ARM
 thumb-find-all = keystone-find-opcodes --bele --or KS_ARCH_ARM KS_MODE_THUMB
+arm-verify = keystone-verify-opcodes --bele KS_ARCH_ARM KS_MODE_ARM

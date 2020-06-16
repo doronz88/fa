@@ -34,19 +34,34 @@ sys.meta_path.append(ImportInterceptor({'textwrap': True, 'Pathlib': False}))
 ida_namespace = None
 
 
-def test_ida_symbols(ida, idb):
+def test_ida_symbols(ida, sample_elf):
+    sample_elf.close()
+
     global ida_namespace
-    if None in (ida, idb):
+    if None in (ida, ):
         pytest.skip("--ida and --idb params must be passed for this test")
-    with IDALink(ida, idb) as s:
+
+    with IDALink(ida, sample_elf.name) as s:
         ida_namespace = s
 
         from fa import utils
         reload(utils)
         utils.verify_ida()
+        s.ida_bytes.del_items(0x1240)
+        s.ida_funcs.add_func(0x1248)
+        s.ida_auto.auto_wait()
 
         import ida_loader
         fa_instance = ida_loader.IdaLoader()
         fa_instance.set_input('ida')
         fa_instance.set_project('test-project-ida')
-        fa_instance.symbols()
+        symbols = fa_instance.symbols()
+
+        for k, v in symbols.items():
+            if isinstance(v, list) or isinstance(v, set):
+                assert len(v) == 1
+                symbols[k] = v.pop()
+
+        assert symbols['magic'] == 0x1240
+        assert symbols['eloop'] == 0x123c
+        assert symbols['main'] == 0x1248

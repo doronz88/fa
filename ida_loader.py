@@ -164,6 +164,7 @@ class IdaLoader(fainterp.FaInterp):
 
     @staticmethod
     def extract_all_user_names(filename=None):
+        results = {}
         output = ''
 
         for ea, name in idautils.Names():
@@ -172,6 +173,7 @@ class IdaLoader(fainterp.FaInterp):
                     continue
             flags = ida_bytes.get_full_flags(ea)
             if idc.hasUserName(flags):
+                results[name] = ea
                 output += '{} = 0x{:08x};\n'.format(name, ea)
 
         print(output)
@@ -180,9 +182,11 @@ class IdaLoader(fainterp.FaInterp):
             with open(filename, 'w') as f:
                 f.write(output)
 
+        return results
+
     def symbols(self, output_file_path=None):
         super(IdaLoader, self).symbols(output_file_path=output_file_path)
-        IdaLoader.extract_all_user_names(output_file_path)
+        return IdaLoader.extract_all_user_names(output_file_path)
 
     def set_input(self, input_):
         self.endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
@@ -213,7 +217,8 @@ def main(signatures_root, project_name, symbols_file=None):
     fa_instance.set_project(project_name) # select project name
     print(fa_instance.list_projects()) # prints available projects
     print(fa_instance.find(symbol_name)) # searches for the specific symbol
-    fa_instance.get_python_symbols(filename=None) # run project's python scripts (all or single)
+    fa_instance.get_python_symbols(filename=None) # run project's python
+                                                    scripts (all or single)
     fa_instance.symbols() # searches for the symbols in the current project
 
     HotKeys:
