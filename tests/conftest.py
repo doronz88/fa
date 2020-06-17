@@ -1,4 +1,8 @@
+import tempfile
+
 from keystone import KS_MODE_BIG_ENDIAN, KS_MODE_ARM, KS_ARCH_ARM, Ks
+from simpleelf.elf_builder import ElfBuilder
+from simpleelf import elf_consts
 import pytest
 
 
@@ -16,10 +20,6 @@ def pytest_addoption(parser):
 
 @pytest.fixture
 def sample_elf(request):
-    import tempfile
-    from simpleelf.elf_builder import ElfBuilder
-    from simpleelf import elf_consts
-
     with tempfile.NamedTemporaryFile(suffix='.elf', delete=False) as f:
         e = ElfBuilder()
         e.set_endianity('>')
@@ -58,13 +58,3 @@ def sample_elf(request):
 @pytest.fixture
 def ida(request):
     return request.config.getoption("--ida")
-
-
-@pytest.fixture
-def idb(request):
-    return request.config.getoption("--idb")
-
-
-@pytest.fixture
-def elf(request):
-    return request.config.getoption("--elf")

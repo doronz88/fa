@@ -15,7 +15,7 @@ def get_parser():
 
 @utils.yield_unique
 def find_bytes(hex_str, segments=None):
-    needle = bytearray(binascii.unhexlify(''.join(hex_str.split(' '))))
+    needle = binascii.unhexlify(''.join(hex_str.split(' ')))
     return utils.find_raw(needle, segments=segments)
 
 

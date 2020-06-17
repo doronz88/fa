@@ -37,9 +37,12 @@ ida_namespace = None
 def test_ida_symbols(ida, sample_elf):
     sample_elf.close()
 
+    if sys.version[0] == '3':
+        pytest.skip('not supported for python3')
+
     global ida_namespace
     if None in (ida, ):
-        pytest.skip("--ida and --idb params must be passed for this test")
+        pytest.skip("--ida param must be passed for this test")
 
     with IDALink(ida, sample_elf.name) as s:
         ida_namespace = s

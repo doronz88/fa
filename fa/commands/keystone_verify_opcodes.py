@@ -39,5 +39,5 @@ def run(segments, args, addresses, interpreter=None, **kwargs):
     ks = Ks(arch, mode)
     compiled_buf = bytearray(ks.asm(args.code)[0])
 
-    setattr(args, 'hex_str', binascii.hexlify(compiled_buf))
+    setattr(args, 'hex_str', binascii.hexlify(compiled_buf).decode('utf8'))
     return verify_bytes.run(segments, args, addresses, **kwargs)

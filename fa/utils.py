@@ -24,6 +24,7 @@ def find_raw(needle, segments=None):
 
     if IDA_MODULE:
         # ida optimization
+        needle = bytearray(needle)
         payload = ' '.join(['{:02x}'.format(b) for b in needle])
         for address in ida_find_all(payload):
             yield address
