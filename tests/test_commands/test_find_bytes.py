@@ -38,7 +38,8 @@ from tests.utils.mock_fa import MockFaInterp
 def test_find_bytes_or(segments, instruction, result):
     analyzer = MockFaInterp()
     analyzer.segments = OrderedDict(segments)
-    assert analyzer.find_from_instructions_list([instruction, "sort"]) == result
+    assert analyzer.find_from_instructions_list(
+        [instruction, "sort"]) == result
 
 
 @pytest.mark.parametrize("segments,instructions,result", [
