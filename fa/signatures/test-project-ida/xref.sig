@@ -9,5 +9,6 @@
 		arm-verify 'push {r4-r7, lr}'
 		unique
 		set-name main
+        set-type 'void main(void)'
 	]
 }

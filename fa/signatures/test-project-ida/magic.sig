@@ -35,5 +35,6 @@
 		back-to-checkpoint 11223344
 
 		set-name magic
+		set-type 'unsigned int'
 	]
 }
