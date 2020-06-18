@@ -3,9 +3,9 @@ from fa import utils
 
 def get_parser():
     p = utils.ArgumentParserNoExit('single',
-                                   description='reduces the result list '
-                                               'into a singleton')
-    p.add_argument('index', type=int, default=0, help='get item by an index')
+                                   description='peek a single result from'
+                                               ' the resultset')
+    p.add_argument('index', type=int, default=0, help='result index')
     return p
 
 

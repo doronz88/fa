@@ -422,41 +422,6 @@ builtin interpreter command. stops parsing current SIG if
 current resultset is empty 
 ```
 
-#### back
-
-```
-usage: back amount
-
-goes back in history of search results to those returned
-from a previous command
-
-positional arguments:
-  amount    amount of command results to go back by
-```
-
-#### checkpoint
-
-```
-usage: checkpoint name
-
-saves current resultset in checkpoint named 'name'
-
-positional arguments:
-  name      name of checkpoint to use
-```
-
-#### back-to-checkpoint
-
-```
-usage: back-to-checkpoint
-
-goes back in history to the resultset saved by a previous
-checkpoint
-
-positional arguments:
-  name    name of checkpoint in history to go back to
-```
-
 #### add-offset-range
 ```
 usage: add-offset-range [-h] start end step
@@ -480,6 +445,46 @@ reduces the list to only those aligned to a specific value
 
 positional arguments:
   value
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### back
+```
+usage: back [-h] amount
+
+goes back in history of search results to those returned from a previous
+command
+
+positional arguments:
+  amount      amount of command results to go back by
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### back-to-checkpoint
+```
+usage: back-to-checkpoint [-h] name
+
+goes back in history to the result-set saved by a previous checkpoint
+
+positional arguments:
+  name        name of checkpoint in history to go back to
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### checkpoint
+```
+usage: checkpoint [-h] name
+
+saves current result-set in checkpoint named "name"
+
+positional arguments:
+  name        name of checkpoint to use
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -742,10 +747,10 @@ optional arguments:
 ```
 usage: single [-h] index
 
-reduces the result list into a singleton
+peek a single result from the resultset
 
 positional arguments:
-  index       get item by an index
+  index       result index
 
 optional arguments:
   -h, --help  show this help message and exit
