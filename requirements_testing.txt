@@ -5,3 +5,4 @@ hjson
 idalink
 pytest
 simpleelf
+pyelftools
