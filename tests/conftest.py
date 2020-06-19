@@ -44,6 +44,7 @@ def sample_elf(request):
             push {r4-r7, lr}
             bl 0x1234-8
             ldr r0, =data
+            bl 0x1234-8
             pop {r4-r7, pc}
         ''', text_address)[0]
         text_buffer = bytearray(text_buffer)

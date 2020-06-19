@@ -72,3 +72,4 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['magic'] == 0x1240
         assert symbols['eloop'] == 0x123c
         assert symbols['main'] == 0x1248
+        assert symbols['second_bl'] == 0x1254
