@@ -1,6 +1,4 @@
-import argparse
-
-from fa import utils
+from fa import utils, context
 
 try:
     import idc
@@ -16,14 +14,14 @@ def get_function_start(segments, ea):
 
 
 def get_parser():
-    p = argparse.ArgumentParser('function-start',
-                                description='goto function\'s prolog')
+    p = utils.ArgumentParserNoExit('function-start',
+                                   description='goto function\'s prolog')
     p.add_argument('--not-unique', action='store_true')
     return p
 
 
+@context.ida_context
 def function_start(addresses):
-    utils.verify_ida()
     for ea in addresses:
         if ea != idc.BADADDR:
             func_start = idc.get_func_attr(ea, idc.FUNCATTR_START)

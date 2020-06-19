@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 
 try:
     import ida_funcs
@@ -12,12 +12,12 @@ def get_parser():
     return p
 
 
-def make_code(addresses):
-    utils.verify_ida()
+@context.ida_context
+def make_function(addresses):
     for ea in addresses:
         ida_funcs.add_func(ea)
     return addresses
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return make_code(addresses)
+    return make_function(addresses)

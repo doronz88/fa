@@ -62,11 +62,6 @@ def read_memory(segments, ea, size):
             return data[offset:offset+size]
 
 
-def verify_ida():
-    if not IDA_MODULE:
-        raise Exception("only available in IDA")
-
-
 def yield_unique(func):
     def wrapper(*args, **kwargs):
         results = set()

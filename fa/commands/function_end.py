@@ -1,4 +1,5 @@
 from fa import utils
+from fa import context
 
 try:
     import idc
@@ -13,8 +14,8 @@ def get_parser():
     return p
 
 
+@context.ida_context
 def function_end(addresses):
-    utils.verify_ida()
     for ea in addresses:
         if ea != idc.BADADDR:
             func_end = idc.get_func_attr(ea, idc.FUNCATTR_END)

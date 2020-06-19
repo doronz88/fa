@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 
 try:
     import idc
@@ -17,6 +17,7 @@ def get_parser():
     return p
 
 
+@context.ida_context
 @utils.yield_unique
 def verify_operand(addresses, mnem, op0=None, op1=None, op2=None):
     for address in addresses:
@@ -44,7 +45,6 @@ def verify_operand(addresses, mnem, op0=None, op1=None, op2=None):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    utils.verify_ida()
     op0 = [int(i) for i in args.op0.split(',')] if args.op0 else None
     op1 = [int(i) for i in args.op1.split(',')] if args.op1 else None
     op2 = [int(i) for i in args.op2.split(',')] if args.op2 else None

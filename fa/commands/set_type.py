@@ -1,4 +1,4 @@
-from fa import utils, types
+from fa import utils, types, context
 
 try:
     import idc
@@ -26,8 +26,8 @@ def set_type_single(address, type_):
     ida_auto.auto_wait()
 
 
+@context.ida_context
 def set_type(addresses, type_):
-    utils.verify_ida()
     for ea in addresses:
         set_type_single(ea, type_)
     return addresses

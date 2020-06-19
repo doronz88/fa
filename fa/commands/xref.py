@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 
 try:
     import idautils
@@ -13,6 +13,7 @@ def get_parser():
     return p
 
 
+@context.ida_context
 @utils.yield_unique
 def xref(addresses):
     for address in addresses:
@@ -21,5 +22,4 @@ def xref(addresses):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    utils.verify_ida()
     return list(xref(addresses))

@@ -1,5 +1,5 @@
 from fa.commands.locate import locate
-from fa import utils
+from fa import utils, context
 
 try:
     import idautils
@@ -20,6 +20,7 @@ def get_parser():
     return p
 
 
+@context.ida_context
 def verify_ref(addresses, name, code=False, data=False):
     symbol = locate(name)
 
@@ -48,7 +49,7 @@ def verify_ref_unique(addresses, name, code=False, data=False):
         yield address
 
 
+@context.ida_context
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    utils.verify_ida()
     return list(set(verify_ref(addresses, args.name,
                                code=args.code, data=args.data)))

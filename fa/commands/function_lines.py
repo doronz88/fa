@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 
 try:
     import idautils
@@ -12,9 +12,9 @@ def get_parser():
     return p
 
 
+@context.ida_context
 @utils.yield_unique
 def function_lines(addresses):
-    utils.verify_ida()
     for address in addresses:
         for item in idautils.FuncItems(address):
             yield item

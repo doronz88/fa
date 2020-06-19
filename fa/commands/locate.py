@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 
 try:
     import idc
@@ -13,8 +13,8 @@ def get_parser():
     return p
 
 
+@context.ida_context
 def locate(name):
-    utils.verify_ida()
     return idc.get_name_ea_simple(name)
 
 

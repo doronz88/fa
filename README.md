@@ -258,11 +258,11 @@ To view the list of available commands, [view the list below](#available-command
 from fa.commands.find_str import find_str 
 from fa.commands.set_name import set_name
 from fa.commands.unique import unique
-from fa import utils
+from fa import context
 
 def run(**kwargs):
     # throw an exception if not running within ida context
-    utils.verify_ida()
+    context.verify_ida('script-name')
 
     # locate the global string, verify it's unique, and set it's 
     # name within the idb 

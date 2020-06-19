@@ -53,7 +53,6 @@ def test_ida_symbols(ida, sample_elf):
         # flake8: noqa
         reload(utils)
 
-        utils.verify_ida()
         s.ida_bytes.del_items(0x1240)
         s.ida_funcs.add_func(0x1248)
         s.ida_auto.auto_wait()

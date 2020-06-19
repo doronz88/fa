@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 from fa.commands.locate import locate
 
 
@@ -10,6 +10,7 @@ def get_parser():
     return p
 
 
+@context.ida_context
 @utils.yield_unique
 def verify_name(addresses, name):
     ref = locate(name)
@@ -19,5 +20,4 @@ def verify_name(addresses, name):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    utils.verify_ida()
     return list(verify_name(addresses, args.name))

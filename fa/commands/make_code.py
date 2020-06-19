@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 
 try:
     import idc
@@ -12,8 +12,8 @@ def get_parser():
     return p
 
 
+@context.ida_context
 def make_code(addresses):
-    utils.verify_ida()
     for ea in addresses:
         idc.create_insn(ea)
     return addresses

@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 from fa.commands import function_start
 
 try:
@@ -23,9 +23,8 @@ def get_parser():
     return p
 
 
+@context.ida_context
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    utils.verify_ida()
-
     if args.name:
         ea = idc.LocByName(args.name)
         occurrences = [ea] if ea != idc.BADADDR else []

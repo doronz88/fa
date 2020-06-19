@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 
 try:
     import idautils
@@ -14,8 +14,8 @@ def get_parser():
     return p
 
 
+@context.ida_context
 def min_xrefs(addresses):
-    utils.verify_ida()
     xrefs = []
     for address in addresses:
         xrefs.append((address, len([ref.frm for ref in
