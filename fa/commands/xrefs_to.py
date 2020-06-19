@@ -19,7 +19,7 @@ def get_parser():
     p.add_argument('--and', action='store_true',
                    help='reduce the current result set')
     p.add_argument('--name', help='parameter as label name')
-    p.add_argument('--bytes', help='parameter as bytesv')
+    p.add_argument('--bytes', help='parameter as bytes')
     return p
 
 

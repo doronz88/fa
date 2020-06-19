@@ -882,5 +882,5 @@ optional arguments:
   --or              expand the current result set
   --and             reduce the current result set
   --name NAME       parameter as label name
-  --bytes BYTES     parameter as bytesv
+  --bytes BYTES     parameter as bytes
 ```
