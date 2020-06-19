@@ -18,9 +18,10 @@ def get_parser():
 
 
 @utils.yield_unique
-def verify_operand(addresses, name, op0=None, op1=None, op2=None):
+def verify_operand(addresses, mnem, op0=None, op1=None, op2=None):
     for address in addresses:
-        if idc.print_insn_mnem(address) == name:
+        current_mnem = idc.print_insn_mnem(address).lower()
+        if current_mnem == mnem:
             if not op0 and not op1 and not op2:
                 yield address
                 continue
