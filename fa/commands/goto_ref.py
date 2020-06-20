@@ -40,4 +40,4 @@ def goto_ref_unique(addresses, code=False, data=False):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(set(goto_ref(addresses, code=args.code, data=args.data)))
+    return list(set(goto_ref_unique(addresses, code=args.code, data=args.data)))
