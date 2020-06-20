@@ -1,4 +1,4 @@
-from fa import utils
+from fa import utils, context
 
 try:
     import idautils
@@ -16,8 +16,8 @@ def get_parser():
     return p
 
 
+@context.ida_context
 def goto_ref(addresses, code=False, data=False):
-    utils.verify_ida()
     for address in addresses:
         refs = []
         if code:
@@ -40,4 +40,4 @@ def goto_ref_unique(addresses, code=False, data=False):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(set(goto_ref(addresses, code=args.code, data=args.data)))
+    return list(set(goto_ref_unique(addresses, code=args.code, data=args.data)))

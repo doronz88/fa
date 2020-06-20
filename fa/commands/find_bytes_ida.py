@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from fa import utils
+from fa import utils, context
 
 
 def get_parser():
@@ -13,6 +13,7 @@ def get_parser():
     return p
 
 
+@context.ida_context
 @utils.yield_unique
 def find_bytes_ida(expression, segments=None):
     for address in utils.ida_find_all(expression):

@@ -1,4 +1,5 @@
-from fa import utils
+from fa.utils import ArgumentParserNoExit
+from fa import context
 
 try:
     import idc
@@ -7,14 +8,14 @@ except ImportError:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('set-name',
-                                   description='set name in disassembler')
+    p = ArgumentParserNoExit('set-name',
+                             description='set name in disassembler')
     p.add_argument('name')
     return p
 
 
+@context.ida_context
 def set_name(addresses, name):
-    utils.verify_ida()
     for ea in addresses:
         idc.set_name(ea, name, idc.SN_CHECK)
     return addresses
