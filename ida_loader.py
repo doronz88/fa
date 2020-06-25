@@ -1,3 +1,4 @@
+from collections import namedtuple
 import subprocess
 import tempfile
 import sys
@@ -198,8 +199,132 @@ class IdaLoader(fainterp.FaInterp):
         # which is much faster
         return
 
+    def interactive_set_project(self):
+        from idaapi import Form
+
+        class SetProjectForm(Form):
+            def __init__(self, signatures_root, projects, current):
+                self.__n = 0
+                Form.__init__(self,
+                              r"""BUTTON YES* OK
+                              FA Project Select
+                              
+                              Select project you wish to work on from your
+                              signatures root:
+                              {}
+                              
+                              (Note: You may change this in config.ini)
+                              
+                              {{FormChangeCb}}
+                              <Set Project :{{cbReadonly}}>
+                              """.format(signatures_root), {
+                                  'FormChangeCb': Form.FormChangeCb(self.OnFormChange),
+                                  'cbReadonly': Form.DropdownListControl(
+                                      items=projects,
+                                      readonly=True,
+                                      selval=projects.index(current)),
+                              })
+
+            def OnFormChange(self, fid):
+                return 1
+
+        projects = self.list_projects()
+        f = SetProjectForm(self._signatures_root, projects, self._project)
+        f, args = f.Compile()
+        ok = f.Execute()
+        if ok == 1:
+            self.set_project(projects[f.cbReadonly.value])
+        f.Free()
+
 
 fa_instance = None
+
+Action = namedtuple('action', 'name icon_filename handler label hotkey')
+
+
+def add_action(action):
+    class Handler(ida_kernwin.action_handler_t):
+        def __init__(self):
+            ida_kernwin.action_handler_t.__init__(self)
+
+        def activate(self, ctx):
+            action.handler()
+            return 1
+
+        def update(self, ctx):
+            return ida_kernwin.AST_ENABLE_FOR_WIDGET if \
+                ctx.widget_type == ida_kernwin.BWN_DISASM else \
+                ida_kernwin.AST_DISABLE_FOR_WIDGET
+
+    print("Creating a custom icon from raw data!")
+    icon_full_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                      'res', 'icons', action.icon_filename)
+    with open(icon_full_filename, 'rb') as f:
+        icon_data = f.read()
+    act_icon = ida_kernwin.load_custom_icon(data=icon_data, format="png")
+
+    act_name = action.name
+
+    ida_kernwin.unregister_action(act_name)
+    if ida_kernwin.register_action(ida_kernwin.action_desc_t(
+            act_name,  # Name. Acts as an ID. Must be unique.
+            action.label,  # Label. That's what users see.
+            Handler(),  # Handler. Called when activated, and for updating
+            action.hotkey,  # Shortcut (optional)
+            None,  # Tooltip (optional)
+            act_icon)):  # Icon ID (optional)
+        print("Action registered. Attaching to menu.")
+
+        # Insert the action in the menu
+        if ida_kernwin.attach_action_to_menu("Edit/Export data", act_name, ida_kernwin.SETMENU_APP):
+            print("Attached to menu.")
+        else:
+            print("Failed attaching to menu.")
+
+        # Insert the action in a toolbar
+        if ida_kernwin.attach_action_to_toolbar("fa", act_name):
+            print("Attached to toolbar.")
+        else:
+            print("Failed attaching to toolbar.")
+
+        class Hooks(ida_kernwin.UI_Hooks):
+            def finish_populating_widget_popup(self, widget, popup):
+                if ida_kernwin.get_widget_type(widget) == ida_kernwin.BWN_DISASM:
+                    ida_kernwin.attach_action_to_popup(widget, popup, act_name, None)
+
+        hooks = Hooks()
+        hooks.hook()
+
+
+def load_ui():
+    actions = [
+        Action(name='fa:set-project', icon_filename='project_becris.png',
+               handler=fa_instance.interactive_set_project, label='FA Set project...',
+               hotkey='Ctrl+6'),
+
+        Action(name='fa:symbols', icon_filename='search_inipagistudio.png',
+               handler=fa_instance.symbols, label='FA Find all project\'s symbols',
+               hotkey='Ctrl+7'),
+
+        Action(name='fa:extended-create-signature', icon_filename='signature_freepik.png',
+               handler=fa_instance.extended_create_symbol, label='FA Create temp signature...',
+               hotkey='Ctrl+8'),
+
+        Action(name='fa:find-symbol', icon_filename='find_inipagistudio.png',
+               handler=fa_instance.find_symbol, label='FA Find last created temp signature',
+               hotkey='Ctrl+9'),
+
+        Action(name='fa:prompt-save', icon_filename='save_freepik.png',
+               handler=fa_instance.prompt_save_signature, label='FA Save last created temp signature',
+               hotkey='Ctrl+0'),
+    ]
+
+    # init toolbar
+    ida_kernwin.delete_toolbar("fa")
+    ida_kernwin.create_toolbar("fa", "FA Toolbar")
+
+    for action in actions:
+        add_action(action)
 
 
 @click.command()
@@ -208,6 +333,12 @@ fa_instance = None
 @click.option('--symbols-file', default=None)
 def main(signatures_root, project_name, symbols_file=None):
     global fa_instance
+
+    fa_instance = IdaLoader()
+    fa_instance.set_input('ida')
+    fa_instance.set_project(project_name)
+
+    load_ui()
 
     IdaLoader.log('''
     ---------------------------------
@@ -224,21 +355,10 @@ def main(signatures_root, project_name, symbols_file=None):
     HotKeys:
     Ctrl-6: Set current project
     Ctrl-7: Search project symbols
-    Ctrl-8: Create temporary signature
-    Ctrl-Shift-8: Create temporary signature and open an editor
+    Ctrl-8: Create temporary signature and open an editor
     Ctrl-9: Find temporary signature
     Ctrl-0: Prompt for adding the temporary signature as permanent
     ---------------------------------''')
-    fa_instance = IdaLoader()
-    fa_instance.set_input('ida')
-    fa_instance.set_project(project_name)
-
-    idaapi.add_hotkey('Ctrl-6', fa_instance.interactive_set_project)
-    idaapi.add_hotkey('Ctrl-7', fa_instance.symbols)
-    idaapi.add_hotkey('Ctrl-8', fa_instance.create_symbol)
-    idaapi.add_hotkey('Ctrl-Shift-8', fa_instance.extended_create_symbol)
-    idaapi.add_hotkey('Ctrl-9', fa_instance.find_symbol)
-    idaapi.add_hotkey('Ctrl-0', fa_instance.prompt_save_signature)
 
     if symbols_file is not None:
         fa_instance.set_signatures_root(signatures_root)
