@@ -1,3 +1,5 @@
+![Python application](https://github.com/doronz88/fa/workflows/Python%20application/badge.svg)
+
 # FA
 
 ## What is it?
