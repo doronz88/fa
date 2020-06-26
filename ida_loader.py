@@ -7,6 +7,7 @@ import os
 import hjson
 import click
 
+from ida_kernwin import Form
 import ida_kernwin
 import ida_bytes
 import idautils
@@ -200,22 +201,28 @@ class IdaLoader(fainterp.FaInterp):
         return
 
     def interactive_set_project(self):
-        from idaapi import Form
-
         class SetProjectForm(Form):
             def __init__(self, signatures_root, projects, current):
-                self.__n = 0
+                description = '''
+                <h2>Project Selector</h2>
+                
+                <div>
+                Select project you wish to work on from your
+                signatures root:
+                </div>
+                <div><pre>{}</pre></div>
+                
+                <div><i>(Note: You may change this in config.ini)</i></div>
+                '''.format(signatures_root)
+
                 Form.__init__(self,
                               r"""BUTTON YES* OK
                               FA Project Select
                               
-                              Select project you wish to work on from your
-                              signatures root:
-                              {}
-                              
-                              (Note: You may change this in config.ini)
-                              
                               {{FormChangeCb}}
+
+                              {{StringLabel}}
+                              
                               <Set Project :{{cbReadonly}}>
                               """.format(signatures_root), {
                                   'FormChangeCb': Form.FormChangeCb(self.OnFormChange),
@@ -223,7 +230,10 @@ class IdaLoader(fainterp.FaInterp):
                                       items=projects,
                                       readonly=True,
                                       selval=projects.index(current)),
+                                  'StringLabel': Form.StringLabel(description,
+                                                                  tp=Form.FT_HTML_LABEL),
                               })
+                self.__n = 0
 
             def OnFormChange(self, fid):
                 return 1
@@ -276,7 +286,7 @@ def add_action(action):
         print("Action registered. Attaching to menu.")
 
         # Insert the action in the menu
-        if ida_kernwin.attach_action_to_menu("Edit/Export data", act_name, ida_kernwin.SETMENU_APP):
+        if ida_kernwin.attach_action_to_menu("FA/", act_name, ida_kernwin.SETMENU_APP):
             print("Attached to menu.")
         else:
             print("Failed attaching to menu.")
@@ -298,33 +308,56 @@ def add_action(action):
 
 def load_ui():
     actions = [
-        Action(name='fa:set-project', icon_filename='project_becris.png',
-               handler=fa_instance.interactive_set_project, label='FA Set project...',
+        Action(name='fa:set-project', icon_filename='suitcase.png',
+               handler=fa_instance.interactive_set_project, label='Set project...',
                hotkey='Ctrl+6'),
 
-        Action(name='fa:symbols', icon_filename='search_inipagistudio.png',
-               handler=fa_instance.symbols, label='FA Find all project\'s symbols',
+        Action(name='fa:symbols', icon_filename='find_all.png',
+               handler=fa_instance.symbols, label='Find all project\'s symbols',
                hotkey='Ctrl+7'),
 
-        Action(name='fa:extended-create-signature', icon_filename='signature_freepik.png',
-               handler=fa_instance.extended_create_symbol, label='FA Create temp signature...',
+        Action(name='fa:extended-create-signature', icon_filename='create_sig.png',
+               handler=fa_instance.extended_create_symbol, label='Create temp signature...',
                hotkey='Ctrl+8'),
 
-        Action(name='fa:find-symbol', icon_filename='find_inipagistudio.png',
-               handler=fa_instance.find_symbol, label='FA Find last created temp signature',
+        Action(name='fa:find-symbol', icon_filename='find.png',
+               handler=fa_instance.find_symbol, label='Find last created temp signature',
                hotkey='Ctrl+9'),
 
-        Action(name='fa:prompt-save', icon_filename='save_freepik.png',
-               handler=fa_instance.prompt_save_signature, label='FA Save last created temp signature',
+        Action(name='fa:prompt-save', icon_filename='save.png',
+               handler=fa_instance.prompt_save_signature, label='Save last created temp signature',
                hotkey='Ctrl+0'),
     ]
 
     # init toolbar
-    ida_kernwin.delete_toolbar("fa")
-    ida_kernwin.create_toolbar("fa", "FA Toolbar")
+    ida_kernwin.delete_toolbar('fa')
+    ida_kernwin.create_toolbar('fa', 'FA Toolbar')
+
+    # init menu
+    ida_kernwin.delete_menu('fa')
+    ida_kernwin.create_menu('fa', 'FA')
 
     for action in actions:
         add_action(action)
+
+
+def install():
+    ida_python_rc_path = os.path.join(idaapi.get_user_idadir(), "idapythonrc.py")
+    if not os.path.exists(ida_python_rc_path):
+        IdaLoader.log('failed location ida rc file')
+        return
+
+    with open(ida_python_rc_path, 'rt') as rc:
+        if 'FA loading start' in rc.read():
+            # already installed
+            return
+
+    with open(ida_python_rc_path, 'at') as rc:
+        rc.write('\n\n# FA loading start\n')
+        rc.write('exec(open(r"{}", "rb").read())\n'.format(os.path.abspath(__file__)))
+        rc.write('# FA loading end\n')
+
+    IdaLoader.log('Successfullt installed :)')
 
 
 @click.command()
@@ -364,6 +397,9 @@ def main(signatures_root, project_name, symbols_file=None):
         fa_instance.set_signatures_root(signatures_root)
         fa_instance.symbols(symbols_file)
         ida_pro.qexit(0)
+
+    # TODO: consider adding as autostart script
+    # install()
 
 
 if __name__ == '__main__':

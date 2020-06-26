@@ -395,7 +395,9 @@ FA> project set: test-project-ida
 ```
 
 Also, an additional `FA Toolbar` will be added with quick functions that
-are also available under the `Edit` menu.
+are also available under the newly created `FA` menu.
+
+![FA Menu](https://github.com/doronz88/fa/raw/master/res/screenshots/menu.png "FA Menu")
 
 A QuickStart Tip:
 
@@ -889,10 +891,3 @@ optional arguments:
   --name NAME       parameter as label name
   --bytes BYTES     parameter as bytes
 ```
-
-### Credits
-
-Icons were downloaded from: [www.flaticon.com](http://www.flaticon.com).
-
-Creators: inipagistudio, becris, freepik
-
