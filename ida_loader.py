@@ -205,33 +205,34 @@ class IdaLoader(fainterp.FaInterp):
             def __init__(self, signatures_root, projects, current):
                 description = '''
                 <h2>Project Selector</h2>
-                
                 <div>
                 Select project you wish to work on from your
                 signatures root:
                 </div>
                 <div><pre>{}</pre></div>
-                
                 <div><i>(Note: You may change this in config.ini)</i></div>
+                <div>
+                    <a href="https://github.com/doronz88/fa#projects">For more info</a>
+                </div>
                 '''.format(signatures_root)
 
                 Form.__init__(self,
                               r"""BUTTON YES* OK
                               FA Project Select
-                              
                               {{FormChangeCb}}
-
                               {{StringLabel}}
-                              
                               <Set Project :{{cbReadonly}}>
                               """.format(signatures_root), {
-                                  'FormChangeCb': Form.FormChangeCb(self.OnFormChange),
-                                  'cbReadonly': Form.DropdownListControl(
-                                      items=projects,
-                                      readonly=True,
-                                      selval=projects.index(current)),
-                                  'StringLabel': Form.StringLabel(description,
-                                                                  tp=Form.FT_HTML_LABEL),
+                                  'FormChangeCb':
+                                      Form.FormChangeCb(self.OnFormChange),
+                                  'cbReadonly':
+                                      Form.DropdownListControl(
+                                          items=projects,
+                                          readonly=True,
+                                          selval=projects.index(current)),
+                                  'StringLabel':
+                                      Form.StringLabel(description,
+                                                       tp=Form.FT_HTML_LABEL),
                               })
                 self.__n = 0
 
@@ -267,8 +268,9 @@ def add_action(action):
                 ida_kernwin.AST_DISABLE_FOR_WIDGET
 
     print("Creating a custom icon from raw data!")
-    icon_full_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                      'res', 'icons', action.icon_filename)
+    icon_full_filename = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        'res', 'icons', action.icon_filename)
     with open(icon_full_filename, 'rb') as f:
         icon_data = f.read()
     act_icon = ida_kernwin.load_custom_icon(data=icon_data, format="png")
@@ -286,7 +288,8 @@ def add_action(action):
         print("Action registered. Attaching to menu.")
 
         # Insert the action in the menu
-        if ida_kernwin.attach_action_to_menu("FA/", act_name, ida_kernwin.SETMENU_APP):
+        if ida_kernwin.attach_action_to_menu(
+                "FA/", act_name, ida_kernwin.SETMENU_APP):
             print("Attached to menu.")
         else:
             print("Failed attaching to menu.")
@@ -299,8 +302,12 @@ def add_action(action):
 
         class Hooks(ida_kernwin.UI_Hooks):
             def finish_populating_widget_popup(self, widget, popup):
-                if ida_kernwin.get_widget_type(widget) == ida_kernwin.BWN_DISASM:
-                    ida_kernwin.attach_action_to_popup(widget, popup, act_name, None)
+                if ida_kernwin.get_widget_type(widget) == \
+                        ida_kernwin.BWN_DISASM:
+                    ida_kernwin.attach_action_to_popup(widget,
+                                                       popup,
+                                                       act_name,
+                                                       None)
 
         hooks = Hooks()
         hooks.hook()
@@ -308,24 +315,33 @@ def add_action(action):
 
 def load_ui():
     actions = [
-        Action(name='fa:set-project', icon_filename='suitcase.png',
-               handler=fa_instance.interactive_set_project, label='Set project...',
+        Action(name='fa:set-project',
+               icon_filename='suitcase.png',
+               handler=fa_instance.interactive_set_project,
+               label='Set project...',
                hotkey='Ctrl+6'),
 
         Action(name='fa:symbols', icon_filename='find_all.png',
-               handler=fa_instance.symbols, label='Find all project\'s symbols',
+               handler=fa_instance.symbols,
+               label='Find all project\'s symbols',
                hotkey='Ctrl+7'),
 
-        Action(name='fa:extended-create-signature', icon_filename='create_sig.png',
-               handler=fa_instance.extended_create_symbol, label='Create temp signature...',
+        Action(name='fa:extended-create-signature',
+               icon_filename='create_sig.png',
+               handler=fa_instance.extended_create_symbol,
+               label='Create temp signature...',
                hotkey='Ctrl+8'),
 
-        Action(name='fa:find-symbol', icon_filename='find.png',
-               handler=fa_instance.find_symbol, label='Find last created temp signature',
+        Action(name='fa:find-symbol',
+               icon_filename='find.png',
+               handler=fa_instance.find_symbol,
+               label='Find last created temp signature',
                hotkey='Ctrl+9'),
 
-        Action(name='fa:prompt-save', icon_filename='save.png',
-               handler=fa_instance.prompt_save_signature, label='Save last created temp signature',
+        Action(name='fa:prompt-save',
+               icon_filename='save.png',
+               handler=fa_instance.prompt_save_signature,
+               label='Save last created temp signature',
                hotkey='Ctrl+0'),
     ]
 
@@ -342,7 +358,8 @@ def load_ui():
 
 
 def install():
-    ida_python_rc_path = os.path.join(idaapi.get_user_idadir(), "idapythonrc.py")
+    ida_python_rc_path = os.path.join(
+        idaapi.get_user_idadir(), "idapythonrc.py")
     if not os.path.exists(ida_python_rc_path):
         IdaLoader.log('failed location ida rc file')
         return
@@ -354,7 +371,8 @@ def install():
 
     with open(ida_python_rc_path, 'at') as rc:
         rc.write('\n\n# FA loading start\n')
-        rc.write('exec(open(r"{}", "rb").read())\n'.format(os.path.abspath(__file__)))
+        rc.write('exec(open(r"{}", "rb").read())\n'.
+                 format(os.path.abspath(__file__)))
         rc.write('# FA loading end\n')
 
     IdaLoader.log('Successfullt installed :)')
