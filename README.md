@@ -385,8 +385,7 @@ FA>
 FA>     HotKeys:
 FA>     Ctrl-6: Set current project
 FA>     Ctrl-7: Search project symbols
-FA>     Ctrl-8: Create temporary signature
-FA>     Ctrl-Shift-8: Create temporary signature and open an editor
+FA>     Ctrl-8: Create temporary signature and open an editor
 FA>     Ctrl-9: Find temporary signature
 FA>     Ctrl-0: Prompt for adding the temporary signature as permanent
 FA>     ---------------------------------
