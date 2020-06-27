@@ -1,3 +1,4 @@
+import traceback
 from collections import namedtuple
 import subprocess
 import tempfile
@@ -164,12 +165,23 @@ class IdaLoader(fainterp.FaInterp):
 
         self.save_signature(sig)
 
+    def find(self, symbol_name, decremental=False):
+        ida_kernwin.replace_wait_box('Searching symbol: \'{}\'...'.format(symbol_name))
+        return super(IdaLoader, self).find(symbol_name, decremental=decremental)
+
+    def get_python_symbols(self, file_name=None):
+        ida_kernwin.replace_wait_box('Running python scripts...')
+        return super(IdaLoader, self).get_python_symbols(file_name=file_name)
+
     @staticmethod
     def extract_all_user_names(filename=None):
         results = {}
         output = ''
 
         for ea, name in idautils.Names():
+            if ida_kernwin.user_cancelled():
+                return results
+
             if '_' in name:
                 if name.split('_')[0] in ('def', 'sub', 'loc', 'jpt'):
                     continue
@@ -187,8 +199,20 @@ class IdaLoader(fainterp.FaInterp):
         return results
 
     def symbols(self, output_file_path=None):
-        super(IdaLoader, self).symbols(output_file_path=output_file_path)
-        return IdaLoader.extract_all_user_names(output_file_path)
+        results = {}
+
+        try:
+            ida_kernwin.show_wait_box('Searching...')
+            super(IdaLoader, self).symbols(output_file_path=output_file_path)
+
+            ida_kernwin.replace_wait_box('Extracting...')
+            results = IdaLoader.extract_all_user_names(output_file_path)
+        except Exception as e:
+            traceback.print_exc()
+        finally:
+            ida_kernwin.hide_wait_box()
+
+        return results
 
     def set_input(self, input_):
         self.endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
