@@ -226,6 +226,47 @@ class IdaLoader(fainterp.FaInterp):
         # which is much faster
         return
 
+    def interactive_settings(self):
+        class SettingsForm(Form):
+            def __init__(self, signatures_root):
+                description = '''
+                <h2>Settings</h2>
+                <div>
+                Here you can change global FA settings.
+                </div>
+                <div>
+                    <a href="https://github.com/doronz88/fa#projects">
+                    For more info</a>
+                </div>
+                '''.format(signatures_root)
+
+                Form.__init__(self,
+                              r"""BUTTON YES* Save
+                              FA Settings
+                              {{FormChangeCb}}
+                              {{StringLabel}}
+                              <Signatures root :{{signaturesRoot}}>
+                              """.format(signatures_root), {
+                                  'FormChangeCb':
+                                      Form.FormChangeCb(self.OnFormChange),
+                                  'signaturesRoot':
+                                      Form.DirInput(value=signatures_root),
+                                  'StringLabel':
+                                      Form.StringLabel(description,
+                                                       tp=Form.FT_HTML_LABEL),
+                              })
+                self.__n = 0
+
+            def OnFormChange(self, fid):
+                return 1
+
+        f = SettingsForm(self._signatures_root)
+        f, args = f.Compile()
+        ok = f.Execute()
+        if ok == 1:
+            self.set_signatures_root(f.signaturesRoot.value, save=True)
+        f.Free()
+
     def interactive_set_project(self):
         class SetProjectForm(Form):
             def __init__(self, signatures_root, projects, current):
@@ -296,12 +337,14 @@ def add_action(action):
                 ida_kernwin.AST_DISABLE_FOR_WIDGET
 
     print("Creating a custom icon from raw data!")
-    icon_full_filename = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        'res', 'icons', action.icon_filename)
-    with open(icon_full_filename, 'rb') as f:
-        icon_data = f.read()
-    act_icon = ida_kernwin.load_custom_icon(data=icon_data, format="png")
+    act_icon = -1
+    if action.icon_filename:
+        icon_full_filename = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'res', 'icons', action.icon_filename)
+        with open(icon_full_filename, 'rb') as f:
+            icon_data = f.read()
+        act_icon = ida_kernwin.load_custom_icon(data=icon_data, format="png")
 
     act_name = action.name
 
@@ -371,6 +414,12 @@ def load_ui():
                handler=fa_instance.prompt_save_signature,
                label='Save last created temp signature',
                hotkey='Ctrl+0'),
+
+        Action(name='fa:settings',
+               icon_filename='settings.png',
+               handler=fa_instance.interactive_settings,
+               label='Settings',
+               hotkey=None),
     ]
 
     # init toolbar

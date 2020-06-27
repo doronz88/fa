@@ -30,6 +30,7 @@ class FaInterp:
         self.history = []
         self.checkpoints = {}
         self.endianity = '<'
+        self._config_path = config_path
 
         if (config_path is not None) and (os.path.exists(config_path)):
             config = ConfigParser()
@@ -41,8 +42,16 @@ class FaInterp:
     def set_input(self, input_):
         pass
 
-    def set_signatures_root(self, path):
+    def set_signatures_root(self, path, save=False):
+        self.log('signatures root: {}'.format(path))
         self._signatures_root = path
+
+        if save:
+            with open(self._config_path, 'wt') as f:
+                config = ConfigParser()
+                config.add_section('global')
+                config.set('global', 'signatures_root', path)
+                config.write(f)
 
     def set_project(self, project):
         self._project = project
