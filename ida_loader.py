@@ -212,7 +212,8 @@ class IdaLoader(fainterp.FaInterp):
                 <div><pre>{}</pre></div>
                 <div><i>(Note: You may change this in config.ini)</i></div>
                 <div>
-                    <a href="https://github.com/doronz88/fa#projects">For more info</a>
+                    <a href="https://github.com/doronz88/fa#projects">
+                    For more info</a>
                 </div>
                 '''.format(signatures_root)
 
