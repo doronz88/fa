@@ -95,7 +95,7 @@ class FaInterp:
             projects += \
                 [os.path.relpath(os.path.join(root, filename),
                                  self._signatures_root) for filename in dirs]
-        return [p for p in projects if p[0] != '.']
+        return [str(p) for p in projects if p[0] != '.']
 
     @staticmethod
     def log(message):
