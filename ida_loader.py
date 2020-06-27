@@ -166,8 +166,10 @@ class IdaLoader(fainterp.FaInterp):
         self.save_signature(sig)
 
     def find(self, symbol_name, decremental=False):
-        ida_kernwin.replace_wait_box('Searching symbol: \'{}\'...'.format(symbol_name))
-        return super(IdaLoader, self).find(symbol_name, decremental=decremental)
+        ida_kernwin.replace_wait_box('Searching symbol: \'{}\'...'
+                                     .format(symbol_name))
+        return super(IdaLoader, self).find(symbol_name,
+                                           decremental=decremental)
 
     def get_python_symbols(self, file_name=None):
         ida_kernwin.replace_wait_box('Running python scripts...')
@@ -254,7 +256,8 @@ class IdaLoader(fainterp.FaInterp):
                                       Form.DropdownListControl(
                                           items=projects,
                                           readonly=True,
-                                          selval=projects.index(current)),
+                                          selval=projects.index(current)
+                                          if current in projects else 0),
                                   'StringLabel':
                                       Form.StringLabel(description,
                                                        tp=Form.FT_HTML_LABEL),
