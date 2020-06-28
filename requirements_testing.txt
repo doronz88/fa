@@ -2,6 +2,8 @@ keystone-engine
 capstone
 click
 hjson
+future
+configparser
 idalink
 pytest
 simpleelf

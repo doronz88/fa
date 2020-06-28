@@ -3,3 +3,4 @@ capstone
 click
 hjson
 future
+configparser
