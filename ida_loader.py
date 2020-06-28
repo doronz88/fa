@@ -268,7 +268,7 @@ class IdaLoader(fainterp.FaInterp):
                 Here you can change global FA settings.
                 </div>
                 <div>
-                    <a href="https://github.com/doronz88/fa#projects">
+                    <a href="https://github.com/doronz88/fa">
                     For more info</a>
                 </div>
                 '''.format(signatures_root)
@@ -279,6 +279,7 @@ class IdaLoader(fainterp.FaInterp):
                               {{FormChangeCb}}
                               {{StringLabel}}
                               <Signatures root :{{signaturesRoot}}>
+                              <Temp signature generation :{{signatureGeneration}}>
                               """.format(signatures_root), {
                                   'FormChangeCb':
                                       Form.FormChangeCb(self.OnFormChange),
@@ -287,6 +288,11 @@ class IdaLoader(fainterp.FaInterp):
                                   'StringLabel':
                                       Form.StringLabel(description,
                                                        tp=Form.FT_HTML_LABEL),
+                                  'signatureGeneration':
+                                      Form.DropdownListControl(
+                                          items=['Default', 'Using function bytes'],
+                                          readonly=True,
+                                          selval=0),
                               })
                 self.__n = 0
 
@@ -298,6 +304,7 @@ class IdaLoader(fainterp.FaInterp):
         ok = f.Execute()
         if ok == 1:
             self.set_signatures_root(f.signaturesRoot.value, save=True)
+            self._create_template_symbol = f.signatureGeneration.value == 1
         f.Free()
 
     def interactive_set_project(self):
