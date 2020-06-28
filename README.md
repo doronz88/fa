@@ -376,7 +376,10 @@ FA>     FA Loaded successfully
 FA> 
 FA>     Quick usage:
 FA>     print(fa_instance.find(symbol_name)) # searches for the specific symbol
-FA>     fa_instance.get_python_symbols(filename=None) # run project's python scripts (all or single)
+FA>     fa_instance.get_python_symbols(filename=None) # run project's python
+FA>                                                     scripts (all or single)
+FA>     fa_instance.set_symbol_template(status) # enable/disable template temp 
+FA>                                               signature
 FA>     fa_instance.symbols() # searches for the symbols in the current project
 FA>     ---------------------------------
 ```

@@ -1,3 +1,4 @@
+import binascii
 import traceback
 from collections import namedtuple
 import subprocess
@@ -108,6 +109,10 @@ def find_function_code_references(func_ea):
 class IdaLoader(fainterp.FaInterp):
     def __init__(self):
         super(IdaLoader, self).__init__()
+        self._create_template_symbol = False
+
+    def set_symbol_template(self, status):
+        self._create_template_symbol = status
 
     def create_symbol(self):
         """
@@ -121,6 +126,34 @@ class IdaLoader(fainterp.FaInterp):
             'type': 'function',
             'instructions': []
         }
+
+        if self._create_template_symbol:
+            find_bytes_ida = "find-bytes-ida --or '"
+
+            for ea in idautils.FuncItems(idc.get_screen_ea()):
+                mnem = idc.print_insn_mnem(ea).lower()
+                opcode_size = idc.get_item_size(ea)
+
+                # ppc
+                if mnem.startswith('b') or mnem in ('lis', 'lwz', 'addi'):
+                    # relative opcodes
+                    find_bytes_ida += '?? ' * opcode_size
+                    continue
+
+                # arm
+                if mnem.startswith('b') or mnem in ('ldr', 'str'):
+                    # relative opcodes
+                    find_bytes_ida += '?? ' * opcode_size
+                    continue
+
+                opcode = binascii.hexlify(idc.get_bytes(ea, opcode_size))
+                formatted_hex = ' '.join(opcode[i:i + 2] for i in range(0, len(opcode), 2))
+                find_bytes_ida += formatted_hex + ' '
+
+            find_bytes_ida += "'"
+
+            signature['instructions'].append(find_bytes_ida)
+            signature['instructions'].append('function-start')
 
         with open(TEMP_SIG_FILENAME, 'w') as f:
             hjson.dump(signature, f, indent=4)
@@ -468,13 +501,15 @@ def main(signatures_root, project_name, symbols_file=None):
 
     load_ui()
 
-    IdaLoader.log('''---------------------------------
+    IdaLoader.log('''    ---------------------------------
     FA Loaded successfully
 
     Quick usage:
     print(fa_instance.find(symbol_name)) # searches for the specific symbol
     fa_instance.get_python_symbols(filename=None) # run project's python
                                                     scripts (all or single)
+    fa_instance.set_symbol_template(status) # enable/disable template temp 
+                                              signature
     fa_instance.symbols() # searches for the symbols in the current project
     ---------------------------------''')
 
