@@ -371,26 +371,14 @@ don't have to memorize everything.
 
 The prompt should look like:
 ```
-FA> 
 FA>     ---------------------------------
 FA>     FA Loaded successfully
 FA> 
 FA>     Quick usage:
-FA>     fa_instance.set_project(project_name) # select project name
-FA>     print(fa_instance.list_projects()) # prints available projects
 FA>     print(fa_instance.find(symbol_name)) # searches for the specific symbol
 FA>     fa_instance.get_python_symbols(filename=None) # run project's python scripts (all or single)
 FA>     fa_instance.symbols() # searches for the symbols in the current project
-FA> 
-FA>     HotKeys:
-FA>     Ctrl-6: Set current project
-FA>     Ctrl-7: Search project symbols
-FA>     Ctrl-8: Create temporary signature and open an editor
-FA>     Ctrl-9: Find temporary signature
-FA>     Ctrl-0: Prompt for adding the temporary signature as permanent
 FA>     ---------------------------------
-FA> project set: test-project-ida
-
 ```
 
 Also, an additional `FA Toolbar` will be added with quick functions that

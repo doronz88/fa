@@ -468,24 +468,14 @@ def main(signatures_root, project_name, symbols_file=None):
 
     load_ui()
 
-    IdaLoader.log('''
-    ---------------------------------
+    IdaLoader.log('''---------------------------------
     FA Loaded successfully
 
     Quick usage:
-    fa_instance.set_project(project_name) # select project name
-    print(fa_instance.list_projects()) # prints available projects
     print(fa_instance.find(symbol_name)) # searches for the specific symbol
     fa_instance.get_python_symbols(filename=None) # run project's python
                                                     scripts (all or single)
     fa_instance.symbols() # searches for the symbols in the current project
-
-    HotKeys:
-    Ctrl-6: Set current project
-    Ctrl-7: Search project symbols
-    Ctrl-8: Create temporary signature and open an editor
-    Ctrl-9: Find temporary signature
-    Ctrl-0: Prompt for adding the temporary signature as permanent
     ---------------------------------''')
 
     if symbols_file is not None:
