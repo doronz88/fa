@@ -174,7 +174,7 @@ class IdaLoader(fainterp.FaInterp):
         with open(TEMP_SIG_FILENAME) as f:
             sig = hjson.load(f)
 
-        results = self.find_from_sig_json(sig, decremental=True)
+        results = self.find_from_sig_json(sig, decremental=False)
 
         for address in results:
             self.log('Search result: 0x{:x}'.format(address))
