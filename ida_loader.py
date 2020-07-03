@@ -147,7 +147,8 @@ class IdaLoader(fainterp.FaInterp):
                     continue
 
                 opcode = binascii.hexlify(idc.get_bytes(ea, opcode_size))
-                formatted_hex = ' '.join(opcode[i:i + 2] for i in range(0, len(opcode), 2))
+                formatted_hex = ' '.join(opcode[i:i + 2] for i in
+                                         range(0, len(opcode), 2))
                 find_bytes_ida += formatted_hex + ' '
 
             find_bytes_ida += "'"
@@ -526,7 +527,7 @@ def main(signatures_root, project_name, symbols_file=None):
     print(fa_instance.find(symbol_name)) # searches for the specific symbol
     fa_instance.get_python_symbols(filename=None) # run project's python
                                                     scripts (all or single)
-    fa_instance.set_symbol_template(status) # enable/disable template temp 
+    fa_instance.set_symbol_template(status) # enable/disable template temp
                                               signature
     fa_instance.symbols() # searches for the symbols in the current project
     ---------------------------------''')

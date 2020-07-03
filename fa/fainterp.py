@@ -16,8 +16,6 @@ DEFAULT_SIGNATURES_ROOT = os.path.join(
 COMMANDS_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'commands')
 
-MULTILINE_PREFIX = '    '
-
 
 class FaInterp:
     __metaclass__ = ABCMeta
@@ -62,7 +60,7 @@ class FaInterp:
 
         if not config.has_section(section):
             config.add_section(section)
-        
+
         config.set(section, key, value)
 
         with open(self._config_path, 'w') as f:
