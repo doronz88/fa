@@ -23,7 +23,7 @@ class FaInterp:
     __metaclass__ = ABCMeta
 
     def __init__(self, config_path=CONFIG_PATH):
-        self._project = 'generic'
+        self._project = None
         self._input = None
         self._segments = OrderedDict()
         self._signatures_root = DEFAULT_SIGNATURES_ROOT
@@ -33,29 +33,64 @@ class FaInterp:
         self._config_path = config_path
 
         if (config_path is not None) and (os.path.exists(config_path)):
-            config = ConfigParser()
-            config.read_file(open(config_path))
             self._signatures_root = os.path.expanduser(
-                config.get('global', 'signatures_root'))
+                self.config_get('global', 'signatures_root'))
+            self._project = self.config_get('global', 'project', None)
 
     @abstractmethod
     def set_input(self, input_):
         pass
+
+    def config_get(self, section, key, default=None):
+        config = ConfigParser()
+
+        with open(self._config_path) as f:
+            config.read_file(f)
+
+        if not config.has_section(section) or \
+                not config.has_option(section, key):
+            return default
+
+        return config.get(section, key)
+
+    def config_set(self, section, key, value):
+        config = ConfigParser()
+
+        if os.path.exists(self._config_path):
+            with open(self._config_path) as f:
+                config.read_file(f)
+
+        if not config.has_section(section):
+            config.add_section(section)
+        
+        config.set(section, key, value)
+
+        with open(self._config_path, 'w') as f:
+            config.write(f)
 
     def set_signatures_root(self, path, save=False):
         self.log('signatures root: {}'.format(path))
         self._signatures_root = path
 
         if save:
-            with open(self._config_path, 'wt') as f:
-                config = ConfigParser()
-                config.add_section('global')
-                config.set('global', 'signatures_root', path)
-                config.write(f)
+            self.config_set('global', 'signatures_root', path)
 
-    def set_project(self, project):
+    def verify_project(self):
+        if self._project is None:
+            raise IOError('No project has been selected')
+
+        if not os.path.exists(os.path.join(self._signatures_root,
+                                           self._project)):
+            raise IOError("Selected project's path doesn't exist.\n"
+                          "Please re-select)")
+
+    def set_project(self, project, save=True):
         self._project = project
         self.log('project set: {}'.format(project))
+
+        self.set_signatures_root(self._signatures_root, save=save)
+        if save:
+            self.config_set('global', 'project', project)
 
     def symbols(self, output_file_path=None):
         results = {}

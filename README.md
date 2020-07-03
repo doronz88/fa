@@ -397,7 +397,7 @@ A QuickStart Tip:
 You can also run IDA in script mode just to extract symbols using:
 
 ```sh
-ida -S"ida_loader.py <signatures-root> <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
+ida -S"ida_loader.py <signatures-root> --project-name <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
 ```
 
 #### ELF
