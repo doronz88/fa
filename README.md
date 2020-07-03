@@ -410,13 +410,13 @@ python elf_loader.py <elf-file> <signatures_root> <project>
 
 ### Available commands
 
-#### stop-if-empty
+#### stop-if-empty (builtin command)
 
 ```
 usage: stop-if-empty
 
-builtin interpreter command. stops parsing current SIG if 
-current resultset is empty 
+builtin interpreter command. stops parsing current SIG if
+current resultset is empty
 ```
 
 #### add-offset-range
@@ -709,6 +709,19 @@ optional arguments:
 usage: print [-h]
 
 prints the current search results
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+#### run
+```
+usage: run [-h] name
+
+run another SIG file
+
+positional arguments:
+  name        SIG filename
 
 optional arguments:
   -h, --help  show this help message and exit
