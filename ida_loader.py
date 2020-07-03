@@ -188,7 +188,15 @@ class IdaLoader(fainterp.FaInterp):
                                          'Rename?') == 1:
                     idc.set_name(results[0], str(sig['name']), idc.SN_CHECK)
 
+    def verify_project(self):
+        try:
+            super(IdaLoader, self).verify_project()
+        except IOError as e:
+            ida_kernwin.warning(e.message)
+            raise e
+
     def prompt_save_signature(self):
+        self.verify_project()
         with open(TEMP_SIG_FILENAME) as f:
             sig = hjson.load(f)
 
@@ -234,6 +242,7 @@ class IdaLoader(fainterp.FaInterp):
         return results
 
     def symbols(self, output_file_path=None):
+        self.verify_project()
         results = {}
 
         try:
@@ -492,19 +501,21 @@ def install():
                  format(os.path.abspath(__file__)))
         rc.write('# FA loading end\n')
 
-    IdaLoader.log('Successfullt installed :)')
+    IdaLoader.log('Successfully installed :)')
 
 
 @click.command()
 @click.argument('signatures_root', default='.')
-@click.argument('project_name', default='test-project-ida')
+@click.option('--project_name', default=None)
 @click.option('--symbols-file', default=None)
 def main(signatures_root, project_name, symbols_file=None):
     global fa_instance
 
     fa_instance = IdaLoader()
     fa_instance.set_input('ida')
-    fa_instance.set_project(project_name)
+
+    if project_name is not None:
+        fa_instance.set_project(project_name)
 
     load_ui()
 
