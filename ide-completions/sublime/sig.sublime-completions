@@ -1,0 +1,185 @@
+{
+    "scope": "source.hjson meta.structure.dictionary.hjson meta.structure.key-value.hjson meta.structure.array.hjson",
+    "completions": [
+        {
+            "trigger": "find-bytes",
+            "contents": "\"find-bytes --or '${1:hex_str}'\",",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "add-offset-range",
+            "contents": "add-offset-range ${1:start} ${2:end} ${3:step}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "back",
+            "contents": "back -${1:amount}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "back-to-checkpoint",
+            "contents": "back-to-checkpoint ${1:checkpoint}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "checkpoint",
+            "contents": "checkpoint ${1:checkpoint}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "clear",
+            "contents": "clear",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "function-end",
+            "contents": "function-end",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "function-start",
+            "contents": "function-start",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "function-lines",
+            "contents": "function-lines",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "goto-ref",
+            "contents": "goto-ref --code --data",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "keystone-find-opcodes",
+            "contents": "\"keystone-find-opcodes --or bele ${1:arch} ${2:mode} '${3:code}'\",",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "keystone-verify-opcodes",
+            "contents": "\"keystone-verify-opcodes --or bele ${1:arch} ${2:mode} '${3:code}'\",",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "locate",
+            "contents": "locate ${1:symbol_name}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "make-code",
+            "contents": "make-code",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "make-function",
+            "contents": "make-function",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "make-literal",
+            "contents": "make-literal",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "max-xrefs",
+            "contents": "max-xrefs",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "min-xrefs",
+            "contents": "min-xrefs",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "most-common",
+            "contents": "most-common",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "offset",
+            "contents": "offset ${1:offset}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "print",
+            "contents": "print",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "run",
+            "contents": "run ${1:filename}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "set-name",
+            "contents": "set-name ${1:name}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "set-type",
+            "contents": "set-type ${1:type}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "single",
+            "contents": "single ${1:zero-base-index}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "sort",
+            "contents": "sort",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "trace",
+            "contents": "trace",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "unique",
+            "contents": "unique",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "verify-aligned",
+            "contents": "verify-aligned ${1:alignment}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "verify-bytes",
+            "contents": "verify-bytes '${:hex}'",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "verify-name",
+            "contents": "verify-name ${1:name}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "verify-operand",
+            "contents": "verify-operand ${1:mnemonic} --op0 ${1:operand0} --op1 ${2:operand1} --op2 ${3:operand2}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "verify-ref",
+            "contents": "verify-ref --code --data ${1:reference_name}",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "verify-str",
+            "contents": "\"verify-str '${1:str}'\",",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "xref",
+            "contents": "xref",
+            "kind": "snippet",
+        },
+        {
+            "trigger": "xrefs-to",
+            "contents": "xrefs-to",
+            "kind": "snippet",
+        },
+    ]
+}
