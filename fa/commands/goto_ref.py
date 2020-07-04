@@ -1,3 +1,4 @@
+from argparse import RawTextHelpFormatter
 from fa import utils, context
 
 try:
@@ -5,10 +6,21 @@ try:
 except ImportError:
     pass
 
+DESCRIPTION = '''goto reference
+
+EXAMPLE:
+    0x00000000: ldr r0, =0x12345678
+
+    results = [0]
+    -> goto-ref --data
+    results = [0x12345678]
+'''
+
 
 def get_parser():
     p = utils.ArgumentParserNoExit('goto-ref',
-                                   description='goto reference')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     p.add_argument('--code', action='store_true',
                    default=False, help='include code references')
     p.add_argument('--data', action='store_true',

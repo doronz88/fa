@@ -1,3 +1,4 @@
+from argparse import RawTextHelpFormatter
 from fa import utils
 from fa import context
 
@@ -6,10 +7,23 @@ try:
 except ImportError:
     pass
 
+DESCRIPTION = '''goto function's end
+
+EXAMPLE:
+    0x00000000: push {r4-r7, lr} -> function's prolog
+    ...
+    0x000000f0: push {r4-r7, pc} -> function's epilog
+
+    results = [0]
+    -> function-end
+    result = [0xf0]
+'''
+
 
 def get_parser():
     p = utils.ArgumentParserNoExit('function-end',
-                                   description='goto function\'s end')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     p.add_argument('--not-unique', action='store_true')
     return p
 

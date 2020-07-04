@@ -1,10 +1,19 @@
+from argparse import RawTextHelpFormatter
 from fa import utils
+
+DESCRIPTION = '''peek a single result from the result-set (zero-based)
+
+EXAMPLE:
+    results = [0, 4, 8, 12]
+    -> single 2
+    result = [8]
+'''
 
 
 def get_parser():
     p = utils.ArgumentParserNoExit('single',
-                                   description='peek a single result from'
-                                               ' the resultset')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     p.add_argument('index', type=int, default=0, help='result index')
     return p
 
