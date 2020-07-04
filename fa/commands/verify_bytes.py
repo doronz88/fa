@@ -1,13 +1,24 @@
+from argparse import RawTextHelpFormatter
 import binascii
 
 from fa import utils
 
+DESCRIPTION = '''reduce the result-set to those matching the given bytes
+
+EXAMPLE:
+    0x00000000: 01 02 03 04
+    0x00000004: 05 06 07 08
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-bytes '05 06 07 08'
+    results = [4]
+'''
+
 
 def get_parser():
     p = utils.ArgumentParserNoExit('verify-bytes',
-                                   description='reduces the search list '
-                                               'to those matching the given'
-                                               ' bytes')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     p.add_argument('--until', type=int,
                    help='keep advancing by a given size until a match')
     p.add_argument('hex_str')

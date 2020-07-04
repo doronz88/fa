@@ -1,3 +1,4 @@
+from argparse import RawTextHelpFormatter
 from fa import utils, context
 
 try:
@@ -5,11 +6,32 @@ try:
 except ImportError:
     pass
 
+DESCRIPTION = '''reduce the result-set to those matching the given instruction
+
+EXAMPLE #1:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-operand mov
+    results = [0, 4]
+
+EXAMPLE #2:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-operand mov --op1 2
+    results = [4]
+'''
+
 
 def get_parser():
     p = utils.ArgumentParserNoExit('verify-operand',
-                                   description='verifies the given '
-                                               'opcode\'s operands')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     p.add_argument('name')
     p.add_argument('--op0')
     p.add_argument('--op1')

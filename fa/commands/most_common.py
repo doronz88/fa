@@ -1,10 +1,19 @@
+from argparse import RawTextHelpFormatter
 from fa import utils
+
+DESCRIPTION = '''get the result appearing the most in the result-set
+
+EXAMPLE:
+    results = [0, 4, 4, 8, 12]
+    -> most-common
+    result = [4]
+'''
 
 
 def get_parser():
     p = utils.ArgumentParserNoExit('most-common',
-                                   description='get the result appearing the '
-                                               'most in the result-set')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     return p
 
 

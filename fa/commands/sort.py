@@ -1,10 +1,19 @@
+from argparse import RawTextHelpFormatter
 from fa import utils
+
+DESCRIPTION = '''performs a sort on the current result-set
+
+EXAMPLE:
+    results = [4, 12, 0, 8]
+    -> sort
+    result = [0, 4, 8 ,12]
+'''
 
 
 def get_parser():
     p = utils.ArgumentParserNoExit('sort',
-                                   description='performs a python-sort on '
-                                               'the current result list')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     return p
 
 

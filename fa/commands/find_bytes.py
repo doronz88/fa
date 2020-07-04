@@ -1,13 +1,28 @@
+from argparse import RawTextHelpFormatter
 from collections import OrderedDict
 import binascii
 
 from fa import utils
 
+DESCRIPTION = '''expands the result-set with the occurrences of the given bytes
+
+EXAMPLE:
+    0x00000000: 01 02 03 04
+    0x00000004: 05 06 07 08
+
+    results = []
+    -> find-bytes --or 01020304
+    result = [0]
+
+    -> find-bytes --or 05060708
+    results = [0, 4]
+'''
+
 
 def get_parser():
     p = utils.ArgumentParserNoExit('find-bytes',
-                                   description='expands the search results '
-                                               'by the given bytes set')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     p.add_argument('--or', action='store_true')
     p.add_argument('hex_str')
     return p
@@ -26,6 +41,6 @@ def run(segments, args, addresses, interpreter=None, **kwargs):
     if getattr(args, 'or'):
         retval.update(results)
     else:
-        raise ValueError("must specify or manner")
+        raise ValueError("must specify --or option")
 
     return list(OrderedDict.fromkeys(retval))

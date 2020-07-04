@@ -1,3 +1,4 @@
+from argparse import RawTextHelpFormatter
 try:
     # flake8: noqa
     from keystone import *
@@ -9,13 +10,25 @@ import binascii
 from fa.commands import find_bytes
 from fa import utils
 
+DESCRIPTION = '''use keystone to search for the supplied opcodes
+
+EXAMPLE:
+    0x00000000: push {r4-r7, lr}
+    0x00000004: mov r0, r1
+
+    results = []
+    -> keystone-find-opcodes --bele --or KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1;'
+    result = [4]
+'''
+
 
 def get_parser():
     p = utils.ArgumentParserNoExit('keystone-find-opcodes',
-                                   description='use keystone to search for the supplied'
-                                               ' opcodes')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     p.add_argument('--bele', action='store_true',
-                   help='figure out the endianity from IDA instead of explicit mode')
+                   help='figure out the endianity from IDA instead of '
+                        'explicit mode')
     p.add_argument('--or', action='store_true',
                    help='mandatory. expands search results')
     p.add_argument('arch',

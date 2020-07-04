@@ -1,12 +1,28 @@
+from argparse import RawTextHelpFormatter
 import binascii
 
 from fa.commands import find_bytes
+
+DESCRIPTION = '''expands the result-set with the occurrences of the given
+string
+
+EXAMPLE:
+    0x00000000: 01 02 03 04
+    0x00000004: 05 06 07 08
+    0x00000008: 30 31 32 33 -> ASCII '0123'
+
+    results = []
+    -> find-str --or '0123'
+
+    result = [8]
+'''
 
 
 def get_parser():
     p = find_bytes.get_parser()
     p.prog = 'find-str'
-    p.description = 'expands the search results by the given string'
+    p.description = DESCRIPTION
+    p.formatter_class = RawTextHelpFormatter
     p.add_argument('--null-terminated', action='store_true')
     return p
 

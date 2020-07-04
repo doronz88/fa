@@ -1,10 +1,11 @@
 from fa import utils
 
+DESCRIPTION = '''prints the current result-set (for debugging)'''
+
 
 def get_parser():
     p = utils.ArgumentParserNoExit('print',
-                                   description='prints the current '
-                                               'search results')
+                                   description=DESCRIPTION)
     return p
 
 

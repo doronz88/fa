@@ -1,3 +1,4 @@
+from argparse import RawTextHelpFormatter
 try:
     # flake8: noqa
     from keystone import *
@@ -10,13 +11,26 @@ import binascii
 from fa.commands import verify_bytes
 from fa import utils
 
+DESCRIPTION = '''use keystone to verify the result-set matches the given
+opcodes
+
+EXAMPLE:
+    0x00000000: push {r4-r7, lr}
+    0x00000004: mov r0, r1
+
+    results = [0, 4]
+    -> keystone-verify-opcodes --bele --or KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1'
+    result = [4]
+'''
+
 
 def get_parser():
     p = utils.ArgumentParserNoExit('keystone-verify-opcodes',
-                                   description='use keystone-engine to verify the given '
-                                               'results match the supplied code')
+                                   description=DESCRIPTION,
+                                   formatter_class=RawTextHelpFormatter)
     p.add_argument('--bele', action='store_true',
-                   help='figure out the endianity from IDA instead of explicit mode')
+                   help='figure out the endianity from IDA instead of '
+                        'explicit mode')
     p.add_argument('--until', type=int,
                    help='keep going onwards opcode-opcode until verified')
     p.add_argument('arch',
