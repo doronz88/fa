@@ -227,10 +227,11 @@ class IdaLoader(fainterp.FaInterp):
                 return results
 
             if '_' in name:
-                if name.split('_')[0] in ('def', 'sub', 'loc', 'jpt'):
+                if name.split('_')[0] in ('def', 'sub', 'loc', 'jpt', 'j',
+                                          'nullsub'):
                     continue
             flags = ida_bytes.get_full_flags(ea)
-            if idc.hasUserName(flags):
+            if ida_bytes.has_user_name(flags):
                 results[name] = ea
                 output += '{} = 0x{:08x};\n'.format(name, ea)
 
@@ -258,6 +259,13 @@ class IdaLoader(fainterp.FaInterp):
             ida_kernwin.hide_wait_box()
 
         return results
+
+    def export(self):
+        symbols_filename = ida_kernwin.ask_file(True, r'*.txt', r'*.txt')
+        with open(symbols_filename, 'w') as f:
+            results = IdaLoader.extract_all_user_names(None)
+            for k, v in results.items():
+                f.write('{} = 0x{:08x};\n'.format(k, v))
 
     def set_input(self, input_):
         self.endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
@@ -436,6 +444,12 @@ def add_action(action):
 
 def load_ui():
     actions = [
+        Action(name='fa:settings',
+               icon_filename='settings.png',
+               handler=fa_instance.interactive_settings,
+               label='Settings',
+               hotkey=None),
+
         Action(name='fa:set-project',
                icon_filename='suitcase.png',
                handler=fa_instance.interactive_set_project,
@@ -446,6 +460,11 @@ def load_ui():
                handler=fa_instance.symbols,
                label='Find all project\'s symbols',
                hotkey='Ctrl+7'),
+
+        Action(name='fa:export', icon_filename='export.png',
+               handler=fa_instance.export,
+               label='Export symbols',
+               hotkey=None),
 
         Action(name='fa:extended-create-signature',
                icon_filename='create_sig.png',
@@ -464,12 +483,6 @@ def load_ui():
                handler=fa_instance.prompt_save_signature,
                label='Save last created temp signature',
                hotkey='Ctrl+0'),
-
-        Action(name='fa:settings',
-               icon_filename='settings.png',
-               handler=fa_instance.interactive_settings,
-               label='Settings',
-               hotkey=None),
     ]
 
     # init toolbar
