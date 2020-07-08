@@ -11,6 +11,7 @@ import click
 
 from ida_kernwin import Form
 import ida_kernwin
+import ida_typeinf
 import ida_bytes
 import idautils
 import ida_pro
@@ -261,11 +262,65 @@ class IdaLoader(fainterp.FaInterp):
         return results
 
     def export(self):
-        symbols_filename = ida_kernwin.ask_file(True, r'*.txt', r'*.txt')
-        with open(symbols_filename, 'w') as f:
-            results = IdaLoader.extract_all_user_names(None)
-            for k, v in results.items():
-                f.write('{} = 0x{:08x};\n'.format(k, v))
+        class ExportForm(Form):
+            def __init__(self):
+                description = '''
+                <h2>Export</h2>
+
+                Select a directory to export IDB data into.
+                '''
+
+                Form.__init__(self,
+                              r"""BUTTON YES* Save
+                              Export
+                              {StringLabel}
+                              <#Symbols#Symbols filename:{iSymbolsFilename}>
+                              <#C Header#C Header filename:{iHeaderFilename}>
+                              <#Select dir#Browse for dir:{iDir}>
+                              """, {
+                                  'iDir': Form.DirInput(),
+                                  'StringLabel':
+                                      Form.StringLabel(description,
+                                                       tp=Form.FT_HTML_LABEL),
+                                  'iSymbolsFilename': Form.StringInput(
+                                      value='symbols.txt'),
+                                  'iHeaderFilename': Form.StringInput(
+                                      value='header.h')
+
+                              })
+                self.__n = 0
+
+            def OnFormChange(self, fid):
+                return 1
+
+        form = ExportForm()
+        form, args = form.Compile()
+        ok = form.Execute()
+        if ok == 1:
+            # save symbols
+            symbols_filename = os.path.join(form.iDir.value,
+                                            form.iSymbolsFilename.value)
+            with open(symbols_filename, 'w') as f:
+                results = IdaLoader.extract_all_user_names(None)
+                for k, v in results.items():
+                    f.write('{} = 0x{:08x};\n'.format(k, v))
+
+            # save c header
+            idati = ida_typeinf.get_idati()
+            c_header_filename = os.path.join(form.iDir.value,
+                                             form.iHeaderFilename.value)
+
+            ordinals = []
+            for ordinal in range(1, ida_typeinf.get_ordinal_qty(idati) + 1):
+                ti = ida_typeinf.tinfo_t()
+                if ti.get_numbered_type(idati, ordinal):
+                    ordinals.append(str(ordinal))
+                    # print ordinal, ti
+
+            with open(c_header_filename, 'w') as f:
+                f.write(idc.print_decls(','.join(ordinals), 0))
+
+        form.Free()
 
     def set_input(self, input_):
         self.endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
@@ -308,7 +363,8 @@ class IdaLoader(fainterp.FaInterp):
                                                        tp=Form.FT_HTML_LABEL),
                                   'signatureGeneration':
                                       Form.DropdownListControl(
-                                          items=['Default', 'Using function bytes'],
+                                          items=['Default',
+                                                 'Using function bytes'],
                                           readonly=True,
                                           selval=0),
                               })
