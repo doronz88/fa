@@ -307,7 +307,7 @@ def run(**kwargs):
 
 ```python
 from fa.commands.set_type import set_type
-from fa import types
+from fa import fa_types
 
 TEMPLATE = '''
 find-str --or '{unique_string}'
@@ -317,15 +317,15 @@ xref
 def run(**kwargs):
     interp = kwargs['interpreter']
 
-    types.add_const('CONST7', 7)
-    types.add_const('CONST8', 8)
+    fa_types.add_const('CONST7', 7)
+    fa_types.add_const('CONST8', 8)
 
-    foo_e = types.FaEnum('foo_e')
+    foo_e = fa_types.FaEnum('foo_e')
     foo_e.add_value('val2', 2)
     foo_e.add_value('val1', 1)
     foo_e.update_idb()
 
-    special_struct_t = types.FaStruct('special_struct_t')
+    special_struct_t = fa_types.FaStruct('special_struct_t')
     special_struct_t.add_field('member1', 'const char *', size=4)
     special_struct_t.add_field('member2', 'const char *', size=4, offset=0x20)
     special_struct_t.update_idb()
@@ -361,9 +361,24 @@ Project aliases have higher priority.
 Loaders are the entry point into running FA. 
 In the future we'll possibly add Ghidra and other tools.
 
+Please first install the package as follows:
+
+Clone the repository and install locally:
+
+```sh
+# clone
+git clone git@github.com:doronz88/fa.git
+cd fa
+
+# install
+python -m pip install -e .
+```
+
 #### IDA
 
-Go to: `File->Script File... (ALT+F7)` and select `ida_loader.py`.
+#### Script mode
+
+Go to: `File->Script File... (ALT+F7)` and select `fa/ida_plugin.py`.
 
 You should get a nice prompt inside the output window welcoming you
 into using FA. Also, a quick usage guide will also be printed so you 
@@ -397,7 +412,23 @@ A QuickStart Tip:
 You can also run IDA in script mode just to extract symbols using:
 
 ```sh
-ida -S"ida_loader.py <signatures-root> --project-name <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
+ida -S"fa/ida_plugin.py <signatures-root> --project-name <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
+```
+
+##### IDA Plugin
+
+If you wish FA will be installed and loaded automatically
+into IDA, please place the following in your IDA plugins 
+directory (named `fa_plugin_stub.py`):
+```python
+from __future__ import print_function
+
+try:
+    from fa.ida_plugin import PLUGIN_ENTRY, FAIDAPlugIn
+except ImportError:
+    print("[WARN] Could not load FA plugin. FA Python package " \
+          "doesn't seem to be installed.")
+
 ```
 
 #### ELF

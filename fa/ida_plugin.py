@@ -6,6 +6,8 @@ import tempfile
 import sys
 import os
 
+sys.path.append('.')  # noqa: E402
+
 import hjson
 import click
 
@@ -17,8 +19,6 @@ import idautils
 import ida_pro
 import idaapi
 import idc
-
-sys.path.append('.')
 
 from fa import fainterp
 
@@ -515,6 +515,10 @@ def install():
 @click.option('--project_name', default=None)
 @click.option('--symbols-file', default=None)
 def main(signatures_root, project_name, symbols_file=None):
+    plugin_main(signatures_root, project_name, symbols_file)
+
+
+def plugin_main(signatures_root, project_name, symbols_file=None):
     global fa_instance
 
     fa_instance = IdaLoader()
@@ -544,6 +548,31 @@ def main(signatures_root, project_name, symbols_file=None):
 
     # TODO: consider adding as autostart script
     # install()
+
+
+try:
+    class FAIDAPlugIn(idaapi.plugin_t):
+        wanted_name = "FA"
+        wanted_hotkey = "Shift-,"
+        flags = 0
+        comment = ""
+        help = "Load FA in IDA Pro"
+
+        def init(self):
+            plugin_main('.', None, None)
+            return idaapi.PLUGIN_KEEP
+
+        def run(self, args):
+            pass
+
+        def term(self):
+            pass
+except TypeError:
+    print('ignoring rpyc bug')
+
+
+def PLUGIN_ENTRY():
+    return FAIDAPlugIn()
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-from fa import utils, types, context
+from fa import utils, fa_types, context
 
 try:
     import idc
@@ -16,8 +16,8 @@ def get_parser():
 
 
 def set_type_single(address, type_):
-    if isinstance(type_, types.FaStruct) or \
-            isinstance(type_, types.FaEnum):
+    if isinstance(type_, fa_types.FaStruct) or \
+            isinstance(type_, fa_types.FaEnum):
         type_str = type_.get_name()
     else:
         type_str = type_

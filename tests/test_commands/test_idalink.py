@@ -57,8 +57,8 @@ def test_ida_symbols(ida, sample_elf):
         s.ida_funcs.add_func(0x1248)
         s.ida_auto.auto_wait()
 
-        import ida_loader
-        fa_instance = ida_loader.IdaLoader()
+        from fa import ida_plugin
+        fa_instance = ida_plugin.IdaLoader()
         fa_instance.set_input('ida')
         fa_instance.set_project('test-project-ida')
         symbols = fa_instance.symbols()
