@@ -42,9 +42,9 @@ def sample_elf(request):
         .code 32
         main:
             push {r4-r7, lr}
-            bl 0x1234-8
+            bl 0x1234
             ldr r0, =data
-            bl 0x1234-8
+            bl 0x1234
             pop {r4-r7, pc}
         ''', text_address)[0]
         text_buffer = bytearray(text_buffer)
