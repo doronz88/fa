@@ -73,3 +73,4 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['main'] == 0x1248
         assert symbols['ldr_ref'] == 0x1250
         assert symbols['second_bl'] == 0x1254
+        assert symbols['find_imm'] == 0x1234

@@ -18,6 +18,8 @@ import ida_pro
 import idaapi
 import idc
 
+sys.path.append('.')
+
 from fa import fainterp
 
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')

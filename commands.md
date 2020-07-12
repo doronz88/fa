@@ -9,6 +9,7 @@ Below is the list of available commands:
 - [clear](#clear)
 - [find-bytes](#find-bytes)
 - [find-bytes-ida](#find-bytes-ida)
+- [find-immediate](#find-immediate)
 - [find-str](#find-str)
 - [function-end](#function-end)
 - [function-lines](#function-lines)
@@ -206,6 +207,28 @@ EXAMPLE:
 
     -> find-bytes-ida --or '05 06 ?? 08'
     results = [0, 4]
+
+positional arguments:
+  expression
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --or
+```
+## find-immediate
+```
+usage: find-immediate [-h] [--or] expression
+
+expands the result-set with the occurrences of the given 
+immediate in "ida immediate syntax"
+
+EXAMPLE:
+    0x00000000: ldr r0, =0x1234
+    0x00000004: add r0, #2 ; 0x1236
+
+    results = []
+    -> find-immediate --or 0x1236
+    result = [4]
 
 positional arguments:
   expression
