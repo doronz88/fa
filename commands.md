@@ -21,6 +21,7 @@ Below is the list of available commands:
 - [make-comment](#make-comment)
 - [make-function](#make-function)
 - [make-literal](#make-literal)
+- [make-unknown](#make-unknown)
 - [max-xrefs](#max-xrefs)
 - [min-xrefs](#min-xrefs)
 - [most-common](#most-common)
@@ -432,6 +433,15 @@ optional arguments:
 usage: make-literal [-h]
 
 convert into a literal
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## make-unknown
+```
+usage: make-unknown [-h]
+
+convert into an unknown block
 
 optional arguments:
   -h, --help  show this help message and exit
