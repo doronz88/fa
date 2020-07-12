@@ -439,6 +439,24 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
+#### align
+```
+usage: align [-h] value
+
+align results to given base (round-up)
+
+EXAMPLE:
+    results = [0, 2, 4, 6, 8]
+    -> align 4
+    results = [0, 4, 4, 8, 8]
+
+positional arguments:
+  value
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
 #### back
 ```
 usage: back [-h] amount
@@ -766,6 +784,30 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
+#### make-comment
+```
+usage: make-comment [-h] comment
+
+add comment for given addresses
+
+EXAMPLE:
+    0x00000200: 01 02 03 04
+    0x00000204: 30 31 32 33
+
+    results = [0x200]
+    -> make-comment 'bla bla'
+    results = [0x200]
+    
+    0x00000200: 01 02 03 04 ; bla bla
+    0x00000204: 30 31 32 33
+
+positional arguments:
+  comment     comment string
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
 #### make-function
 ```
 usage: make-function [-h]
@@ -1051,6 +1093,30 @@ optional arguments:
   -h, --help  show this help message and exit
   --code      include code references
   --data      include data references
+```
+
+#### verify-segment
+```
+usage: verify-segment [-h] name
+
+reduce the result-set to those in the given segment name
+
+EXAMPLE:
+    .text:0x00000000 01 02 03 04
+    .text:0x00000004 30 31 32 33
+    
+    .data:0x00000200 01 02 03 04
+    .data:0x00000204 30 31 32 33
+
+    results = [0, 0x200]
+    -> verify-segment .data
+    results = [0x200]
+
+positional arguments:
+  name        segment name
+
+optional arguments:
+  -h, --help  show this help message and exit
 ```
 
 #### verify-str
