@@ -6,6 +6,8 @@ import tempfile
 import sys
 import os
 
+sys.path.append('.')  # noqa: E402
+
 import hjson
 import click
 
@@ -17,8 +19,6 @@ import idautils
 import ida_pro
 import idaapi
 import idc
-
-sys.path.append('.')
 
 from fa import fainterp
 
@@ -382,11 +382,8 @@ def add_action(action):
             return 1
 
         def update(self, ctx):
-            return ida_kernwin.AST_ENABLE_FOR_WIDGET if \
-                ctx.widget_type == ida_kernwin.BWN_DISASM else \
-                ida_kernwin.AST_DISABLE_FOR_WIDGET
+            return ida_kernwin.AST_ENABLE_FOR_WIDGET
 
-    print("Creating a custom icon from raw data!")
     act_icon = -1
     if action.icon_filename:
         icon_full_filename = os.path.join(
@@ -406,19 +403,14 @@ def add_action(action):
             action.hotkey,  # Shortcut (optional)
             None,  # Tooltip (optional)
             act_icon)):  # Icon ID (optional)
-        print("Action registered. Attaching to menu.")
 
         # Insert the action in the menu
-        if ida_kernwin.attach_action_to_menu(
+        if not ida_kernwin.attach_action_to_menu(
                 "FA/", act_name, ida_kernwin.SETMENU_APP):
-            print("Attached to menu.")
-        else:
             print("Failed attaching to menu.")
 
         # Insert the action in a toolbar
-        if ida_kernwin.attach_action_to_toolbar("fa", act_name):
-            print("Attached to toolbar.")
-        else:
+        if not ida_kernwin.attach_action_to_toolbar("fa", act_name):
             print("Failed attaching to toolbar.")
 
         class Hooks(ida_kernwin.UI_Hooks):
@@ -515,6 +507,10 @@ def install():
 @click.option('--project_name', default=None)
 @click.option('--symbols-file', default=None)
 def main(signatures_root, project_name, symbols_file=None):
+    plugin_main(signatures_root, project_name, symbols_file)
+
+
+def plugin_main(signatures_root, project_name, symbols_file=None):
     global fa_instance
 
     fa_instance = IdaLoader()
@@ -544,6 +540,31 @@ def main(signatures_root, project_name, symbols_file=None):
 
     # TODO: consider adding as autostart script
     # install()
+
+
+try:
+    class FAIDAPlugIn(idaapi.plugin_t):
+        wanted_name = "FA"
+        wanted_hotkey = "Shift-,"
+        flags = 0
+        comment = ""
+        help = "Load FA in IDA Pro"
+
+        def init(self):
+            plugin_main('.', None, None)
+            return idaapi.PLUGIN_KEEP
+
+        def run(self, args):
+            pass
+
+        def term(self):
+            pass
+except TypeError:
+    print('ignoring rpyc bug')
+
+
+def PLUGIN_ENTRY():
+    return FAIDAPlugIn()
 
 
 if __name__ == '__main__':
