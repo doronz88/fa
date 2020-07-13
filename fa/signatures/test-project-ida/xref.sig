@@ -6,6 +6,8 @@
 		xref
 		function-start
 		arm-verify 'push {r4-r7, lr}'
+		make-comment 'function prolog'
+        verify-segment .text
 		unique
 		set-name main
         set-type 'void main(void)'

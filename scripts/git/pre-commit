@@ -1,0 +1,44 @@
+#!/usr/bin/python
+from collections import OrderedDict
+import os
+import sys
+
+sys.path.append('.')  # noqa: E402
+
+from fa.fainterp import FaInterp
+
+COMMANDS_ROOT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), '..', '..', 'fa', 'commands')
+
+
+def main():
+    doc = OrderedDict()
+    doc['stop-if-empty'] = 'builtin interpreter command. \n' \
+                           'stops parsing current SIG if current ' \
+                           'resultset is empty\n'
+
+    for filename in os.listdir(COMMANDS_ROOT):
+        if filename.endswith('.py') and \
+                filename not in ('__init__.py',):
+            command = os.path.splitext(filename)[0]
+            command = FaInterp.get_command(command)
+
+            p = command.get_parser()
+            doc[p.prog] = p.format_help()
+
+    buf = ''
+    buf += '# FA Command List\n'
+    buf += 'Below is the list of available commands:\n'
+
+    for command in doc.keys():
+        buf += '- [{command}](#{command})\n'.format(command=command)
+
+    for command, help in doc.items():
+        buf += '## {}\n```\n{}```\n'.format(command, help)
+
+    with open('commands.md', 'wt') as f:
+        f.write(buf)
+
+
+if __name__ == '__main__':
+    main()
