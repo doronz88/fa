@@ -390,7 +390,7 @@ don't have to memorize everything.
 Also, an additional `FA Toolbar` will be added with quick functions that
 are also available under the newly created `FA` menu.
 
-![FA Menu](https://github.com/doronz88/fa/raw/master/res/screenshots/menu.png "FA Menu")
+![FA Menu](https://github.com/doronz88/fa/raw/master/fa/res/screenshots/menu.png "FA Menu")
 
 A QuickStart Tip:
 
