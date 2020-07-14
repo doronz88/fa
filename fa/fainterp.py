@@ -18,9 +18,18 @@ COMMANDS_ROOT = os.path.join(
 
 
 class FaInterp:
+    """
+    FA Interpreter base class
+    """
     __metaclass__ = ABCMeta
 
     def __init__(self, config_path=CONFIG_PATH):
+        """
+        Constructor
+        :param config_path: config.ini path. used to load global settings
+                            instead of setting each of the options manually
+                            (signatures_root, project, ...)
+        """
         self._project = None
         self._input = None
         self._segments = OrderedDict()
@@ -37,9 +46,21 @@ class FaInterp:
 
     @abstractmethod
     def set_input(self, input_):
+        """
+        Set file input
+        :param input_: file to work on
+        :return:
+        """
         pass
 
     def config_get(self, section, key, default=None):
+        """
+        Read configuration setting. This is loaded from INI config file.
+        :param section: section name
+        :param key: key name
+        :param default: default value, if key doesn't exist inside section
+        :return: the value in the specified section-key
+        """
         config = ConfigParser()
 
         with open(self._config_path) as f:
@@ -52,6 +73,13 @@ class FaInterp:
         return config.get(section, key)
 
     def config_set(self, section, key, value):
+        """
+        Write configuration setting. This is saved into INI config file
+        :param section: section name
+        :param key: key name
+        :param value: value to set
+        :return: None
+        """
         config = ConfigParser()
 
         if sys.version[0] == '2':
@@ -71,6 +99,12 @@ class FaInterp:
             config.write(f)
 
     def set_signatures_root(self, path, save=False):
+        """
+        Change signatures root path (where the projects are searched).
+        :param path: signatures root path (where the projects are searched).
+        :param save: should save into configuration file?
+        :return: None
+        """
         self.log('signatures root: {}'.format(path))
         self._signatures_root = path
 
@@ -78,6 +112,11 @@ class FaInterp:
             self.config_set('global', 'signatures_root', path)
 
     def verify_project(self):
+        """
+        Throws IOError if no project has been selected or points into an
+        invalid path
+        :return: None
+        """
         if self._project is None:
             raise IOError('No project has been selected')
 
@@ -87,6 +126,12 @@ class FaInterp:
                           "Please re-select)")
 
     def set_project(self, project, save=True):
+        """
+        Set currently active project (where SIG files are placed)
+        :param project: project name
+        :param save: should save this setting into configuration file?
+        :return: None
+        """
         self._project = project
         self.log('project set: {}'.format(project))
 
@@ -95,6 +140,11 @@ class FaInterp:
             self.config_set('global', 'project', project)
 
     def symbols(self, output_file_path=None):
+        """
+        Run find for all SIG files in currently active project
+        :param output_file_path: optional, save found symbols into output file
+        :return: dictionary of found symbols
+        """
         results = {}
         results.update(self.get_python_symbols())
         for sig in self.get_json_signatures():
@@ -117,6 +167,10 @@ class FaInterp:
         return results
 
     def interactive_set_project(self):
+        """
+        Show GUI for selecting a project from signatures_root
+        :return: None
+        """
         app = Tk()
         # app.geometry('200x30')
 
@@ -136,6 +190,10 @@ class FaInterp:
         app.mainloop()
 
     def list_projects(self):
+        """
+        Get a list of all available projects in signatures_root
+        :return: list of all available projects in signatures_root
+        """
         projects = []
         for root, dirs, files in os.walk(self._signatures_root):
             projects += \
@@ -145,15 +203,30 @@ class FaInterp:
 
     @staticmethod
     def log(message):
+        """
+        Log message
+        :param message:
+        :return:
+        """
         for line in message.splitlines():
             print('FA> {}'.format(line))
 
     @abstractmethod
     def reload_segments(self):
+        """
+        Reload memory segments
+        :return:
+        """
         pass
 
     @staticmethod
     def get_module(name, filename):
+        """
+        Load a python module by filename
+        :param name: module name
+        :param filename: module filename
+        :return: loaded python module
+        """
         if not os.path.exists(filename):
             raise NotImplementedError("no such filename: {}".format(filename))
 
@@ -171,10 +244,21 @@ class FaInterp:
 
     @staticmethod
     def get_command(command):
+        """
+        Get fa command as a loaded python-module
+        :param command: command name
+        :return: command's python-module
+        """
         filename = os.path.join(COMMANDS_ROOT, "{}.py".format(command))
         return FaInterp.get_module(command, filename)
 
     def run_command(self, command, addresses):
+        """
+        Run fa command with given address list and output the result
+        :param command: fa command name
+        :param addresses: input address list
+        :return: output address list
+        """
         args = ''
         if ' ' in command:
             command, args = command.split(' ', 1)
@@ -189,6 +273,11 @@ class FaInterp:
                           interpreter=self)
 
     def get_alias(self):
+        """
+        Get dictionary of all defined aliases globally and by project.
+        Project aliases loaded last so are considered stronger.
+        :return: dictionary of all fa command aliases
+        """
         retval = {}
         with open(os.path.join(COMMANDS_ROOT, 'alias')) as f:
             for line in f.readlines():
@@ -209,6 +298,13 @@ class FaInterp:
         return retval
 
     def save_signature(self, signature):
+        """
+        Save given signature object (by dictionary) into active project
+        as a new SIG file. If symbol name already exists, then create another
+        file (never overwrites).
+        :param signature: Dictionary of signature object
+        :return: None
+        """
         filename = os.path.join(
             self._signatures_root,
             self._project,
@@ -224,6 +320,14 @@ class FaInterp:
 
     def find_from_instructions_list(self, instructions,
                                     decremental=False, addresses=None):
+        """
+        Run the given instruction list and output the result
+        :param instructions: instruction list
+        :param decremental: should stop and return the output *before* the last
+                            command that returned an empty list of results
+        :param addresses: input address list (if any)
+        :return: output address list
+        """
         if addresses is None:
             addresses = []
 
@@ -298,6 +402,13 @@ class FaInterp:
         return self.find_from_sig_json(sig, decremental)
 
     def get_python_symbols(self, file_name=None):
+        """
+        Run all python scripts found in currently active project and return
+        the dictionary of all found symbols
+        :param file_name: optional, specify which python script to execute
+                          inside the currently active project
+        :return: dictionary of all found symbols
+        """
         symbols = {}
         project_root = os.path.join(self._signatures_root, self._project)
         sys.path.append(project_root)
@@ -316,6 +427,11 @@ class FaInterp:
         return symbols
 
     def get_json_signatures(self, symbol_name=None):
+        """
+        Get a list of all json SIG objects in currently active project.
+        :param symbol_name: optional, select a specific SIG file by symbol name
+        :return: list of all json SIG objects in currently active project.
+        """
         signatures = []
         project_root = os.path.join(self._signatures_root, self._project)
 
@@ -338,6 +454,13 @@ class FaInterp:
         return signatures
 
     def find(self, symbol_name, decremental=False):
+        """
+        Find symbol by its name in the SIG file
+        :param symbol_name: symbol name
+        :param decremental: Should stop *before* the last command which
+                            returned zero results
+        :return: list of matches for the given symbol
+        """
         results = []
         signatures = self.get_json_signatures(symbol_name)
         if len(signatures) == 0:
