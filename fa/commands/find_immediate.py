@@ -8,7 +8,7 @@ try:
 except ImportError:
     pass
 
-DESCRIPTION = '''expands the result-set with the occurrences of the given 
+DESCRIPTION = '''expands the result-set with the occurrences of the given
 immediate in "ida immediate syntax"
 
 EXAMPLE:

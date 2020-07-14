@@ -16,7 +16,7 @@ EXAMPLE:
     results = [0x200]
     -> make-comment 'bla bla'
     results = [0x200]
-    
+
     0x00000200: 01 02 03 04 ; bla bla
     0x00000204: 30 31 32 33
 '''
