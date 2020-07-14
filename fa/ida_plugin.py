@@ -25,6 +25,9 @@ from fa import fainterp
 # Filename for the temporary created signature
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
 
+# IDA fa plugin filename
+PLUGIN_FILENAME = 'fa_ida_plugin.py'
+
 
 def open_file(filename):
     """
@@ -570,25 +573,25 @@ def load_ui():
 
 def install():
     """
-    Not yet supported but should handle installing as an IDA plugin
-    :return:
+    Install FA ida plugin
+    :return: None
     """
-    ida_python_rc_path = os.path.join(
-        idaapi.get_user_idadir(), "idapythonrc.py")
-    if not os.path.exists(ida_python_rc_path):
-        IdaLoader.log('failed location ida rc file')
+    fa_plugin_filename = os.path.join(
+        idaapi.get_user_idadir(), 'plugins', PLUGIN_FILENAME)
+    if os.path.exists(fa_plugin_filename):
+        IdaLoader.log('already installed')
         return
 
-    with open(ida_python_rc_path, 'rt') as rc:
-        if 'FA loading start' in rc.read():
-            # already installed
-            return
+    with open(fa_plugin_filename, 'w') as f:
+        f.writelines("""from __future__ import print_function
+try:
+    from fa.ida_plugin import PLUGIN_ENTRY, FAIDAPlugIn
+except ImportError:
+    print("[WARN] Could not load FA plugin. "
+          "FA Python package doesn\'t seem to be installed.")
+""")
 
-    with open(ida_python_rc_path, 'at') as rc:
-        rc.write('\n\n# FA loading start\n')
-        rc.write('exec(open(r"{}", "rb").read())\n'.
-                 format(os.path.abspath(__file__)))
-        rc.write('# FA loading end\n')
+    idaapi.load_plugin(PLUGIN_FILENAME)
 
     IdaLoader.log('Successfully installed :)')
 

@@ -376,28 +376,16 @@ python -m pip install -e .
 
 #### IDA
 
-#### Script mode
+Within IDA Python run:
 
-Go to: `File->Script File... (ALT+F7)` and select `fa/ida_plugin.py`.
+```python
+from fa import ida_plugin
+ida_plugin.install()
+```
 
 You should get a nice prompt inside the output window welcoming you
 into using FA. Also, a quick usage guide will also be printed so you 
 don't have to memorize everything.
-
-The prompt should look like:
-```
-FA>     ---------------------------------
-FA>     FA Loaded successfully
-FA> 
-FA>     Quick usage:
-FA>     print(fa_instance.find(symbol_name)) # searches for the specific symbol
-FA>     fa_instance.get_python_symbols(filename=None) # run project's python
-FA>                                                     scripts (all or single)
-FA>     fa_instance.set_symbol_template(status) # enable/disable template temp 
-FA>                                               signature
-FA>     fa_instance.symbols() # searches for the symbols in the current project
-FA>     ---------------------------------
-```
 
 Also, an additional `FA Toolbar` will be added with quick functions that
 are also available under the newly created `FA` menu.
@@ -415,21 +403,6 @@ You can also run IDA in script mode just to extract symbols using:
 ida -S"fa/ida_plugin.py <signatures-root> --project-name <project-name> --symbols-file=/tmp/symbols.txt" foo.idb
 ```
 
-##### IDA Plugin
-
-If you wish FA will be installed and loaded automatically
-into IDA, please place the following in your IDA plugins 
-directory (named `fa_plugin_stub.py`):
-```python
-from __future__ import print_function
-
-try:
-    from fa.ida_plugin import PLUGIN_ENTRY, FAIDAPlugIn
-except ImportError:
-    print("[WARN] Could not load FA plugin. FA Python package " \
-          "doesn't seem to be installed.")
-
-```
 
 #### ELF
 
