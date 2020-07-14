@@ -219,7 +219,7 @@ optional arguments:
 ```
 usage: find-immediate [-h] [--or] expression
 
-expands the result-set with the occurrences of the given 
+expands the result-set with the occurrences of the given
 immediate in "ida immediate syntax"
 
 EXAMPLE:
@@ -432,7 +432,7 @@ EXAMPLE:
     results = [0x200]
     -> make-comment 'bla bla'
     results = [0x200]
-    
+
     0x00000200: 01 02 03 04 ; bla bla
     0x00000204: 30 31 32 33
 
@@ -728,7 +728,7 @@ reduce the result-set to those in the given segment name
 EXAMPLE:
     .text:0x00000000 01 02 03 04
     .text:0x00000004 30 31 32 33
-    
+
     .data:0x00000200 01 02 03 04
     .data:0x00000204 30 31 32 33
 
