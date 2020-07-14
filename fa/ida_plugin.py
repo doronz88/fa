@@ -22,10 +22,16 @@ import idc
 
 from fa import fainterp
 
+# Filename for the temporary created signature
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
 
 
 def open_file(filename):
+    """
+    Attempt to open the given filename by OS' default editor
+    :param filename: filename to open
+    :return: None
+    """
     if sys.platform == "win32":
         try:
             os.startfile(filename)
@@ -44,11 +50,23 @@ def open_file(filename):
 
 
 class IdaLoader(fainterp.FaInterp):
+    """
+    IDA loader
+    Includes improved GUI interaction for accessing the interpreter
+    functionality.
+    """
+
     def __init__(self):
         super(IdaLoader, self).__init__()
         self._create_template_symbol = False
 
     def set_symbol_template(self, status):
+        """
+        Should the create-temp-signature feature attempt to create a default
+        signature by predefined template?
+        :param status: new boolean setting
+        :return: None
+        """
         self._create_template_symbol = status
 
     def create_symbol(self):
@@ -100,15 +118,19 @@ class IdaLoader(fainterp.FaInterp):
         return TEMP_SIG_FILENAME
 
     def extended_create_symbol(self):
+        """
+        Creates a temporary symbol of the currently active function
+        and open it using OS default editor
+        :return: None
+        """
         filename = self.create_symbol()
         open_file(filename)
 
     def find_symbol(self):
         """
         Find the last create symbol signature.
-        :return:
+        :return: None
         """
-
         with open(TEMP_SIG_FILENAME) as f:
             sig = hjson.load(f)
 
@@ -120,6 +142,8 @@ class IdaLoader(fainterp.FaInterp):
 
         if len(results) == 1:
             # if remote sig has a proper name, but current one is not
+            ida_kernwin.jumpto(results[0])
+
             if not sig['name'].startswith('sub_') and \
                     idc.get_func_name(results[0]).startswith('sub_'):
                 if ida_kernwin.ask_yn(1, 'Only one result has been found. '
@@ -127,6 +151,11 @@ class IdaLoader(fainterp.FaInterp):
                     idc.set_name(results[0], str(sig['name']), idc.SN_CHECK)
 
     def verify_project(self):
+        """
+        Verify a valid project is currently active.
+        Show IDA warning if not.
+        :return: None
+        """
         try:
             super(IdaLoader, self).verify_project()
         except IOError as e:
@@ -134,6 +163,10 @@ class IdaLoader(fainterp.FaInterp):
             raise e
 
     def prompt_save_signature(self):
+        """
+        Save last-created-temp-signature if user agrees to in IDA prompt
+        :return: None
+        """
         self.verify_project()
         with open(TEMP_SIG_FILENAME) as f:
             sig = hjson.load(f)
@@ -145,17 +178,35 @@ class IdaLoader(fainterp.FaInterp):
         self.save_signature(sig)
 
     def find(self, symbol_name, decremental=False):
+        """
+        Find symbol by name (as specified in SIG file)
+        Show an IDA waitbox while doing so
+        :param symbol_name: symbol name
+        :param decremental: Should stop before reaching a command with no
+                            results?
+        :return: output address list
+        """
         ida_kernwin.replace_wait_box('Searching symbol: \'{}\'...'
                                      .format(symbol_name))
         return super(IdaLoader, self).find(symbol_name,
                                            decremental=decremental)
 
     def get_python_symbols(self, file_name=None):
+        """
+        Run all python scripts inside the currently active project.
+        Show an IDA waitbox while doing so
+        :param file_name: filter a specific filename to execute
+        :return: dictionary of all found symbols
+        """
         ida_kernwin.replace_wait_box('Running python scripts...')
         return super(IdaLoader, self).get_python_symbols(file_name=file_name)
 
     @staticmethod
     def extract_all_user_names(filename=None):
+        """
+        Get all user-named labels inside IDA. Also prints into output window.
+        :return: dictionary of all user named labels: label_name -> ea
+        """
         results = {}
         output = ''
 
@@ -181,6 +232,12 @@ class IdaLoader(fainterp.FaInterp):
         return results
 
     def symbols(self, output_file_path=None):
+        """
+        Run find for all SIG files in currently active project.
+        Show an IDA waitbox while doing so
+        :param output_file_path: optional, save found symbols into output file
+        :return: dictionary of found symbols
+        """
         self.verify_project()
         results = {}
 
@@ -198,6 +255,11 @@ class IdaLoader(fainterp.FaInterp):
         return results
 
     def export(self):
+        """
+        Show an export dialog to export symbols and header file for given
+        IDB.
+        :return: None
+        """
         class ExportForm(Form):
             def __init__(self):
                 description = '''
@@ -259,16 +321,28 @@ class IdaLoader(fainterp.FaInterp):
         form.Free()
 
     def set_input(self, input_):
+        """
+        Mock for change_input. Just reload current loaded data settings.
+        :param input_: doesn't matter
+        :return: None
+        """
         self.endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
         self._input = input_
         self.reload_segments()
 
     def reload_segments(self):
-        # memory searches will use IDA's API instead
-        # which is much faster
+        """
+        memory searches will use IDA's API instead
+        which is much faster so this is just a stub.
+        :return: None
+        """
         return
 
     def interactive_settings(self):
+        """
+        Show settings dialog
+        :return: None
+        """
         class SettingsForm(Form):
             def __init__(self, signatures_root):
                 description = '''
@@ -318,6 +392,10 @@ class IdaLoader(fainterp.FaInterp):
         f.Free()
 
     def interactive_set_project(self):
+        """
+        Show set-project dialog
+        :return: None
+        """
         class SetProjectForm(Form):
             def __init__(self, signatures_root, projects, current):
                 description = '''
@@ -373,6 +451,11 @@ Action = namedtuple('action', 'name icon_filename handler label hotkey')
 
 
 def add_action(action):
+    """
+    Add an ida-action
+    :param action: action given as the `Action` namedtuple
+    :return: None
+    """
     class Handler(ida_kernwin.action_handler_t):
         def __init__(self):
             ida_kernwin.action_handler_t.__init__(self)
@@ -427,6 +510,10 @@ def add_action(action):
 
 
 def load_ui():
+    """
+    Load FA's GUI buttons
+    :return: None
+    """
     actions = [
         Action(name='fa:settings',
                icon_filename='settings.png',
@@ -482,6 +569,10 @@ def load_ui():
 
 
 def install():
+    """
+    Not yet supported but should handle installing as an IDA plugin
+    :return:
+    """
     ida_python_rc_path = os.path.join(
         idaapi.get_user_idadir(), "idapythonrc.py")
     if not os.path.exists(ida_python_rc_path):
@@ -564,8 +655,13 @@ except TypeError:
 
 
 def PLUGIN_ENTRY():
+    """
+    Entry point for IDA plugins
+    :return:
+    """
     return FAIDAPlugIn()
 
 
 if __name__ == '__main__':
+    # Entry point for IDA in script mode (-S)
     main(standalone_mode=False, args=idc.ARGV[1:])
