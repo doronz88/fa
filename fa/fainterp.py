@@ -54,9 +54,13 @@ class FaInterp:
     def config_set(self, section, key, value):
         config = ConfigParser()
 
+        if sys.version[0] == '2':
+            section = section.decode('utf8')
+            key = key.decode('utf8')
+            value = value.decode('utf8')
+
         if os.path.exists(self._config_path):
-            with open(self._config_path) as f:
-                config.read_file(f)
+            config.read(self._config_path)
 
         if not config.has_section(section):
             config.add_section(section)
