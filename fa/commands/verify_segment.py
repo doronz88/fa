@@ -12,7 +12,7 @@ DESCRIPTION = '''reduce the result-set to those in the given segment name
 EXAMPLE:
     .text:0x00000000 01 02 03 04
     .text:0x00000004 30 31 32 33
-    
+
     .data:0x00000200 01 02 03 04
     .data:0x00000204 30 31 32 33
 
