@@ -61,7 +61,11 @@ class IdaLoader(fainterp.FaInterp):
 
     def __init__(self):
         super(IdaLoader, self).__init__()
-        self._create_template_symbol = False
+        self._create_template_symbol = eval(self.config_get(
+            'global',
+            'create_symbol_template',
+            'False'
+        ))
 
     def set_symbol_template(self, status):
         """
@@ -71,6 +75,7 @@ class IdaLoader(fainterp.FaInterp):
         :return: None
         """
         self._create_template_symbol = status
+        self.config_set('global', 'create_symbol_template', str(status))
 
     def create_symbol(self):
         """
@@ -391,7 +396,7 @@ class IdaLoader(fainterp.FaInterp):
         ok = f.Execute()
         if ok == 1:
             self.set_signatures_root(f.signaturesRoot.value, save=True)
-            self._create_template_symbol = f.signatureGeneration.value == 1
+            self.set_symbol_template(f.signatureGeneration.value == 1)
         f.Free()
 
     def interactive_set_project(self):
