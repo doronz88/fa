@@ -283,7 +283,7 @@ optional arguments:
 ```
 ## function-lines
 ```
-usage: function-lines [-h]
+usage: function-lines [-h] [--after]
 
 get all function's lines
 
@@ -301,6 +301,7 @@ EXAMPLE:
 
 optional arguments:
   -h, --help  show this help message and exit
+  --after     include only function lines which occur after currentresultset
 ```
 ## function-start
 ```

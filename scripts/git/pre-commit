@@ -17,7 +17,10 @@ def main():
                            'stops parsing current SIG if current ' \
                            'resultset is empty\n'
 
-    for filename in os.listdir(COMMANDS_ROOT):
+    commands = os.listdir(COMMANDS_ROOT)
+    commands.sort()
+
+    for filename in commands:
         if filename.endswith('.py') and \
                 filename not in ('__init__.py',):
             command = os.path.splitext(filename)[0]
