@@ -61,6 +61,9 @@ class FaInterp:
         :param default: default value, if key doesn't exist inside section
         :return: the value in the specified section-key
         """
+        if not os.path.exists(self._config_path):
+            return default
+
         config = ConfigParser()
 
         with open(self._config_path) as f:
