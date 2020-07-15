@@ -26,16 +26,23 @@ def get_parser():
     p = utils.ArgumentParserNoExit('function-lines',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
+    p.add_argument('--after', action='store_true',
+                   help='include only function lines which occur after current'
+                        'resultset')
     return p
 
 
 @context.ida_context
 @utils.yield_unique
-def function_lines(addresses):
+def function_lines(addresses, after=False):
     for address in addresses:
         for item in idautils.FuncItems(address):
-            yield item
+            if not after:
+                yield item
+            else:
+                if item > address:
+                    yield item
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(function_lines(addresses))
+    return list(function_lines(addresses, args.after))
