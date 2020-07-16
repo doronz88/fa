@@ -585,8 +585,13 @@ def install():
     Install FA ida plugin
     :return: None
     """
-    fa_plugin_filename = os.path.join(
-        idaapi.get_user_idadir(), 'plugins', PLUGIN_FILENAME)
+    fa_plugin_dir = os.path.join(
+        idaapi.get_user_idadir(), 'plugins')
+
+    if not os.path.exists(fa_plugin_dir):
+        os.makedirs(fa_plugin_dir)
+
+    fa_plugin_filename = os.path.join(fa_plugin_dir, PLUGIN_FILENAME)
     if os.path.exists(fa_plugin_filename):
         IdaLoader.log('already installed')
         return
