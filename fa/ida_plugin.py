@@ -84,8 +84,10 @@ class IdaLoader(fainterp.FaInterp):
         """
         self.log('creating temporary signature')
 
+        current_ea = idc.get_screen_ea()
+
         signature = {
-            'name': idc.get_func_name(idc.get_screen_ea()),
+            'name': idc.get_func_name(current_ea),
             'type': 'function',
             'instructions': []
         }
@@ -93,7 +95,7 @@ class IdaLoader(fainterp.FaInterp):
         if self._create_template_symbol:
             find_bytes_ida = "find-bytes-ida --or '"
 
-            for ea in idautils.FuncItems(idc.get_screen_ea()):
+            for ea in idautils.FuncItems(current_ea):
                 mnem = idc.print_insn_mnem(ea).lower()
                 opcode_size = idc.get_item_size(ea)
 
@@ -118,6 +120,8 @@ class IdaLoader(fainterp.FaInterp):
 
             signature['instructions'].append(find_bytes_ida)
             signature['instructions'].append('function-start')
+            signature['instructions'].append('set-name "{}"'.format(
+                idc.get_func_name(current_ea)))
 
         with open(TEMP_SIG_FILENAME, 'w') as f:
             hjson.dump(signature, f, indent=4)
