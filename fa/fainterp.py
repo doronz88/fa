@@ -61,6 +61,9 @@ class FaInterp:
         :param default: default value, if key doesn't exist inside section
         :return: the value in the specified section-key
         """
+        if not os.path.exists(self._config_path):
+            return default
+
         config = ConfigParser()
 
         with open(self._config_path) as f:
@@ -285,15 +288,16 @@ class FaInterp:
                 k, v = line.split('=')
                 retval[k.strip()] = v.strip()
 
-        # include also project alias
-        project_root = os.path.join(self._signatures_root, self._project)
-        project_alias_filename = os.path.join(project_root, 'alias')
-        if os.path.exists(project_alias_filename):
-            with open(project_alias_filename) as f:
-                for line in f.readlines():
-                    line = line.strip()
-                    k, v = line.split('=')
-                    retval[k.strip()] = v.strip()
+        if self._project:
+            # include also project alias
+            project_root = os.path.join(self._signatures_root, self._project)
+            project_alias_filename = os.path.join(project_root, 'alias')
+            if os.path.exists(project_alias_filename):
+                with open(project_alias_filename) as f:
+                    for line in f.readlines():
+                        line = line.strip()
+                        k, v = line.split('=')
+                        retval[k.strip()] = v.strip()
 
         return retval
 
