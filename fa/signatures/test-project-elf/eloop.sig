@@ -3,6 +3,6 @@
 	"name": "eloop",
 	"instructions": [
 		"arm-find-all 'loop: b loop'"
-		unique
+		verify-single
 	]
 }

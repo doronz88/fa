@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='fa',
-    version='0.1.1',
+    version='0.1.2',
     description='FA Plugin',
     author='DoronZ',
     author_email='doron88@gmail.com',

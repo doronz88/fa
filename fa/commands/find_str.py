@@ -12,7 +12,7 @@ EXAMPLE:
     0x00000008: 30 31 32 33 -> ASCII '0123'
 
     results = []
-    -> find-str --or '0123'
+    -> find-str '0123'
 
     result = [8]
 '''

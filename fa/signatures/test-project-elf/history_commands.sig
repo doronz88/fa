@@ -2,8 +2,8 @@
     "type": "global",
 	"name": "magic",
 	"instructions": [
-		find-bytes --or '11 22 33 44'
-		unique
+		find-bytes '11 22 33 44'
+		verify-single
 		checkpoint 11223344
 
 		# verify the advance works

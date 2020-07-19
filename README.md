@@ -114,7 +114,7 @@ To view the list of available commands, [view the list below](#available-command
     name: g_awsome_global,
     instructions: [
             # find the byte sequence '11 22 33 44'
-            find-bytes --or '11 22 33 44'
+            find-bytes '11 22 33 44'
 
             # advance offset by 20
             offset 20
@@ -139,7 +139,7 @@ To view the list of available commands, [view the list below](#available-command
     name: free
     instructions: [
             # search the string "free"
-            find-str --or 'free' --null-terminated
+            find-str 'free' --null-terminated
 
             # goto xref
             xref
@@ -212,7 +212,7 @@ To view the list of available commands, [view the list below](#available-command
     name: cool_functions
     instructions: [
             # find string
-            find-str --or 'init_stuff' --null-terminated
+            find-str 'init_stuff' --null-terminated
 
             # goto to xref
             xref
@@ -259,7 +259,7 @@ To view the list of available commands, [view the list below](#available-command
 ```python
 from fa.commands.find_str import find_str 
 from fa.commands.set_name import set_name
-from fa.commands.unique import unique
+from fa.commands.verify_single import unique
 from fa import context
 
 def run(**kwargs):
@@ -283,7 +283,7 @@ def run(**kwargs):
 
 ```python
 TEMPLATE = '''
-find-str --or '{unique_string}'
+find-str '{unique_string}'
 xref
 function-start
 unique
@@ -310,7 +310,7 @@ from fa.commands.set_type import set_type
 from fa import fa_types
 
 TEMPLATE = '''
-find-str --or '{unique_string}'
+find-str '{unique_string}'
 xref
 '''
 

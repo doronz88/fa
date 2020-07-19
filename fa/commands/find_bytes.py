@@ -1,5 +1,4 @@
 from argparse import RawTextHelpFormatter
-from collections import OrderedDict
 import binascii
 
 from fa import utils
@@ -11,10 +10,10 @@ EXAMPLE:
     0x00000004: 05 06 07 08
 
     results = []
-    -> find-bytes --or 01020304
+    -> find-bytes 01020304
     result = [0]
 
-    -> find-bytes --or 05060708
+    -> find-bytes 05060708
     results = [0, 4]
 '''
 
@@ -23,12 +22,10 @@ def get_parser():
     p = utils.ArgumentParserNoExit('find-bytes',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('--or', action='store_true')
     p.add_argument('hex_str')
     return p
 
 
-@utils.yield_unique
 def find_bytes(hex_str, segments=None):
     needle = binascii.unhexlify(''.join(hex_str.split(' ')))
     return utils.find_raw(needle, segments=segments)
@@ -36,11 +33,4 @@ def find_bytes(hex_str, segments=None):
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
     results = list(find_bytes(args.hex_str, segments=segments))
-
-    retval = set(addresses)
-    if getattr(args, 'or'):
-        retval.update(results)
-    else:
-        raise ValueError("must specify --or option")
-
-    return list(OrderedDict.fromkeys(retval))
+    return addresses + results

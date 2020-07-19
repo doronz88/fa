@@ -16,7 +16,7 @@ EXAMPLE:
     0x00000004: add r0, #2 ; 0x1236
 
     results = []
-    -> find-immediate --or 0x1236
+    -> find-immediate 0x1236
     result = [4]
 '''
 
@@ -25,7 +25,6 @@ def get_parser():
     p = utils.ArgumentParserNoExit('find-immediate',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('--or', action='store_true')
     p.add_argument('expression')
     return p
 
@@ -44,11 +43,4 @@ def find_immediate(expression):
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
     results = list(find_immediate(args.expression))
-
-    retval = set(addresses)
-    if getattr(args, 'or'):
-        retval.update(results)
-    else:
-        raise ValueError("must specify --or option")
-
-    return retval
+    return addresses + results

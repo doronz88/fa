@@ -19,7 +19,7 @@ EXAMPLE:
     0x00000004: mov r0, r1
 
     results = [0, 4]
-    -> keystone-verify-opcodes --bele --or KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1'
+    -> keystone-verify-opcodes --bele KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1'
     result = [4]
 '''
 

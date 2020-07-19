@@ -14,7 +14,6 @@ def get_parser():
 
 
 @context.ida_context
-@utils.yield_unique
 def xref(addresses):
     for address in addresses:
         for ref in idautils.XrefsTo(address):

@@ -41,6 +41,7 @@ Below is the list of available commands:
 - [verify-operand](#verify-operand)
 - [verify-ref](#verify-ref)
 - [verify-segment](#verify-segment)
+- [verify-single](#verify-single)
 - [verify-str](#verify-str)
 - [xref](#xref)
 - [xrefs-to](#xrefs-to)
@@ -168,7 +169,7 @@ optional arguments:
 ```
 ## find-bytes
 ```
-usage: find-bytes [-h] [--or] hex_str
+usage: find-bytes [-h] hex_str
 
 expands the result-set with the occurrences of the given bytes
 
@@ -177,10 +178,10 @@ EXAMPLE:
     0x00000004: 05 06 07 08
 
     results = []
-    -> find-bytes --or 01020304
+    -> find-bytes 01020304
     result = [0]
 
-    -> find-bytes --or 05060708
+    -> find-bytes 05060708
     results = [0, 4]
 
 positional arguments:
@@ -188,11 +189,10 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
-  --or
 ```
 ## find-bytes-ida
 ```
-usage: find-bytes-ida [-h] [--or] expression
+usage: find-bytes-ida [-h] expression
 
 expands the result-set with the occurrences of the given bytes
 expression in "ida bytes syntax"
@@ -202,10 +202,10 @@ EXAMPLE:
     0x00000004: 05 06 07 08
 
     results = []
-    -> find-bytes-ida --or '01 02 03 04'
+    -> find-bytes-ida '01 02 03 04'
     result = [0]
 
-    -> find-bytes-ida --or '05 06 ?? 08'
+    -> find-bytes-ida '05 06 ?? 08'
     results = [0, 4]
 
 positional arguments:
@@ -213,11 +213,10 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
-  --or
 ```
 ## find-immediate
 ```
-usage: find-immediate [-h] [--or] expression
+usage: find-immediate [-h] expression
 
 expands the result-set with the occurrences of the given
 immediate in "ida immediate syntax"
@@ -227,7 +226,7 @@ EXAMPLE:
     0x00000004: add r0, #2 ; 0x1236
 
     results = []
-    -> find-immediate --or 0x1236
+    -> find-immediate 0x1236
     result = [4]
 
 positional arguments:
@@ -235,11 +234,10 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
-  --or
 ```
 ## find-str
 ```
-usage: find-str [-h] [--or] [--null-terminated] hex_str
+usage: find-str [-h] [--null-terminated] hex_str
 
 expands the result-set with the occurrences of the given
 string
@@ -250,7 +248,7 @@ EXAMPLE:
     0x00000008: 30 31 32 33 -> ASCII '0123'
 
     results = []
-    -> find-str --or '0123'
+    -> find-str '0123'
 
     result = [8]
 
@@ -259,12 +257,11 @@ positional arguments:
 
 optional arguments:
   -h, --help         show this help message and exit
-  --or
   --null-terminated
 ```
 ## function-end
 ```
-usage: function-end [-h] [--not-unique]
+usage: function-end [-h]
 
 goto function's end
 
@@ -278,8 +275,7 @@ EXAMPLE:
     result = [0xf0]
 
 optional arguments:
-  -h, --help    show this help message and exit
-  --not-unique
+  -h, --help  show this help message and exit
 ```
 ## function-lines
 ```
@@ -305,7 +301,7 @@ optional arguments:
 ```
 ## function-start
 ```
-usage: function-start [-h] [--not-unique]
+usage: function-start [-h]
 
 goto function's start
 
@@ -319,8 +315,7 @@ EXAMPLE:
     result = [0]
 
 optional arguments:
-  -h, --help    show this help message and exit
-  --not-unique
+  -h, --help  show this help message and exit
 ```
 ## goto-ref
 ```
@@ -351,7 +346,7 @@ EXAMPLE:
     0x00000004: mov r0, r1
 
     results = []
-    -> keystone-find-opcodes --bele --or KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1;'
+    -> keystone-find-opcodes --bele KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1;'
     result = [4]
 
 positional arguments:
@@ -376,7 +371,7 @@ EXAMPLE:
     0x00000004: mov r0, r1
 
     results = [0, 4]
-    -> keystone-verify-opcodes --bele --or KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1'
+    -> keystone-verify-opcodes --bele KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1'
     result = [4]
 
 positional arguments:
@@ -608,17 +603,12 @@ optional arguments:
 ```
 usage: unique [-h]
 
-verifies the result-list contains a single value
+make the resultset unique
 
-EXAMPLE #1:
-    results = [4, 12, 0, 8]
+EXAMPLE:
+    results = [0, 4, 8, 8, 12]
     -> unique
-    result = []
-
-EXAMPLE #2:
-    results = [4]
-    -> unique
-    result = [4]
+    result = [0, 4, 8, 12]
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -739,6 +729,25 @@ EXAMPLE:
 
 positional arguments:
   name        segment name
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## verify-single
+```
+usage: verify-single [-h]
+
+verifies the result-list contains a single value
+
+EXAMPLE #1:
+    results = [4, 12, 0, 8]
+    -> unique
+    result = []
+
+EXAMPLE #2:
+    results = [4]
+    -> unique
+    result = [4]
 
 optional arguments:
   -h, --help  show this help message and exit

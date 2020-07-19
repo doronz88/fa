@@ -2,13 +2,13 @@
     "type": "function",
 	"name": "main",
 	"instructions": [
-		find-bytes --or '11 22 33 44'
+		find-bytes '11 22 33 44'
 		xref
 		function-start
 		arm-verify 'push {r4-r7, lr}'
 		make-comment 'function prolog'
         verify-segment .text
-		unique
+		verify-single
 		set-name main
         set-type 'void main(void)'
 	]
