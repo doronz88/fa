@@ -356,7 +356,7 @@ class IdaLoader(fainterp.FaInterp):
         :return: None
         """
         class SettingsForm(Form):
-            def __init__(self, signatures_root):
+            def __init__(self, signatures_root, use_template):
                 description = '''
                 <h2>Settings</h2>
                 <div>
@@ -366,7 +366,7 @@ class IdaLoader(fainterp.FaInterp):
                     <a href="https://github.com/doronz88/fa">
                     For more info</a>
                 </div>
-                '''.format(signatures_root)
+                '''
 
                 Form.__init__(self,
                               r"""BUTTON YES* Save
@@ -388,14 +388,14 @@ class IdaLoader(fainterp.FaInterp):
                                           items=['Default',
                                                  'Using function bytes'],
                                           readonly=True,
-                                          selval=0),
+                                          selval=use_template),
                               })
                 self.__n = 0
 
             def OnFormChange(self, fid):
                 return 1
 
-        f = SettingsForm(self._signatures_root)
+        f = SettingsForm(self._signatures_root, self._create_template_symbol)
         f, args = f.Compile()
         ok = f.Execute()
         if ok == 1:
