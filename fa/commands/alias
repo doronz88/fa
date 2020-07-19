@@ -1,8 +1,8 @@
-ppc32-big-find-all = keystone-find-opcodes --or KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32
-ppc32-find-all = keystone-find-opcodes --bele --or KS_ARCH_PPC KS_MODE_PPC32
+ppc32-big-find-all = keystone-find-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32
+ppc32-find-all = keystone-find-opcodes --bele KS_ARCH_PPC KS_MODE_PPC32
 ppc32-big-verify = keystone-verify-opcodes KS_ARCH_PPC KS_MODE_BIG_ENDIAN|KS_MODE_PPC32
 ppc32-verify = keystone-verify-opcodes --bele KS_ARCH_PPC KS_MODE_PPC32
-arm-find-all = keystone-find-opcodes --bele --or KS_ARCH_ARM KS_MODE_ARM
-thumb-find-all = keystone-find-opcodes --bele --or KS_ARCH_ARM KS_MODE_THUMB
+arm-find-all = keystone-find-opcodes --bele KS_ARCH_ARM KS_MODE_ARM
+thumb-find-all = keystone-find-opcodes --bele KS_ARCH_ARM KS_MODE_THUMB
 arm-verify = keystone-verify-opcodes --bele KS_ARCH_ARM KS_MODE_ARM
 find-imm = find-immediate

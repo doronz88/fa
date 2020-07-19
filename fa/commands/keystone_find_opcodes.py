@@ -17,7 +17,7 @@ EXAMPLE:
     0x00000004: mov r0, r1
 
     results = []
-    -> keystone-find-opcodes --bele --or KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1;'
+    -> keystone-find-opcodes --bele KS_ARCH_ARM KS_MODE_ARM 'mov r0, r1;'
     result = [4]
 '''
 

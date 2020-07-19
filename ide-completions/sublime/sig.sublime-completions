@@ -3,12 +3,12 @@
     "completions": [
         {
             "trigger": "find-bytes",
-            "contents": "\"find-bytes --or '${1:hex_str}'\",",
+            "contents": "\"find-bytes '${1:hex_str}'\",",
             "kind": "snippet",
         },
         {
             "trigger": "find-str",
-            "contents": "\"find-str --or '${1:hex_str}'\",",
+            "contents": "\"find-str '${1:hex_str}'\",",
             "kind": "snippet",
         },
         {
@@ -58,12 +58,12 @@
         },
         {
             "trigger": "keystone-find-opcodes",
-            "contents": "\"keystone-find-opcodes --or bele ${1:arch} ${2:mode} '${3:code}'\",",
+            "contents": "\"keystone-find-opcodes --bele ${1:arch} ${2:mode} '${3:code}'\",",
             "kind": "snippet",
         },
         {
             "trigger": "keystone-verify-opcodes",
-            "contents": "\"keystone-verify-opcodes --or bele ${1:arch} ${2:mode} '${3:code}'\",",
+            "contents": "\"keystone-verify-opcodes --bele ${1:arch} ${2:mode} '${3:code}'\",",
             "kind": "snippet",
         },
         {

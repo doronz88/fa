@@ -33,7 +33,6 @@ def get_parser():
 
 
 @context.ida_context
-@utils.yield_unique
 def function_lines(addresses, after=False):
     for address in addresses:
         for item in idautils.FuncItems(address):

@@ -21,7 +21,6 @@ def get_parser():
     return p
 
 
-@utils.yield_unique
 def add_offset_range(addresses, start, end, step):
     for ea in addresses:
         for i in range(start, end, step):

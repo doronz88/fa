@@ -93,7 +93,7 @@ class IdaLoader(fainterp.FaInterp):
         }
 
         if self._create_template_symbol:
-            find_bytes_ida = "find-bytes-ida --or '"
+            find_bytes_ida = "find-bytes-ida '"
 
             for ea in idautils.FuncItems(current_ea):
                 mnem = idc.print_insn_mnem(ea).lower()

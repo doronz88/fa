@@ -24,7 +24,6 @@ def get_parser():
     p = utils.ArgumentParserNoExit('function-end',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('--not-unique', action='store_true')
     return p
 
 
@@ -38,5 +37,4 @@ def function_end(addresses):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    results = function_end(addresses)
-    return list(results) if args.not_unique else list(set(results))
+    return list(function_end(addresses))

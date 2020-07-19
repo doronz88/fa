@@ -45,13 +45,12 @@ def goto_ref(addresses, code=False, data=False):
                 yield ref
 
 
-@utils.yield_unique
 def goto_ref_unique(addresses, code=False, data=False):
     for address in goto_ref(addresses, code=code, data=data):
         yield address
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(set(goto_ref_unique(addresses,
-                                    code=args.code,
-                                    data=args.data)))
+    return list(goto_ref_unique(addresses,
+                                code=args.code,
+                                data=args.data))
