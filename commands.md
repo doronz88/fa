@@ -3,6 +3,7 @@ Below is the list of available commands:
 - [stop-if-empty](#stop-if-empty)
 - [add-offset-range](#add-offset-range)
 - [align](#align)
+- [append](#append)
 - [back](#back)
 - [back-to-checkpoint](#back-to-checkpoint)
 - [checkpoint](#checkpoint)
@@ -82,6 +83,18 @@ EXAMPLE:
 
 positional arguments:
   value
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## append
+```
+usage: append [-h] cmd [cmd ...]
+
+append results from another command
+
+positional arguments:
+  cmd         command
 
 optional arguments:
   -h, --help  show this help message and exit

@@ -19,3 +19,5 @@ def test_elf_symbols(sample_elf):
 
     assert symbols['magic'] == 0x1240
     assert symbols['eloop'] == 0x123c
+    assert symbols['eloop_twice'] == 0x123c
+    assert symbols['append_offset2'] == 0x123c + 2
