@@ -4,5 +4,6 @@
 	"instructions": [
 		"arm-find-all 'loop: b loop'"
 		verify-single
+		set-name eloop
 	]
 }

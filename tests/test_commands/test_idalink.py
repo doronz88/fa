@@ -47,11 +47,12 @@ def test_ida_symbols(ida, sample_elf):
     with IDALink(ida, sample_elf.name) as s:
         ida_namespace = s
 
-        from fa import utils
+        from fa import utils, context
 
         # hack to fix imports
         # flake8: noqa
         reload(utils)
+        reload(context)
 
         s.ida_bytes.del_items(0x1240)
         s.ida_funcs.add_func(0x1248)

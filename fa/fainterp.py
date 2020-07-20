@@ -34,6 +34,7 @@ class FaInterp:
         self._input = None
         self._segments = OrderedDict()
         self._signatures_root = DEFAULT_SIGNATURES_ROOT
+        self._symbols = {}
         self.history = []
         self.checkpoints = {}
         self.endianity = '<'
@@ -142,32 +143,18 @@ class FaInterp:
         if save:
             self.config_set('global', 'project', project)
 
-    def symbols(self, output_file_path=None):
+    def symbols(self):
         """
         Run find for all SIG files in currently active project
         :param output_file_path: optional, save found symbols into output file
         :return: dictionary of found symbols
         """
-        results = {}
-        results.update(self.get_python_symbols())
+        self.get_python_symbols()
+
         for sig in self.get_json_signatures():
-            sig_results = self.find(sig['name'], decremental=True)
+            self.find(sig['name'])
 
-            if len(sig_results) > 0:
-                if sig['name'] not in results.keys():
-                    results[sig['name']] = set()
-
-                results[sig['name']].update(sig_results)
-
-        errors = ''
-        for k, v in results.items():
-            if isinstance(v, list) or isinstance(v, set):
-                if len(v) != 1:
-                    errors += '# {} had too many results\n'.format(k)
-                    continue
-
-        print(errors)
-        return results
+        return self._symbols
 
     def interactive_set_project(self):
         """
@@ -456,6 +443,9 @@ class FaInterp:
                     signatures.append(signature)
 
         return signatures
+
+    def set_symbol(self, symbol_name, value):
+        self._symbols[symbol_name] = value
 
     def find(self, symbol_name, decremental=False):
         """

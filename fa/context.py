@@ -44,7 +44,7 @@ def ida_context(function):
     if IDA_MODULE:
         return function
     else:
-        def invalid_context():
+        def invalid_context(*kwargs):
             raise InvalidContextException(
                 'function "{}" must be executed from an IDA context'
                 .format(function.__name__))

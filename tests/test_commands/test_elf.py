@@ -13,10 +13,6 @@ def test_elf_symbols(sample_elf):
     fa_instance.set_project('test-project-elf')
     symbols = fa_instance.symbols()
 
-    for k, v in symbols.items():
-        assert len(v) == 1
-        symbols[k] = v.pop()
-
     assert symbols['magic'] == 0x1240
     assert symbols['eloop'] == 0x123c
     assert symbols['eloop_twice'] == 0x123c

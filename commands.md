@@ -552,7 +552,7 @@ optional arguments:
 ```
 usage: set-name [-h] name
 
-set name in disassembler
+set symbol name
 
 positional arguments:
   name
