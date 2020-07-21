@@ -24,11 +24,19 @@
         function-lines
         verify-operand ldr --op0 0
         set-name test_verify_operand
+        checkpoint ref
+
+        verify-ref --code --data
+        set-name test_verify_ref_no_name
 
         goto-ref --data
         set-name test_verify_goto_ref
 
-        locate test_verify_operand
+        back-to-checkpoint ref
+        verify-ref --name test_verify_goto_ref --code --data
+        set-name test_verify_ref_name
+
+        locate test_function_lines
         set-name test_locate
 
         clear

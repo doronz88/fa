@@ -729,17 +729,15 @@ optional arguments:
 ```
 ## verify-ref
 ```
-usage: verify-ref [-h] [--code] [--data] name
+usage: verify-ref [-h] [--code] [--data] [--name NAME]
 
 verifies a given reference exists to current result set
 
-positional arguments:
-  name
-
 optional arguments:
-  -h, --help  show this help message and exit
-  --code      include code references
-  --data      include data references
+  -h, --help   show this help message and exit
+  --code       include code references
+  --data       include data references
+  --name NAME  symbol name
 ```
 ## verify-segment
 ```

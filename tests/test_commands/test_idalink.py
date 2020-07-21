@@ -95,6 +95,9 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['test_function_end'] == 0x125c
         assert symbols['test_function_lines'] == 0x1248
         assert symbols['test_verify_operand'] == 0x1250
+        assert symbols['test_verify_ref_no_name'] == 0x1250
         assert symbols['test_verify_goto_ref'] == 0x125c
-        assert symbols['test_locate'] == symbols['test_verify_operand']
+        assert symbols['test_verify_ref_name'] == 0x1250
+        assert symbols['test_locate'] == symbols['test_function_lines']
+        assert symbols['test_find_immediate'] == 0x1240
         assert symbols['test_find_immediate'] == 0x1240

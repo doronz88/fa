@@ -16,16 +16,17 @@ def get_parser():
                    default=False, help='include code references')
     p.add_argument('--data', action='store_true',
                    default=False, help='include data references')
-    p.add_argument('name')
+    p.add_argument('--name', default=None, help='symbol name')
     return p
 
 
 @context.ida_context
-def verify_ref(addresses, name, code=False, data=False):
-    symbol = locate(name)
+def verify_ref(addresses, name=None, code=False, data=False):
+    if name is not None:
+        symbol = locate(name)
 
-    if symbol == idc.BADADDR:
-        return
+        if symbol == idc.BADADDR:
+            return
 
     for address in addresses:
         refs = []
@@ -38,9 +39,14 @@ def verify_ref(addresses, name, code=False, data=False):
             continue
 
         for ref in refs:
-            if address + 4 != ref and symbol == ref:
-                yield address
-                break
+            if name is not None:
+                if address + 4 != ref and symbol == ref:
+                    yield address
+                    break
+            else:
+                if address + 4 != ref:
+                    yield address
+                    break
 
 
 @utils.yield_unique
