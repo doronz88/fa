@@ -69,9 +69,32 @@ def test_ida_symbols(ida, sample_elf):
                 assert len(v) == 1
                 symbols[k] = v.pop()
 
-        assert symbols['magic'] == 0x1240
-        assert symbols['eloop'] == 0x123c
-        assert symbols['main'] == 0x1248
-        assert symbols['ldr_ref'] == 0x1250
-        assert symbols['second_bl'] == 0x1254
-        assert symbols['find_imm'] == 0x1234
+        # from test-basic
+        assert symbols['test_add'] == 80
+        assert symbols['test_pos_offset'] == 81
+        assert symbols['test_neg_offset'] == 80
+        assert symbols['test_add_offset_range'] == 100
+        assert symbols['test_back_to_checkpoint'] == 80
+        assert symbols['test_align'] == 84
+        assert symbols['test_most_common'] == 2
+        assert symbols['test_sort'] == 3
+        assert symbols['test_verify_single_success'] == 1
+        assert 'test_verify_single_fail' not in symbols
+        assert symbols['test_run'] == 67
+        assert symbols['test_alias'] == 0x123c
+        assert symbols['test_keystone_find_opcodes'] == 0x123c
+        assert symbols['test_keystone_verify_opcodes'] == 0x123c
+        assert symbols['test_append'] == 2
+        assert symbols['test_find_bytes'] == 0x1240
+        assert symbols['test_find_str'] == 0x1242
+
+        # from test-ida-context
+        assert symbols['test_find_bytes_ida'] == 0x1240
+        assert symbols['test_xref'] == 0x125c
+        assert symbols['test_function_start'] == 0x1248
+        assert symbols['test_function_end'] == 0x125c
+        assert symbols['test_function_lines'] == 0x1248
+        assert symbols['test_verify_operand'] == 0x1250
+        assert symbols['test_verify_goto_ref'] == 0x125c
+        assert symbols['test_locate'] == symbols['test_verify_operand']
+        assert symbols['test_find_immediate'] == 0x1240

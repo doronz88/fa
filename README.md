@@ -257,26 +257,19 @@ To view the list of available commands, [view the list below](#available-command
 #### Python script to find a list of symbols
 
 ```python
-from fa.commands.find_str import find_str 
-from fa.commands.set_name import set_name
-from fa.commands.verify_single import unique
+from fa.commands.find_str import find_str
 from fa import context
 
 def run(**kwargs):
     # throw an exception if not running within ida context
     context.verify_ida('script-name')
+    interp = kwargs['interpreter']
 
-    # locate the global string, verify it's unique, and set it's 
-    # name within the idb 
-    results = set_name(unique(find_str('hello world', null_terminated=True)),
-                       'g_hello_world_string')
+    # locate the global string
+    resultset = list(find_str('hello world', null_terminated=True)
 
-    if len(results) != 1:
-        # no results
-        return {}
-    
-    # return a dictionary of the found symbols
-    return {'g_hello_world_string': results[0]}
+    if len(resultset) == 1:
+        interp.set_symbol('g_hello_world', resultset[0])
 ```
 
 #### Python script to automate SIG files interpreter

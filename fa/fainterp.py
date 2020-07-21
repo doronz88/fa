@@ -400,7 +400,6 @@ class FaInterp:
                           inside the currently active project
         :return: dictionary of all found symbols
         """
-        symbols = {}
         project_root = os.path.join(self._signatures_root, self._project)
         sys.path.append(project_root)
 
@@ -413,9 +412,7 @@ class FaInterp:
                     name = os.path.splitext(filename)[0]
                     filename = os.path.join(project_root, filename)
                     m = FaInterp.get_module(name, filename)
-                    symbols.update(m.run(interpreter=self))
-
-        return symbols
+                    m.run(interpreter=self)
 
     def get_json_signatures(self, symbol_name=None):
         """
