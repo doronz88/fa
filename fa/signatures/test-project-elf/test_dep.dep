@@ -1,0 +1,8 @@
+{
+    "type": "function",
+	"name": "test",
+	"instructions": [
+		add 67
+		set-name test_run
+	]
+}

@@ -1,6 +1,7 @@
 # FA Command List
 Below is the list of available commands:
 - [stop-if-empty](#stop-if-empty)
+- [add](#add)
 - [add-offset-range](#add-offset-range)
 - [align](#align)
 - [append](#append)
@@ -50,6 +51,23 @@ Below is the list of available commands:
 ```
 builtin interpreter command. 
 stops parsing current SIG if current resultset is empty
+```
+## add
+```
+usage: add [-h] value
+
+add an hard-coded value into resultset
+
+EXAMPLE:
+    results = []
+    -> add 80
+    result = [80]
+
+positional arguments:
+  value
+
+optional arguments:
+  -h, --help  show this help message and exit
 ```
 ## add-offset-range
 ```
@@ -552,7 +570,7 @@ optional arguments:
 ```
 usage: set-name [-h] name
 
-set name in disassembler
+set symbol name
 
 positional arguments:
   name

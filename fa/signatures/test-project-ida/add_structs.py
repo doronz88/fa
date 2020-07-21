@@ -14,5 +14,3 @@ def run(**kwargs):
     special_struct_t.add_field('member1', 'const char *', size=4)
     special_struct_t.add_field('member2', 'const char *', size=4, offset=0x20)
     special_struct_t.update_idb()
-
-    return {}

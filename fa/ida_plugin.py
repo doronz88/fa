@@ -243,6 +243,10 @@ class IdaLoader(fainterp.FaInterp):
 
         return results
 
+    def set_symbol(self, symbol_name, value):
+        super(IdaLoader, self).set_symbol(symbol_name, value)
+        idc.set_name(value, symbol_name, idc.SN_CHECK)
+
     def symbols(self, output_file_path=None):
         """
         Run find for all SIG files in currently active project.
@@ -255,10 +259,13 @@ class IdaLoader(fainterp.FaInterp):
 
         try:
             ida_kernwin.show_wait_box('Searching...')
-            super(IdaLoader, self).symbols(output_file_path=output_file_path)
+            results = super(IdaLoader, self).symbols()
 
             ida_kernwin.replace_wait_box('Extracting...')
-            results = IdaLoader.extract_all_user_names(output_file_path)
+            ida_symbols = IdaLoader.extract_all_user_names(output_file_path)
+
+            results.update(ida_symbols)
+
         except Exception as e:
             traceback.print_exc()
         finally:
