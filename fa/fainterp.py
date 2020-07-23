@@ -412,7 +412,10 @@ class FaInterp:
                     name = os.path.splitext(filename)[0]
                     filename = os.path.join(project_root, filename)
                     m = FaInterp.get_module(name, filename)
-                    m.run(interpreter=self)
+                    if not hasattr(m, 'run'):
+                        self.log('skipping: {}'.format(filename))
+                    else:
+                        m.run(interpreter=self)
 
     def get_json_signatures(self, symbol_name=None):
         """
