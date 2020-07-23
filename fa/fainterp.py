@@ -410,7 +410,7 @@ class FaInterp:
 
                 if not file_name or file_name == filename:
                     name = os.path.splitext(filename)[0]
-                    filename = os.path.join(project_root, filename)
+                    filename = os.path.join(root, filename)
                     m = FaInterp.get_module(name, filename)
                     if not hasattr(m, 'run'):
                         self.log('skipping: {}'.format(filename))
