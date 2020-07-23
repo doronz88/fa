@@ -9,6 +9,7 @@ Below is the list of available commands:
 - [back-to-checkpoint](#back-to-checkpoint)
 - [checkpoint](#checkpoint)
 - [clear](#clear)
+- [find](#find)
 - [find-bytes](#find-bytes)
 - [find-bytes-ida](#find-bytes-ida)
 - [find-immediate](#find-immediate)
@@ -194,6 +195,18 @@ EXAMPLE:
     results = [0, 4, 8]
     -> clear
     results = []
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## find
+```
+usage: find [-h] name
+
+find another symbol defined in other SIG files
+
+positional arguments:
+  name        symbol name
 
 optional arguments:
   -h, --help  show this help message and exit
