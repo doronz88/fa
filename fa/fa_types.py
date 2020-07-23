@@ -50,33 +50,27 @@ class FaEnum(FaType):
 
 
 class FaStruct(FaType):
-    Field = namedtuple('Field', ['name', 'type', 'size'])
+    Field = namedtuple('Field', ['name', 'type', 'offset'])
 
     def __init__(self, name):
         super(FaStruct, self).__init__(name)
         self._fields = []
-        self._size = 0
 
-    def add_field(self, name, type_, size=0, offset=0):
-        if (offset != 0) and (offset != self._size):
-            self.add_field('padd_{:x}'.format(self._size),
-                           'unsigned char[{}]'.format(offset - self._size),
-                           offset - self._size)
-
-        self._fields.append(self.Field(name, type_, size))
-        self._size += size
+    def add_field(self, name, type_, offset=0xffffffff):
+        self._fields.append(self.Field(name, type_, offset))
 
     def update_idb(self):
         sid = ida_struct.get_struc_id(self._name)
-        if sid != -1:
-            sptr = ida_struct.get_struc(sid)
-            ida_struct.del_struc(sptr)
-
-        sid = ida_struct.add_struc(idc.BADADDR, self._name, 0)
         sptr = ida_struct.get_struc(sid)
 
+        if sid == idc.BADADDR:
+            sid = ida_struct.add_struc(idc.BADADDR, self._name, 0)
+            sptr = ida_struct.get_struc(sid)
+        else:
+            ida_struct.del_struc_members(sptr, 0, 0xffffffff)
+
         for f in self._fields:
-            ida_struct.add_struc_member(sptr, f.name, idc.BADADDR,
+            ida_struct.add_struc_member(sptr, f.name, f.offset,
                                         (idc.FF_BYTE | idc.FF_DATA)
                                         & 0xFFFFFFFF,
                                         None, 1)
