@@ -4,6 +4,5 @@ make-function
 '''
 
 
-def run(**kwargs):
-    interp = kwargs['interpreter']
-    interp.find_from_instructions_list(TEMPLATE.splitlines())
+def run(interpreter):
+    interpreter.find_from_instructions_list(TEMPLATE.splitlines())

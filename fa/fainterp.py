@@ -415,7 +415,7 @@ class FaInterp:
                     if not hasattr(m, 'run'):
                         self.log('skipping: {}'.format(filename))
                     else:
-                        m.run(interpreter=self)
+                        m.run(self)
 
     def get_json_signatures(self, symbol_name=None):
         """

@@ -98,9 +98,9 @@ Confused? That's alright :grinning:. [Just look at the examples below](#examples
 
 User may also use his own python script files to perform 
 the search. Just create a new `.py` file in your project 
-directory and implement the `run(**kwargs)` method. Also, the project's
-path is appended to python's `sys.path` so you may import
-your scripts from one another.
+directory and implement the `run(interpreter)` method. 
+Also, the project's path is appended to python's `sys.path` 
+so you may import your scripts from one another.
 
 To view the list of available commands, [view the list below](#available-commands)
 
@@ -261,15 +261,13 @@ from fa.commands.find_str import find_str
 from fa.commands.set_name import set_name
 from fa import context
 
-def run(**kwargs):
+def run(interpreter):
     # throw an exception if not running within ida context
     context.verify_ida('script-name')
 
-    interp = kwargs['interpreter']
-
     # locate the global string
-    resultset = set_name(find_str('hello world', null_terminated=True),
-                         'g_hello_world', interp)
+    set_name(find_str('hello world', null_terminated=True),
+             'g_hello_world', interpreter)
 ```
 
 #### Python script to automate SIG files interpreter
@@ -283,14 +281,12 @@ unique
 set-name '{function_name}'
 '''
 
-def run(**kwargs):
-    interp = kwargs['interpreter']
-
+def run(interpreter):
     for function_name in ['func1', 'func2', 'func3']:
         instructions = TEMPLATE.format(unique_string=function_name, 
                                        function_name=function_name).split('\n')
         
-        interp.find_from_instructions_list(instructions)
+        interpreter.find_from_instructions_list(instructions)
 ```
 
 #### Python script to dynamically add structs

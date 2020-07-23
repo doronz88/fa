@@ -1,7 +1,7 @@
 from fa import fa_types
 
 
-def run(**kwargs):
+def run(interpreter):
     fa_types.add_const('CONST7', 7)
     fa_types.add_const('CONST8', 8)
 
