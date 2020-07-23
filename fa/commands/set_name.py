@@ -13,7 +13,11 @@ def get_parser():
     return p
 
 
-def run(segments, args, addresses, interpreter=None, **kwargs):
+def set_name(addresses, name, interpreter):
     for ea in addresses:
-        interpreter.set_symbol(args.name, ea)
+        interpreter.set_symbol(name, ea)
     return addresses
+
+
+def run(segments, args, addresses, interpreter=None, **kwargs):
+    return set_name(addresses, args.name, interpreter)
