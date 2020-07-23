@@ -87,6 +87,7 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['test_append'] == 2
         assert symbols['test_find_bytes'] == 0x1240
         assert symbols['test_find_str'] == 0x1242
+        assert symbols['test_find'] == 76
 
         # from test-ida-context
         assert symbols['test_find_bytes_ida'] == 0x1240

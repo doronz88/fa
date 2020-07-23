@@ -198,7 +198,7 @@ class FaInterp:
         :param message:
         :return:
         """
-        for line in message.splitlines():
+        for line in str(message).splitlines():
             print('FA> {}'.format(line))
 
     @abstractmethod
@@ -410,9 +410,12 @@ class FaInterp:
 
                 if not file_name or file_name == filename:
                     name = os.path.splitext(filename)[0]
-                    filename = os.path.join(project_root, filename)
+                    filename = os.path.join(root, filename)
                     m = FaInterp.get_module(name, filename)
-                    m.run(interpreter=self)
+                    if not hasattr(m, 'run'):
+                        self.log('skipping: {}'.format(filename))
+                    else:
+                        m.run(self)
 
     def get_json_signatures(self, symbol_name=None):
         """

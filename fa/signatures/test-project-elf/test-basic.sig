@@ -87,5 +87,9 @@
 
         find-str '3DUfw'
         set-name test_find_str
+
+        clear
+
+        find test_find
 	]
 }
