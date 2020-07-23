@@ -300,9 +300,7 @@ find-str '{unique_string}'
 xref
 '''
 
-def run(**kwargs):
-    interp = kwargs['interpreter']
-
+def run(interpreter):
     fa_types.add_const('CONST7', 7)
     fa_types.add_const('CONST8', 8)
 
@@ -320,7 +318,7 @@ def run(**kwargs):
         instructions = TEMPLATE.format(unique_string=function_name, 
                                        function_name=function_name).split('\n')
         
-        results = interp.find_from_instructions_list(instructions)
+        results = interpreter.find_from_instructions_list(instructions)
         for ea in results:
             # the set_type can receive either a string, FaStruct
             # or FaEnum :-)
