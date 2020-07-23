@@ -30,3 +30,4 @@ def test_elf_symbols(sample_elf):
     assert symbols['test_append'] == 2
     assert symbols['test_find_bytes'] == 0x1240
     assert symbols['test_find_str'] == 0x1242
+    assert symbols['test_find'] == 76
