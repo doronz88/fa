@@ -198,7 +198,7 @@ class FaInterp:
         :param message:
         :return:
         """
-        for line in message.splitlines():
+        for line in str(message).splitlines():
             print('FA> {}'.format(line))
 
     @abstractmethod
