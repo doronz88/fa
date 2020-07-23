@@ -258,18 +258,18 @@ To view the list of available commands, [view the list below](#available-command
 
 ```python
 from fa.commands.find_str import find_str
+from fa.commands.set_name import set_name
 from fa import context
 
 def run(**kwargs):
     # throw an exception if not running within ida context
     context.verify_ida('script-name')
+
     interp = kwargs['interpreter']
 
     # locate the global string
-    resultset = list(find_str('hello world', null_terminated=True)
-
-    if len(resultset) == 1:
-        interp.set_symbol('g_hello_world', resultset[0])
+    resultset = set_name(find_str('hello world', null_terminated=True),
+                         'g_hello_world', interp)
 ```
 
 #### Python script to automate SIG files interpreter
@@ -284,16 +284,13 @@ set-name '{function_name}'
 '''
 
 def run(**kwargs):
-    results = {}
     interp = kwargs['interpreter']
 
     for function_name in ['func1', 'func2', 'func3']:
         instructions = TEMPLATE.format(unique_string=function_name, 
                                        function_name=function_name).split('\n')
         
-        results[function_name] = interp.find_from_instructions_list(instructions)
-
-    return results
+        interp.find_from_instructions_list(instructions)
 ```
 
 #### Python script to dynamically add structs
@@ -332,8 +329,6 @@ def run(**kwargs):
             # the set_type can receive either a string, FaStruct
             # or FaEnum :-)
             set_type(ea, special_struct_t)
-
-    return {}
 ```
 
 ### Aliases
