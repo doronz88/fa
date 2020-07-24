@@ -262,6 +262,21 @@ To view the list of available commands, [view the list below](#available-command
 
             # add a second member
             set-struct-member struct_t member_at_4 'const char *'
+
+            # goto function printf
+            locate printf
+
+            # iterate its function lines 
+            function-lines
+
+            # look for the specific mov opcode (MOV R8, ???)
+            verify-operand mov --op0 8
+            
+            # extract the offset
+            operand 1
+
+            # define this offset into the struct
+            set-struct-member struct_t member_at_r8_offset 'const char *'
 	]
 }
 ```
