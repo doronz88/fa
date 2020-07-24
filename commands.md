@@ -36,6 +36,7 @@ Below is the list of available commands:
 - [set-const](#set-const)
 - [set-enum](#set-enum)
 - [set-name](#set-name)
+- [set-struct-member](#set-struct-member)
 - [set-type](#set-type)
 - [single](#single)
 - [sort](#sort)
@@ -650,6 +651,20 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
+```
+## set-struct-member
+```
+usage: set-struct-member [-h] struct_name member_name member_type
+
+add a struct member
+
+positional arguments:
+  struct_name
+  member_name
+  member_type
+
+optional arguments:
+  -h, --help   show this help message and exit
 ```
 ## set-type
 ```

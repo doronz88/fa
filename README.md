@@ -244,6 +244,28 @@ To view the list of available commands, [view the list below](#available-command
 }
 ```
 
+#### Adding struct member offsets 
+
+```hjson
+{
+    type: offsets
+    name: structs-finder
+    instructions: [
+            # add hard-coded '0' into resultset
+            add 0
+
+            # add a first member at offset 0
+            set-struct-member struct_t member_at_0 'unsigned int'
+
+            # advance offset by 4
+            offset 4            
+
+            # add a second member
+            set-struct-member struct_t member_at_4 'const char *'
+	]
+}
+```
+
 #### Finding several functions in a row
 
 ```hjson

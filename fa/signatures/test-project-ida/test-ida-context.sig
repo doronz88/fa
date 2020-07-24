@@ -61,5 +61,13 @@
         single 0
         operand 1
         set-name test_operand
+
+        clear
+
+        add 0
+        set-struct-member test_struct_t test_member_offset_0 'unsigned int'
+
+        offset 4
+        set-struct-member test_struct_t test_member_offset_4 'unsigned int'
 	]
 }

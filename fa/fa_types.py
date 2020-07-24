@@ -59,7 +59,7 @@ class FaStruct(FaType):
     def add_field(self, name, type_, offset=0xffffffff):
         self._fields.append(self.Field(name, type_, offset))
 
-    def update_idb(self):
+    def update_idb(self, delete_existing_members=True):
         sid = ida_struct.get_struc_id(self._name)
         sptr = ida_struct.get_struc(sid)
 
@@ -67,7 +67,8 @@ class FaStruct(FaType):
             sid = ida_struct.add_struc(idc.BADADDR, self._name, 0)
             sptr = ida_struct.get_struc(sid)
         else:
-            ida_struct.del_struc_members(sptr, 0, 0xffffffff)
+            if delete_existing_members:
+                ida_struct.del_struc_members(sptr, 0, 0xffffffff)
 
         for f in self._fields:
             ida_struct.add_struc_member(sptr, f.name, f.offset,
