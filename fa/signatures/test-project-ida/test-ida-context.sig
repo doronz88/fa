@@ -51,7 +51,15 @@
         set-enum TEST_ENUM_NAME TEST_ENUM_KEY1_VALUE_4
 
         clear
+
         add 6
         set-enum TEST_ENUM_NAME TEST_ENUM_KEY2_VALUE_6
+
+        clear
+
+        arm-find-all 'mov r0, 1'
+        single 0
+        operand 1
+        set-name test_operand
 	]
 }

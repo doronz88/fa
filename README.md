@@ -204,6 +204,46 @@ To view the list of available commands, [view the list below](#available-command
 }
 ```
 
+#### Finding enums and constants 
+
+```hjson
+{
+    type: finder
+    name: consts-finder
+    instructions: [
+            # goto printf
+            locate printf
+
+            # iterate all its function lines
+            function-lines
+
+            # save this result
+            checkpoint printf-lines
+            
+            # look for: li r7, ???
+            verify-operand li --op0 7
+
+            # extract second operand
+            operand 1
+
+            # define the constant
+            set-const IMPORTANT_OFFSET
+
+            # back to previous results
+            back-to-checkpoint printf-lines
+            
+            # look for: li r7, ???
+            verify-operand li --op0 8
+
+            # get second operand
+            operand 1
+
+            # set this enum value
+            set-enum important_enum_t some_enum_key
+	]
+}
+```
+
 #### Finding several functions in a row
 
 ```hjson
