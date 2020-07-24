@@ -146,7 +146,6 @@ class FaInterp:
     def symbols(self):
         """
         Run find for all SIG files in currently active project
-        :param output_file_path: optional, save found symbols into output file
         :return: dictionary of found symbols
         """
         self.get_python_symbols()

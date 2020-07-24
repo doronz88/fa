@@ -32,6 +32,8 @@ Below is the list of available commands:
 - [offset](#offset)
 - [print](#print)
 - [run](#run)
+- [set-const](#set-const)
+- [set-enum](#set-enum)
 - [set-name](#set-name)
 - [set-type](#set-type)
 - [single](#single)
@@ -575,6 +577,31 @@ run another SIG file
 
 positional arguments:
   name        SIG filename
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## set-const
+```
+usage: set-const [-h] name
+
+define a const value
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## set-enum
+```
+usage: set-enum [-h] enum_name enum_key
+
+define an enum value
+
+positional arguments:
+  enum_name
+  enum_key
 
 optional arguments:
   -h, --help  show this help message and exit
