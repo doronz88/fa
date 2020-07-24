@@ -1,5 +1,4 @@
 {
-    "type": "function",
 	"name": "test_find",
 	"instructions": [
 	    add 76

@@ -1,5 +1,4 @@
 {
-    "type": "function",
 	"name": "test",
 	"instructions": [
 	    find-bytes-ida 11223344

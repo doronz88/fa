@@ -79,7 +79,6 @@ or binary exploration).
 SIG syntax (single):
 ```hjson
 {
-    type: function/global/number # doesn't really have meaning
     name: name
     instructions : [
         # Available commands are listed below
@@ -110,7 +109,6 @@ To view the list of available commands, [view the list below](#available-command
 
 ```hjson
 {
-    type: global,
     name: g_awsome_global,
     instructions: [
             # find the byte sequence '11 22 33 44'
@@ -135,7 +133,6 @@ To view the list of available commands, [view the list below](#available-command
 
 ```hjson
 {
-    type: function
     name: free
     instructions: [
             # search the string "free"
@@ -161,7 +158,6 @@ To view the list of available commands, [view the list below](#available-command
 
 ```hjson
 {
-    type: function-list
     name: arm-explorer
     instructions: [
             # search for some potential function prologs
@@ -180,7 +176,6 @@ To view the list of available commands, [view the list below](#available-command
 
 ```hjson
 {
-    type: explorer
     name: arm-string-explorer
     instructions: [
             # goto printf
@@ -208,7 +203,6 @@ To view the list of available commands, [view the list below](#available-command
 
 ```hjson
 {
-    type: finder
     name: consts-finder
     instructions: [
             # goto printf
@@ -248,7 +242,6 @@ To view the list of available commands, [view the list below](#available-command
 
 ```hjson
 {
-    type: offsets
     name: structs-finder
     instructions: [
             # add hard-coded '0' into resultset
@@ -285,7 +278,6 @@ To view the list of available commands, [view the list below](#available-command
 
 ```hjson
 {
-    type: function
     name: cool_functions
     instructions: [
             # find string

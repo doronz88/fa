@@ -88,7 +88,6 @@ class IdaLoader(fainterp.FaInterp):
 
         signature = {
             'name': idc.get_func_name(current_ea),
-            'type': 'function',
             'instructions': []
         }
 
