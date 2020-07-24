@@ -30,8 +30,11 @@ Below is the list of available commands:
 - [min-xrefs](#min-xrefs)
 - [most-common](#most-common)
 - [offset](#offset)
+- [verify-operand](#verify-operand)
 - [print](#print)
 - [run](#run)
+- [set-const](#set-const)
+- [set-enum](#set-enum)
 - [set-name](#set-name)
 - [set-type](#set-type)
 - [single](#single)
@@ -41,7 +44,6 @@ Below is the list of available commands:
 - [verify-aligned](#verify-aligned)
 - [verify-bytes](#verify-bytes)
 - [verify-name](#verify-name)
-- [verify-operand](#verify-operand)
 - [verify-ref](#verify-ref)
 - [verify-segment](#verify-segment)
 - [verify-single](#verify-single)
@@ -558,6 +560,39 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 ```
+## verify-operand
+```
+usage: verify-operand [-h] [--op0 OP0] [--op1 OP1] [--op2 OP2] name
+
+reduce the result-set to those matching the given instruction
+
+EXAMPLE #1:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-operand mov
+    results = [0, 4]
+
+EXAMPLE #2:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-operand mov --op1 2
+    results = [4]
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --op0 OP0
+  --op1 OP1
+  --op2 OP2
+```
 ## print
 ```
 usage: print [-h]
@@ -575,6 +610,31 @@ run another SIG file
 
 positional arguments:
   name        SIG filename
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## set-const
+```
+usage: set-const [-h] name
+
+define a const value
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## set-enum
+```
+usage: set-enum [-h] enum_name enum_key
+
+define an enum value
+
+positional arguments:
+  enum_name
+  enum_key
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -706,39 +766,6 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
-```
-## verify-operand
-```
-usage: verify-operand [-h] [--op0 OP0] [--op1 OP1] [--op2 OP2] name
-
-reduce the result-set to those matching the given instruction
-
-EXAMPLE #1:
-    0x00000000: mov r0, r1
-    0x00000004: mov r1, r2
-    0x00000008: push {r4}
-
-    results = [0, 2, 4, 6, 8]
-    -> verify-operand mov
-    results = [0, 4]
-
-EXAMPLE #2:
-    0x00000000: mov r0, r1
-    0x00000004: mov r1, r2
-    0x00000008: push {r4}
-
-    results = [0, 2, 4, 6, 8]
-    -> verify-operand mov --op1 2
-    results = [4]
-
-positional arguments:
-  name
-
-optional arguments:
-  -h, --help  show this help message and exit
-  --op0 OP0
-  --op1 OP1
-  --op2 OP2
 ```
 ## verify-ref
 ```
