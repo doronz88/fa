@@ -37,7 +37,7 @@ And for testing:
 python -m pip install -r requirements_testing.txt
 ```
 
-## I wanna start using, but where do I start?
+## Where yo start?
 
 Before using, you should understand the terminology for: 
 Projects, SIG files and Loaders.
@@ -58,7 +58,7 @@ in a better directory organization layout, better performance and
 less rate for false-positives. 
 
 The signatures are located by default in the `signatures` directory.
-If one wishes to use a different location, you may create `config.ini`
+If you wish to use a different location, you may create `config.ini`
 at FA's root with the following contents:
 
 ```ini
@@ -310,8 +310,8 @@ def run(interpreter):
     foo_e.update_idb()
 
     special_struct_t = fa_types.FaStruct('special_struct_t')
-    special_struct_t.add_field('member1', 'const char *', size=4)
-    special_struct_t.add_field('member2', 'const char *', size=4, offset=0x20)
+    special_struct_t.add_field('member1', 'const char *')
+    special_struct_t.add_field('member2', 'const char *', offset=0x20)
     special_struct_t.update_idb()
 
     for function_name in ['unique_magic1', 'unique_magic2']:
