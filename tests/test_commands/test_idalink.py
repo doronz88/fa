@@ -109,3 +109,4 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['test_find_immediate'] == 0x1240
         assert symbols['test_find_immediate'] == 0x1240
         assert symbols['test_operand'] == 1
+        assert symbols['test_function_start_cmd'] == 0x1248
