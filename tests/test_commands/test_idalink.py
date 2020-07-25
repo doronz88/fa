@@ -69,6 +69,8 @@ def test_ida_symbols(ida, sample_elf):
                 assert len(v) == 1
                 symbols[k] = v.pop()
 
+        consts = fa_instance.get_consts()
+
         # from test-basic
         assert symbols['test_add'] == 80
         assert symbols['test_pos_offset'] == 81

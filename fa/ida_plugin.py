@@ -1,4 +1,5 @@
 import binascii
+import re
 import traceback
 from collections import namedtuple
 import subprocess
@@ -20,7 +21,7 @@ import ida_pro
 import idaapi
 import idc
 
-from fa import fainterp
+from fa import fainterp, fa_types
 
 # Filename for the temporary created signature
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
@@ -242,6 +243,10 @@ class IdaLoader(fainterp.FaInterp):
 
         return results
 
+    def set_const(self, name, value):
+        super(IdaLoader, self).set_const(name, value)
+        fa_types.add_const(name, value)
+
     def set_symbol(self, symbol_name, value):
         super(IdaLoader, self).set_symbol(symbol_name, value)
         idc.set_name(value, symbol_name, idc.SN_CHECK)
@@ -326,15 +331,28 @@ class IdaLoader(fainterp.FaInterp):
             c_header_filename = os.path.join(form.iDir.value,
                                              form.iHeaderFilename.value)
 
+            consts_ordinal = None
             ordinals = []
             for ordinal in range(1, ida_typeinf.get_ordinal_qty(idati) + 1):
                 ti = ida_typeinf.tinfo_t()
                 if ti.get_numbered_type(idati, ordinal):
-                    ordinals.append(str(ordinal))
-                    # print ordinal, ti
+                    if ti.get_type_name() == 'FA_CONSTS':
+                        # convert into macro definitions
+                        consts_ordinal = ordinal
+                    else:
+                        ordinals.append(str(ordinal))
 
             with open(c_header_filename, 'w') as f:
-                f.write(idc.print_decls(','.join(ordinals), 0))
+                if consts_ordinal is not None:
+                    consts = re.findall('\s*(.+?) = (.+?),',
+                                        idc.print_decls(
+                                            str(consts_ordinal), 0))
+                    for k, v in consts:
+                        f.write('#define {} ({})\n'.format(k, v))
+                    f.write('\n')
+
+                f.write(idc.print_decls
+                        (','.join(ordinals), idc.PDF_DEF_BASE))
 
         form.Free()
 

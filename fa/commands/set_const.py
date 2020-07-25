@@ -8,11 +8,11 @@ def get_parser():
     return p
 
 
-def set_const(addresses, name):
+def set_const(addresses, name, interpreter):
     for ea in addresses:
-        fa_types.add_const(name, ea)
+        interpreter.set_const(name, ea)
     return addresses
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return set_const(addresses, args.name)
+    return set_const(addresses, args.name, interpreter)
