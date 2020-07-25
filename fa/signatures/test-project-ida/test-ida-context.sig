@@ -68,5 +68,11 @@
 
         offset 4
         set-struct-member test_struct_t test_member_offset_4 'unsigned int'
+
+        clear
+
+        function-start arm-find-all 'pop {r4-r7, pc}'
+        single 0
+        set-name test_function_start_cmd
 	]
 }

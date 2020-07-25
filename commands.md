@@ -372,18 +372,30 @@ optional arguments:
 ```
 ## function-start
 ```
-usage: function-start [-h]
+usage: function-start [-h] [cmd [cmd ...]]
 
 goto function's start
 
 EXAMPLE:
     0x00000000: push {r4-r7, lr} -> function's prolog
     ...
-    0x000000f0: push {r4-r7, pc} -> function's epilog
+    0x000000f0: pop {r4-r7, pc} -> function's epilog
 
     results = [0xf0]
     -> function-start
     result = [0]
+    
+EXAMPLE 2:
+    0x00000000: push {r4-r7, lr} -> function's prolog
+    ...
+    0x000000f0: pop {r4-r7, pc} -> function's epilog
+
+    results = []
+    -> function-start arm-find-all 'pop {r4-r7, pc}'
+    result = [0]
+
+positional arguments:
+  cmd         command
 
 optional arguments:
   -h, --help  show this help message and exit
