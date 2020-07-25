@@ -79,7 +79,7 @@ or binary exploration).
 SIG syntax (single):
 ```hjson
 {
-    name: name
+    name: name  
     instructions : [
         # Available commands are listed below
         command1

@@ -35,6 +35,7 @@ class FaInterp:
         self._segments = OrderedDict()
         self._signatures_root = DEFAULT_SIGNATURES_ROOT
         self._symbols = {}
+        self._consts = {}
         self.history = []
         self.checkpoints = {}
         self.endianity = '<'
@@ -443,8 +444,14 @@ class FaInterp:
 
         return signatures
 
+    def set_const(self, name, value):
+        self._consts[name] = value
+
     def set_symbol(self, symbol_name, value):
         self._symbols[symbol_name] = value
+
+    def get_consts(self):
+        return self._consts
 
     def find(self, symbol_name, decremental=False):
         """
