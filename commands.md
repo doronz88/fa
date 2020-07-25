@@ -4,6 +4,7 @@ Below is the list of available commands:
 - [add](#add)
 - [add-offset-range](#add-offset-range)
 - [align](#align)
+- [and](#and)
 - [append](#append)
 - [back](#back)
 - [back-to-checkpoint](#back-to-checkpoint)
@@ -31,6 +32,7 @@ Below is the list of available commands:
 - [most-common](#most-common)
 - [offset](#offset)
 - [verify-operand](#verify-operand)
+- [or](#or)
 - [print](#print)
 - [run](#run)
 - [set-const](#set-const)
@@ -105,6 +107,28 @@ EXAMPLE:
 
 positional arguments:
   value
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## and
+```
+usage: and [-h] cmd [cmd ...]
+
+intersect with another command's resultset
+
+EXAMPLE:
+    results = [80]
+    -> and add 80
+    results = [80]
+
+EXAMPLE #2:
+    results = [80]
+    -> and add 81
+    results = []
+
+positional arguments:
+  cmd         command
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -593,6 +617,28 @@ optional arguments:
   --op0 OP0
   --op1 OP1
   --op2 OP2
+```
+## or
+```
+usage: or [-h] cmd [cmd ...]
+
+unite with another command's resultset
+
+EXAMPLE:
+    results = [80]
+    -> or add 80
+    results = [80]
+
+EXAMPLE #2:
+    results = [80]
+    -> or add 81
+    results = [80, 81]
+
+positional arguments:
+  cmd         command
+
+optional arguments:
+  -h, --help  show this help message and exit
 ```
 ## print
 ```
