@@ -90,5 +90,33 @@
         clear
 
         find test_find
+
+        clear
+
+        add 80
+        or offset 0
+        verify-single
+        set-name test_or_80
+
+        clear
+
+        add 80
+        or offset 1
+        sort
+        single -1
+        set-name test_or_81
+
+        clear
+
+        add 80
+        and offset 0
+        verify-single
+        set-name test_and_80
+
+        clear
+
+        add 80
+        and offset 1
+        set-name test_and_81
 	]
 }

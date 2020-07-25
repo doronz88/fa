@@ -31,3 +31,7 @@ def test_elf_symbols(sample_elf):
     assert symbols['test_find_bytes'] == 0x1240
     assert symbols['test_find_str'] == 0x1242
     assert symbols['test_find'] == 76
+    assert symbols['test_or_80'] == 80
+    assert symbols['test_or_81'] == 81
+    assert symbols['test_and_80'] == 80
+    assert 'test_ond_81' not in symbols
