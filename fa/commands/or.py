@@ -5,12 +5,12 @@ DESCRIPTION = '''unite with another command's resultset
 
 EXAMPLE:
     results = [80]
-    -> or add 80
+    -> or offset 0
     results = [80]
 
 EXAMPLE #2:
     results = [80]
-    -> or add 81
+    -> or offset 1
     results = [80, 81]
 '''
 

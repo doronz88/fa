@@ -5,12 +5,12 @@ DESCRIPTION = '''intersect with another command's resultset
 
 EXAMPLE:
     results = [80]
-    -> and add 80
+    -> and offset 0
     results = [80]
 
 EXAMPLE #2:
     results = [80]
-    -> and add 81
+    -> and offset 1
     results = []
 '''
 
