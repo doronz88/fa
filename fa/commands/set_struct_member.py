@@ -13,7 +13,7 @@ def get_parser():
 def set_struct_member(addresses, struct_name, member_name, member_type):
     for ea in addresses:
         enum = fa_types.FaStruct(struct_name)
-        enum.add_field(member_name, member_type)
+        enum.add_field(member_name, member_type, offset=ea)
         enum.update_idb(delete_existing_members=False)
     return addresses
 
