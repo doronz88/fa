@@ -235,8 +235,6 @@ class IdaLoader(fainterp.FaInterp):
                 results[name] = ea
                 output += '{} = 0x{:08x};\n'.format(name, ea)
 
-        print(output)
-
         if filename is not None:
             with open(filename, 'w') as f:
                 f.write(output)
