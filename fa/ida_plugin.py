@@ -156,12 +156,6 @@ class IdaLoader(fainterp.FaInterp):
             # if remote sig has a proper name, but current one is not
             ida_kernwin.jumpto(results[0])
 
-            if not sig['name'].startswith('sub_') and \
-                    idc.get_func_name(results[0]).startswith('sub_'):
-                if ida_kernwin.ask_yn(1, 'Only one result has been found. '
-                                         'Rename?') == 1:
-                    idc.set_name(results[0], str(sig['name']), idc.SN_CHECK)
-
     def verify_project(self):
         """
         Verify a valid project is currently active.
