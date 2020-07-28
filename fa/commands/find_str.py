@@ -38,10 +38,10 @@ def find_str(string, null_terminated=False):
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
     hex_str = binascii.hexlify(six.b(args.hex_str))
-    
+
     if sys.version[0] == '3':
         hex_str = hex_str.decode()
-    
+
     if args.null_terminated:
         hex_str += '00'
     setattr(args, 'hex_str', hex_str)

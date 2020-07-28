@@ -302,8 +302,7 @@ class IdaLoader(fainterp.FaInterp):
                                       value='fa_structs.h'),
                                   'iIfdef': Form.StringInput(
                                       value='FA_STRUCTS'),
-
-                })
+                              })
                 self.__n = 0
 
             def OnFormChange(self, fid):

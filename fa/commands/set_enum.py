@@ -1,4 +1,4 @@
-from fa import utils, fa_types, context
+from fa import utils, fa_types
 
 
 def get_parser():
