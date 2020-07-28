@@ -371,6 +371,7 @@ class FaInterp:
         :return: Addresses of matching signatures.
         :rtype: result list of last returns instruction
         """
+        self.log('interpreting SIG for: {}'.format(signature_json['name']))
         return self.find_from_instructions_list(
             signature_json['instructions'], decremental)
 
