@@ -405,7 +405,7 @@ class FaInterp:
         sys.path.append(project_root)
 
         for root, dirs, files in os.walk(project_root):
-            for filename in files:
+            for filename in sorted(files):
                 if not filename.lower().endswith('.py'):
                     continue
 
@@ -428,7 +428,7 @@ class FaInterp:
         project_root = os.path.join(self._signatures_root, self._project)
 
         for root, dirs, files in os.walk(project_root):
-            for filename in files:
+            for filename in sorted(files):
                 if not filename.lower().endswith('.sig'):
                     continue
 
