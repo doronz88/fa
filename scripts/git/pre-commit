@@ -39,8 +39,15 @@ def main():
     for command, help in doc.items():
         buf += '## {}\n```\n{}```\n'.format(command, help)
 
+    with open('commands.md', 'rt') as f:
+        current_buf = f.read()
+
     with open('commands.md', 'wt') as f:
         f.write(buf)
+
+    if current_buf != buf:
+        print('commands.md has been changed. please review and then commit')
+        sys.exit(1)
 
 
 if __name__ == '__main__':
