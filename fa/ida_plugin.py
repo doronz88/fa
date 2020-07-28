@@ -289,6 +289,7 @@ class IdaLoader(fainterp.FaInterp):
                               {StringLabel}
                               <#Symbols#Symbols filename:{iSymbolsFilename}>
                               <#C Header#C Header filename:{iHeaderFilename}>
+                              <#ifdef_macro#ifdef'ed:{iIfdef}>
                               <#Select dir#Browse for dir:{iDir}>
                               """, {
                                   'iDir': Form.DirInput(),
@@ -298,8 +299,9 @@ class IdaLoader(fainterp.FaInterp):
                                   'iSymbolsFilename': Form.StringInput(
                                       value='symbols.txt'),
                                   'iHeaderFilename': Form.StringInput(
-                                      value='header.h')
-
+                                      value='fa_structs.h'),
+                                  'iIfdef': Form.StringInput(
+                                      value='FA_STRUCTS'),
                               })
                 self.__n = 0
 
@@ -335,6 +337,11 @@ class IdaLoader(fainterp.FaInterp):
                         ordinals.append(str(ordinal))
 
             with open(c_header_filename, 'w') as f:
+                ifdef_name = form.iIfdef.value.strip()
+
+                if len(ifdef_name) > 0:
+                    f.write('#ifdef {}\n\n'.format(ifdef_name))
+
                 if consts_ordinal is not None:
                     consts = re.findall('\s*(.+?) = (.+?),',
                                         idc.print_decls(
@@ -343,8 +350,18 @@ class IdaLoader(fainterp.FaInterp):
                         f.write('#define {} ({})\n'.format(k, v))
                     f.write('\n')
 
-                f.write(idc.print_decls
-                        (','.join(ordinals), idc.PDF_DEF_BASE))
+                structs_buf = idc.print_decls(','.join(ordinals), 0)
+
+                for struct_name in re.findall('struct (.+?)\s+\{', structs_buf):
+                    f.write('typedef struct {struct_name} {struct_name};\n'
+                            .format(struct_name=struct_name))
+                f.write('\n')
+                f.write(structs_buf)
+                f.write('\n')
+
+                if len(ifdef_name) > 0:
+                    f.write('#endif // {ifdef_name}\n'
+                            .format(ifdef_name=ifdef_name))
 
         form.Free()
 

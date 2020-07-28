@@ -1,10 +1,5 @@
 from fa.utils import ArgumentParserNoExit
 
-try:
-    import idc
-except ImportError:
-    pass
-
 
 def get_parser():
     p = ArgumentParserNoExit('set-name',

@@ -16,7 +16,7 @@ EXAMPLE:
     results = [0xf0]
     -> function-start
     result = [0]
-    
+
 EXAMPLE 2:
     0x00000000: push {r4-r7, lr} -> function's prolog
     ...
