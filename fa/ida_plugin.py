@@ -301,7 +301,7 @@ class IdaLoader(fainterp.FaInterp):
                                   'iHeaderFilename': Form.StringInput(
                                       value='fa_structs.h'),
                                   'iIfdef': Form.StringInput(
-                                      value='FA_STRUCTS'),
+                                      value='FA_STRUCTS_H'),
                               })
                 self.__n = 0
 
@@ -340,7 +340,9 @@ class IdaLoader(fainterp.FaInterp):
                 ifdef_name = form.iIfdef.value.strip()
 
                 if len(ifdef_name) > 0:
-                    f.write('#ifdef {}\n\n'.format(ifdef_name))
+                    f.write('#ifndef {ifdef_name}\n'
+                            '#define {ifdef_name}\n\n'
+                            .format(ifdef_name=ifdef_name))
 
                 if consts_ordinal is not None:
                     consts = re.findall('\s*(.+?) = (.+?),',
@@ -350,9 +352,12 @@ class IdaLoader(fainterp.FaInterp):
                         f.write('#define {} ({})\n'.format(k, v))
                     f.write('\n')
 
-                structs_buf = idc.print_decls(','.join(ordinals), 0)
+                structs_buf = idc.print_decls(','.join(ordinals),
+                                              idc.PDF_DEF_BASE)
 
-                for struct_name in re.findall('struct (.+?)\s+\{', structs_buf):
+                for struct_name in re.findall(
+                        r'struct .*?([a-zA-Z0-9_\-]+?)\s+\{',
+                        structs_buf):
                     f.write('typedef struct {struct_name} {struct_name};\n'
                             .format(struct_name=struct_name))
                 f.write('\n')
