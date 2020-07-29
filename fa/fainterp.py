@@ -310,6 +310,7 @@ class FaInterp:
             hjson.dump(signature, f, indent=4)
 
     def find_from_instructions_list(self, instructions,
+                                    clear_checkpoints=False,
                                     decremental=False, addresses=None):
         """
         Run the given instruction list and output the result
@@ -323,7 +324,9 @@ class FaInterp:
             addresses = []
 
         self.history = []
-        self.checkpoints = {}
+
+        if clear_checkpoints:
+            self.checkpoints = {}
 
         for line in instructions:
             line = line.strip()
