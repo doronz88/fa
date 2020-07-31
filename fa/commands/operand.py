@@ -20,7 +20,7 @@ EXAMPLE #1:
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('verify-operand',
+    p = utils.ArgumentParserNoExit('operand',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
     p.add_argument('op', type=int, help='operand number')

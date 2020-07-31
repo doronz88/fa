@@ -70,5 +70,17 @@
         set-struct-member test_struct_t test_member_offset_4 'unsigned int'
 
         clear
+
+        arm-find-all 'mov r0, 1; bx lr'
+        set-name funcy
+        set-type 'int func(int)'
+        xref
+        sort
+        single 1
+        argument 0
+
+        set-name test_argument
+
+        clear
 	]
 }
