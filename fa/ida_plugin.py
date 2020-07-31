@@ -350,6 +350,9 @@ class IdaLoader(fainterp.FaInterp):
                                             str(consts_ordinal), 0))
                     for k, v in consts:
                         f.write('#define {} ({})\n'.format(k, v))
+
+                    # ida exports using this type
+                    f.write('#define _BYTE char\n')
                     f.write('\n')
 
                 structs_buf = idc.print_decls(','.join(ordinals),
