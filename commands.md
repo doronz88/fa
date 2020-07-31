@@ -682,9 +682,12 @@ optional arguments:
 ```
 ## print
 ```
-usage: print [-h]
+usage: print [-h] [phrase]
 
 prints the current result-set (for debugging)
+
+positional arguments:
+  phrase      optional string
 
 optional arguments:
   -h, --help  show this help message and exit
