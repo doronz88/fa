@@ -115,6 +115,7 @@ optional arguments:
 ```
 usage: and [-h] cmd [cmd ...]
 
+[DEPRECATED]
 intersect with another command's resultset
 
 EXAMPLE:
@@ -385,15 +386,6 @@ EXAMPLE:
     -> function-start
     result = [0]
 
-EXAMPLE 2:
-    0x00000000: push {r4-r7, lr} -> function's prolog
-    ...
-    0x000000f0: pop {r4-r7, pc} -> function's epilog
-
-    results = []
-    -> function-start arm-find-all 'pop {r4-r7, pc}'
-    result = [0]
-
 positional arguments:
   cmd         command
 
@@ -634,6 +626,7 @@ optional arguments:
 ```
 usage: or [-h] cmd [cmd ...]
 
+[DEPRECATED]
 unite with another command's resultset
 
 EXAMPLE:

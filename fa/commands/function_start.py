@@ -16,15 +16,6 @@ EXAMPLE:
     results = [0xf0]
     -> function-start
     result = [0]
-
-EXAMPLE 2:
-    0x00000000: push {r4-r7, lr} -> function's prolog
-    ...
-    0x000000f0: pop {r4-r7, pc} -> function's epilog
-
-    results = []
-    -> function-start arm-find-all 'pop {r4-r7, pc}'
-    result = [0]
 '''
 
 
@@ -53,10 +44,4 @@ def function_start(addresses):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    if len(args.cmd) > 0:
-        cmd = args.cmd[0] + ' ' + \
-              ''.join('"{}"'.format(c) for c in args.cmd[1:])
-        addresses = interpreter.find_from_instructions_list(
-            [cmd],
-            addresses=addresses)
     return list(function_start(addresses))

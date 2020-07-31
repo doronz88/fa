@@ -1,4 +1,7 @@
 import argparse
+import inspect
+import os
+import warnings
 
 IDA_MODULE = False
 
@@ -75,6 +78,17 @@ def yield_unique(func):
 class ArgumentParserNoExit(argparse.ArgumentParser):
     def error(self, message):
         raise ValueError(message)
+
+
+def deprecated(function):
+    frame = inspect.stack()[1]
+    module = inspect.getmodule(frame[0])
+    filename = module.__file__
+    command_name = os.path.splitext(os.path.basename(filename))[0]
+
+    warnings.warn('command: "{}" is deperected and will be removed in '
+                  'the future.'.format(command_name, DeprecationWarning))
+    return function
 
 
 def add_struct_to_idb(name):

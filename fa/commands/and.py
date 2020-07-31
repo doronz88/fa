@@ -1,7 +1,8 @@
 from argparse import RawTextHelpFormatter
 from fa import utils
 
-DESCRIPTION = '''intersect with another command's resultset
+DESCRIPTION = '''[DEPRECATED]
+intersect with another command's resultset
 
 EXAMPLE:
     results = [80]
@@ -23,6 +24,7 @@ def get_parser():
     return p
 
 
+@utils.deprecated
 def and_(addresses, cmd, interpreter):
     results = set(addresses)
     innert_command_results = interpreter.find_from_instructions_list(
