@@ -6,6 +6,7 @@ Below is the list of available commands:
 - [align](#align)
 - [and](#and)
 - [append](#append)
+- [argument](#argument)
 - [back](#back)
 - [back-to-checkpoint](#back-to-checkpoint)
 - [checkpoint](#checkpoint)
@@ -32,7 +33,7 @@ Below is the list of available commands:
 - [min-xrefs](#min-xrefs)
 - [most-common](#most-common)
 - [offset](#offset)
-- [verify-operand](#verify-operand)
+- [operand](#operand)
 - [or](#or)
 - [print](#print)
 - [run](#run)
@@ -48,6 +49,7 @@ Below is the list of available commands:
 - [verify-aligned](#verify-aligned)
 - [verify-bytes](#verify-bytes)
 - [verify-name](#verify-name)
+- [verify-operand](#verify-operand)
 - [verify-ref](#verify-ref)
 - [verify-segment](#verify-segment)
 - [verify-single](#verify-single)
@@ -143,6 +145,28 @@ append results from another command
 
 positional arguments:
   cmd         command
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## argument
+```
+usage: argument [-h] arg
+
+get function's argument assignment address
+
+EXAMPLE:
+    0x00000000: ldr r0, =dest
+    0x00000004: ldr r1, =src
+    0x00000008: mov r2, #4
+    0x0000000c: bl memcpy
+
+    results = [0x0c]
+    -> argument 2
+    results = [8]  # address of 3rd argument
+
+positional arguments:
+  arg         argument number
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -612,38 +636,26 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 ```
-## verify-operand
+## operand
 ```
-usage: verify-operand [-h] [--op0 OP0] [--op1 OP1] [--op2 OP2] name
+usage: operand [-h] op
 
-reduce the result-set to those matching the given instruction
+get operand value from given instruction
 
 EXAMPLE #1:
     0x00000000: mov r0, r1
     0x00000004: mov r1, r2
     0x00000008: push {r4}
 
-    results = [0, 2, 4, 6, 8]
-    -> verify-operand mov
-    results = [0, 4]
-
-EXAMPLE #2:
-    0x00000000: mov r0, r1
-    0x00000004: mov r1, r2
-    0x00000008: push {r4}
-
-    results = [0, 2, 4, 6, 8]
-    -> verify-operand mov --op1 2
     results = [4]
+    -> operand 1
+    results = [2]  # because r2
 
 positional arguments:
-  name
+  op          operand number
 
 optional arguments:
   -h, --help  show this help message and exit
-  --op0 OP0
-  --op1 OP1
-  --op2 OP2
 ```
 ## or
 ```
@@ -855,6 +867,39 @@ positional arguments:
 
 optional arguments:
   -h, --help  show this help message and exit
+```
+## verify-operand
+```
+usage: verify-operand [-h] [--op0 OP0] [--op1 OP1] [--op2 OP2] name
+
+reduce the result-set to those matching the given instruction
+
+EXAMPLE #1:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-operand mov
+    results = [0, 4]
+
+EXAMPLE #2:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-operand mov --op1 2
+    results = [4]
+
+positional arguments:
+  name
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --op0 OP0
+  --op1 OP1
+  --op2 OP2
 ```
 ## verify-ref
 ```
