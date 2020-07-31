@@ -25,5 +25,6 @@ def get_parser():
     return p
 
 
+@utils.deprecated
 def run(segments, args, addresses, interpreter=None, **kwargs):
     return interpreter.history[-args.amount]
