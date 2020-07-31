@@ -118,5 +118,31 @@
         add 80
         and offset 1
         set-name test_and_81
+
+        clear
+
+        add 1
+        add 2
+        add 3
+
+        checkpoint a
+
+        clear
+
+        add 2
+        add 8
+        add 12
+
+        checkpoint b
+
+        clear
+
+        checkpoint c
+
+        intersect a b
+        set-name test_intersect_ab
+
+        intersect a b c
+        set-name test_intersect_abc
 	]
 }

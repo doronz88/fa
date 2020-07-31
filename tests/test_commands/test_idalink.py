@@ -94,6 +94,8 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['test_or_81'] == 81
         assert symbols['test_and_80'] == 80
         assert 'test_ond_81' not in symbols
+        assert symbols['test_intersect_ab'] == 2
+        assert 'test_intersect_abc' not in symbols
 
         # from test-ida-context
         assert symbols['test_find_bytes_ida'] == 0x1240
