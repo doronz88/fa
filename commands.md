@@ -19,6 +19,7 @@ Below is the list of available commands:
 - [function-lines](#function-lines)
 - [function-start](#function-start)
 - [goto-ref](#goto-ref)
+- [intersect](#intersect)
 - [keystone-find-opcodes](#keystone-find-opcodes)
 - [keystone-verify-opcodes](#keystone-verify-opcodes)
 - [locate](#locate)
@@ -409,6 +410,28 @@ optional arguments:
   -h, --help  show this help message and exit
   --code      include code references
   --data      include data references
+```
+## intersect
+```
+usage: intersect [-h] checkpoints [checkpoints ...]
+
+intersect two or more checkpoints
+
+EXAMPLE:
+    results = [0, 4, 8]
+    checkpoint a
+    ...
+    results = [0, 12, 20]
+    checkpoint b
+
+    -> intersect a b
+    results = [0]
+
+positional arguments:
+  checkpoints  checkpoint names
+
+optional arguments:
+  -h, --help   show this help message and exit
 ```
 ## keystone-find-opcodes
 ```
