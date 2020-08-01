@@ -36,6 +36,7 @@ class FaInterp:
         self._signatures_root = DEFAULT_SIGNATURES_ROOT
         self._symbols = {}
         self._consts = {}
+        self.executed_sigs = []
         self.history = []
         self.checkpoints = {}
         self.endianity = '<'
@@ -144,7 +145,7 @@ class FaInterp:
         if save:
             self.config_set('global', 'project', project)
 
-    def symbols(self):
+    def symbols(self, reexecute=False):
         """
         Run find for all SIG files in currently active project
         :return: dictionary of found symbols
@@ -152,7 +153,7 @@ class FaInterp:
         self.get_python_symbols()
 
         for sig in self.get_json_signatures():
-            self.find(sig['name'])
+            self.find(sig['name'], reexecute=reexecute)
 
         return self._symbols
 
@@ -457,7 +458,7 @@ class FaInterp:
     def get_consts(self):
         return self._consts
 
-    def find(self, symbol_name, decremental=False):
+    def find(self, symbol_name, decremental=False, reexecute=False):
         """
         Find symbol by its name in the SIG file
         :param symbol_name: symbol name
@@ -465,6 +466,12 @@ class FaInterp:
                             returned zero results
         :return: list of matches for the given symbol
         """
+        if symbol_name in self.executed_sigs:
+            if not reexecute:
+                return
+        else:
+            self.executed_sigs.append(symbol_name)
+
         results = []
         signatures = self.get_json_signatures(symbol_name)
         if len(signatures) == 0:

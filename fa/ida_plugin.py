@@ -183,7 +183,7 @@ class IdaLoader(fainterp.FaInterp):
 
         self.save_signature(sig)
 
-    def find(self, symbol_name, decremental=False):
+    def find(self, symbol_name, decremental=False, reexecute=False):
         """
         Find symbol by name (as specified in SIG file)
         Show an IDA waitbox while doing so
@@ -195,7 +195,8 @@ class IdaLoader(fainterp.FaInterp):
         ida_kernwin.replace_wait_box('Searching symbol: \'{}\'...'
                                      .format(symbol_name))
         return super(IdaLoader, self).find(symbol_name,
-                                           decremental=decremental)
+                                           decremental=decremental,
+                                           reexecute=reexecute)
 
     def get_python_symbols(self, file_name=None):
         """
@@ -253,9 +254,14 @@ class IdaLoader(fainterp.FaInterp):
         self.verify_project()
         results = {}
 
+        reexecute = False
+        if len(self.executed_sigs) != 0:
+            if ida_kernwin.ask_yn(1, 'Re-Execute already ran SIG files?') == 1:
+                reexecute = True
+
         try:
             ida_kernwin.show_wait_box('Searching...')
-            results = super(IdaLoader, self).symbols()
+            results = super(IdaLoader, self).symbols(reexecute=reexecute)
 
             ida_kernwin.replace_wait_box('Extracting...')
             ida_symbols = IdaLoader.extract_all_user_names(output_file_path)
