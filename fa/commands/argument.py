@@ -31,7 +31,13 @@ def get_parser():
 @context.ida_context
 def argument(addresses, arg):
     for address in addresses:
-        yield ida_typeinf.get_arg_addrs(address)[arg]
+        args = ida_typeinf.get_arg_addrs(address)
+        if args is None:
+            continue
+        try:
+            yield args[arg]
+        except KeyError:
+            continue
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
