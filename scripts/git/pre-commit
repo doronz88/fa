@@ -1,4 +1,6 @@
 #!/usr/bin/python
+import json
+import re
 from collections import OrderedDict
 import os
 import sys
@@ -10,15 +12,31 @@ from fa.fainterp import FaInterp
 COMMANDS_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', '..', 'fa', 'commands')
 
+COMMANDS_MD = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), '..', '..', 'commands.md')
+
+SUBLIME_COMP = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    '..', '..', 'ide-completions', 'sublime', 'sig.sublime-completions')
+
 
 def main():
-    doc = OrderedDict()
-    doc['stop-if-empty'] = 'builtin interpreter command. \n' \
+    command_usage = OrderedDict()
+    command_usage['stop-if-empty'] = 'stop-if-empty'
+
+    command_help = OrderedDict()
+    command_help['stop-if-empty'] = 'builtin interpreter command. \n' \
                            'stops parsing current SIG if current ' \
                            'resultset is empty\n'
 
     commands = os.listdir(COMMANDS_ROOT)
     commands.sort()
+
+    sublime_completions = {
+        'scope': 'source.hjson meta.structure.dictionary.hjson '
+                 'meta.structure.key-value.hjson meta.structure.array.hjson',
+        'completions': []
+    }
 
     for filename in commands:
         if filename.endswith('.py') and \
@@ -27,25 +45,58 @@ def main():
             command = FaInterp.get_command(command)
 
             p = command.get_parser()
-            doc[p.prog] = p.format_help()
+            command_help[p.prog] = p.format_help()
 
-    buf = ''
-    buf += '# FA Command List\n'
-    buf += 'Below is the list of available commands:\n'
+            snippet = p.format_usage().split('usage: ', 1)[1]\
+                .replace('\n', '').strip().replace(' [-h]', '')\
+                .replace('[', '').replace(']', '')
 
-    for command in doc.keys():
-        buf += '- [{command}](#{command})\n'.format(command=command)
+            def replacer(m):
+                buf = ''
+                global index
+                for g in m.groups():
+                    if g.startswith('--'):
+                        buf += g
+                    else:
+                        buf += '${%d:%s}' % (index, g)
+                        index += 1
+                return buf
 
-    for command, help in doc.items():
-        buf += '## {}\n```\n{}```\n'.format(command, help)
+            args = ''
+            cmd = snippet
 
-    with open('commands.md', 'rt') as f:
+            if ' ' in snippet:
+                cmd, args = snippet.split(' ', 1)
+                globals()['index'] = 1
+                args = re.sub('([\-\w]+)', replacer, args)
+
+            sublime_completions['completions'].append({
+                'trigger': p.prog,
+                'kind': 'snippet',
+                'contents': cmd + ' ' + args,
+            })
+
+    commands_md_buf = ''
+    commands_md_buf += '# FA Command List\n'
+    commands_md_buf += 'Below is the list of available commands:\n'
+
+    for command in command_help.keys():
+        commands_md_buf += '- [{command}](#{command})\n'\
+            .format(command=command)
+
+    for command, help in command_help.items():
+        commands_md_buf += '## {}\n```\n{}```\n'.format(command, help)
+
+    with open(COMMANDS_MD, 'rt') as f:
         current_buf = f.read()
 
-    with open('commands.md', 'wt') as f:
-        f.write(buf)
+    with open(COMMANDS_MD, 'wt') as f:
+        f.write(commands_md_buf)
 
-    if current_buf != buf:
+    with open(SUBLIME_COMP, 'wt') as f:
+        f.write(json.dumps(sublime_completions, indent=4))
+
+    if current_buf != commands_md_buf:
         print('commands.md has been changed. please review and then commit')
         sys.exit(1)
 

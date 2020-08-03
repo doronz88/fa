@@ -840,7 +840,7 @@ optional arguments:
 ```
 ## verify-bytes
 ```
-usage: verify-bytes [-h] [--until UNTIL] hex_str
+usage: verify-bytes [-h] hex_str
 
 reduce the result-set to those matching the given bytes
 
@@ -856,8 +856,7 @@ positional arguments:
   hex_str
 
 optional arguments:
-  -h, --help     show this help message and exit
-  --until UNTIL  keep advancing by a given size until a match
+  -h, --help  show this help message and exit
 ```
 ## verify-name
 ```
@@ -960,7 +959,7 @@ optional arguments:
 ```
 ## verify-str
 ```
-usage: verify-str [-h] [--until UNTIL] [--null-terminated] hex_str
+usage: verify-str [-h] [--null-terminated] hex_str
 
 reduce the result-set to those matching the given string
 
@@ -977,7 +976,6 @@ positional arguments:
 
 optional arguments:
   -h, --help         show this help message and exit
-  --until UNTIL      keep advancing by a given size until a match
   --null-terminated
 ```
 ## xref

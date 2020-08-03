@@ -1,190 +1,280 @@
 {
-    "scope": "source.hjson meta.structure.dictionary.hjson meta.structure.key-value.hjson meta.structure.array.hjson",
+    "scope": "source.hjson meta.structure.dictionary.hjson meta.structure.key-value.hjson meta.structure.array.hjson", 
     "completions": [
         {
-            "trigger": "find-bytes",
-            "contents": "\"find-bytes '${1:hex_str}'\",",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "add", 
+            "contents": "add ${1:value}"
+        }, 
         {
-            "trigger": "find-str",
-            "contents": "\"find-str '${1:hex_str}'\",",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "add-offset-range", 
+            "contents": "add-offset-range ${1:start} ${2:end} ${3:step}"
+        }, 
         {
-            "trigger": "add-offset-range",
-            "contents": "add-offset-range ${1:start} ${2:end} ${3:step}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "align", 
+            "contents": "align ${1:value}"
+        }, 
         {
-            "trigger": "back",
-            "contents": "back -${1:amount}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "and", 
+            "contents": "and ${1:cmd} ${2:cmd} ..."
+        }, 
         {
-            "trigger": "back-to-checkpoint",
-            "contents": "back-to-checkpoint ${1:checkpoint}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "append", 
+            "contents": "append ${1:cmd} ${2:cmd} ..."
+        }, 
         {
-            "trigger": "checkpoint",
-            "contents": "checkpoint ${1:checkpoint}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "argument", 
+            "contents": "argument ${1:arg}"
+        }, 
         {
-            "trigger": "clear",
-            "contents": "clear",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "back", 
+            "contents": "back ${1:amount}"
+        }, 
         {
-            "trigger": "function-end",
-            "contents": "function-end",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "back-to-checkpoint", 
+            "contents": "back-to-checkpoint ${1:name}"
+        }, 
         {
-            "trigger": "function-start",
-            "contents": "function-start",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "checkpoint", 
+            "contents": "checkpoint ${1:name}"
+        }, 
         {
-            "trigger": "function-lines",
-            "contents": "function-lines",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "clear", 
+            "contents": "clear "
+        }, 
         {
-            "trigger": "goto-ref",
-            "contents": "goto-ref --code --data",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "find", 
+            "contents": "find ${1:name}"
+        }, 
         {
-            "trigger": "keystone-find-opcodes",
-            "contents": "\"keystone-find-opcodes --bele ${1:arch} ${2:mode} '${3:code}'\",",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "find-bytes", 
+            "contents": "find-bytes ${1:hex_str}"
+        }, 
         {
-            "trigger": "keystone-verify-opcodes",
-            "contents": "\"keystone-verify-opcodes --bele ${1:arch} ${2:mode} '${3:code}'\",",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "find-bytes-ida", 
+            "contents": "find-bytes-ida ${1:expression}"
+        }, 
         {
-            "trigger": "locate",
-            "contents": "locate ${1:symbol_name}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "find-immediate", 
+            "contents": "find-immediate ${1:expression}"
+        }, 
         {
-            "trigger": "make-code",
-            "contents": "make-code",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "find-str", 
+            "contents": "find-str --null-terminated ${1:hex_str}"
+        }, 
         {
-            "trigger": "make-function",
-            "contents": "make-function",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "function-end", 
+            "contents": "function-end "
+        }, 
         {
-            "trigger": "make-literal",
-            "contents": "make-literal",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "function-lines", 
+            "contents": "function-lines --after"
+        }, 
         {
-            "trigger": "max-xrefs",
-            "contents": "max-xrefs",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "function-start", 
+            "contents": "function-start ${1:cmd} ${2:cmd} ..."
+        }, 
         {
-            "trigger": "min-xrefs",
-            "contents": "min-xrefs",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "goto-ref", 
+            "contents": "goto-ref --code --data"
+        }, 
         {
-            "trigger": "most-common",
-            "contents": "most-common",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "intersect", 
+            "contents": "intersect ${1:checkpoints} ${2:checkpoints} ..."
+        }, 
         {
-            "trigger": "offset",
-            "contents": "offset ${1:offset}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "keystone-find-opcodes", 
+            "contents": "keystone-find-opcodes --bele --or ${1:arch} ${2:mode} ${3:code}"
+        }, 
         {
-            "trigger": "print",
-            "contents": "print",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "keystone-verify-opcodes", 
+            "contents": "keystone-verify-opcodes --bele --until ${1:UNTIL} ${2:arch} ${3:mode} ${4:code}"
+        }, 
         {
-            "trigger": "run",
-            "contents": "run ${1:filename}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "locate", 
+            "contents": "locate ${1:name}"
+        }, 
         {
-            "trigger": "set-name",
-            "contents": "set-name ${1:name}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "make-code", 
+            "contents": "make-code "
+        }, 
         {
-            "trigger": "set-type",
-            "contents": "set-type ${1:type}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "make-comment", 
+            "contents": "make-comment ${1:comment}"
+        }, 
         {
-            "trigger": "single",
-            "contents": "single ${1:zero-base-index}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "make-function", 
+            "contents": "make-function "
+        }, 
         {
-            "trigger": "sort",
-            "contents": "sort",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "make-literal", 
+            "contents": "make-literal "
+        }, 
         {
-            "trigger": "trace",
-            "contents": "trace",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "make-unknown", 
+            "contents": "make-unknown "
+        }, 
         {
-            "trigger": "unique",
-            "contents": "unique",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "max-xrefs", 
+            "contents": "max-xrefs "
+        }, 
         {
-            "trigger": "verify-aligned",
-            "contents": "verify-aligned ${1:alignment}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "min-xrefs", 
+            "contents": "min-xrefs "
+        }, 
         {
-            "trigger": "verify-bytes",
-            "contents": "verify-bytes '${:hex}'",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "most-common", 
+            "contents": "most-common "
+        }, 
         {
-            "trigger": "verify-name",
-            "contents": "verify-name ${1:name}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "offset", 
+            "contents": "offset ${1:offset}"
+        }, 
         {
-            "trigger": "verify-operand",
-            "contents": "verify-operand ${1:mnemonic} --op0 ${2:operand0} --op1 ${3:operand1} --op2 ${4:operand2}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "operand", 
+            "contents": "operand ${1:op}"
+        }, 
         {
-            "trigger": "verify-ref",
-            "contents": "verify-ref --code --data ${1:reference_name}",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "or", 
+            "contents": "or ${1:cmd} ${2:cmd} ..."
+        }, 
         {
-            "trigger": "verify-str",
-            "contents": "\"verify-str '${1:str}'\",",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "print", 
+            "contents": "print ${1:phrase}"
+        }, 
         {
-            "trigger": "xref",
-            "contents": "xref",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "run", 
+            "contents": "run ${1:name}"
+        }, 
         {
-            "trigger": "xrefs-to",
-            "contents": "xrefs-to",
-            "kind": "snippet",
-        },
+            "kind": "snippet", 
+            "trigger": "set-const", 
+            "contents": "set-const ${1:name}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "set-enum", 
+            "contents": "set-enum ${1:enum_name} ${2:enum_key}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "set-name", 
+            "contents": "set-name ${1:name}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "set-struct-member", 
+            "contents": "set-struct-member ${1:struct_name} ${2:member_name} ${3:member_type}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "set-type", 
+            "contents": "set-type ${1:type_str}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "single", 
+            "contents": "single ${1:index}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "sort", 
+            "contents": "sort "
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "trace", 
+            "contents": "trace "
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "unique", 
+            "contents": "unique "
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "verify-aligned", 
+            "contents": "verify-aligned ${1:value}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "verify-bytes", 
+            "contents": "verify-bytes ${1:hex_str}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "verify-name", 
+            "contents": "verify-name ${1:name}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "verify-operand", 
+            "contents": "verify-operand --op0 ${1:OP0} --op1 ${2:OP1} --op2 ${3:OP2} ${4:name}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "verify-ref", 
+            "contents": "verify-ref --code --data --name ${1:NAME}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "verify-segment", 
+            "contents": "verify-segment ${1:name}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "verify-single", 
+            "contents": "verify-single "
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "verify-str", 
+            "contents": "verify-str --null-terminated ${1:hex_str}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "xref", 
+            "contents": "xref "
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "xrefs-to", 
+            "contents": "xrefs-to --function-start --or --and --name ${1:NAME}                --bytes ${2:BYTES}"
+        }
     ]
 }
