@@ -37,7 +37,7 @@ And for testing:
 python -m pip install -r requirements_testing.txt
 ```
 
-## Where yo start?
+## Where to start?
 
 Before using, you should understand the terminology for: 
 Projects, SIG files and Loaders.
