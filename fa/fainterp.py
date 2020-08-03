@@ -1,3 +1,5 @@
+import time
+
 from tkinter import ttk, Tk
 from configparser import ConfigParser
 
@@ -375,8 +377,11 @@ class FaInterp:
         :rtype: result list of last returns instruction
         """
         self.log('interpreting SIG for: {}'.format(signature_json['name']))
-        return self.find_from_instructions_list(
+        start = time.time()
+        retval = self.find_from_instructions_list(
             signature_json['instructions'], decremental)
+        self.log('interpretation took: {}s'.format(time.time() - start))
+        return retval
 
     def find_from_sig_path(self, signature_path, decremental=False):
         """
