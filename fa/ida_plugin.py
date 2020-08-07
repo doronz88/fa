@@ -333,6 +333,9 @@ class IdaLoader(fainterp.FaInterp):
                     if ti.get_type_name() == 'FA_CONSTS':
                         # convert into macro definitions
                         consts_ordinal = ordinal
+                    elif ti.get_type_name() in ('__va_list_tag',
+                                                'va_list'):
+                        continue
                     else:
                         ordinals.append(str(ordinal))
 
