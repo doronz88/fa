@@ -85,8 +85,12 @@
 
         arm-find-all 'mov r0, 1; bx lr'
 
-        beq test_branch1 'verify-operand mov --op0 0'
+        verify-operand mov --op0 0
+        store tmp
+
+        if tmp test_branch1
         set-name test_branch1_false
+
         label test_branch1
         set-name test_branch1_true
 	]

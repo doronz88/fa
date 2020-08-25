@@ -368,9 +368,9 @@ class FaInterp:
 
         labels, instructions = self._get_labeled_instructions(instructions)
 
-        beq = ArgumentParserNoExit('cmp')
-        beq.add_argument('label')
-        beq.add_argument('cond')
+        if_parser = ArgumentParserNoExit('if')
+        if_parser.add_argument('cond')
+        if_parser.add_argument('label')
 
         b_parser = ArgumentParserNoExit('branch')
         b_parser.add_argument('label')
@@ -380,16 +380,20 @@ class FaInterp:
             line = instructions[pc]
             print(line)
 
+            for k, v in self.get_alias().items():
+                # handle aliases
+                if line.startswith(k):
+                    line = line.replace(k, v)
+
             if line == 'stop-if-empty':
                 if len(addresses) == 0:
                     return addresses
                 else:
                     pc += 1
                     continue
-            elif line.startswith('beq '):
-                args = beq.parse_args(shlex.split(line)[1:])
-                if 0 != len(self.find_from_instructions_list(
-                        [args.cond], addresses=addresses)):
+            elif line.startswith('if '):
+                args = if_parser.parse_args(shlex.split(line)[1:])
+                if eval(args.cond, self.variables):
                     pc = labels[args.label]
                 else:
                     pc += 1
@@ -400,11 +404,6 @@ class FaInterp:
                 continue
 
             # normal commands
-
-            for k, v in self.get_alias().items():
-                # handle aliases
-                if line.startswith(k):
-                    line = line.replace(k, v)
 
             new_addresses = []
             try:

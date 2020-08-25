@@ -150,22 +150,31 @@
         add 1
         add 2
 
-        beq is_single1 verify-single
+        verify-single
+        store is_single1
+        if is_single1 is_single_label1
+        add 1
         set-name test_is_single_false1
         b end1
-        label is_single1
+        label is_single_label1
         set-name test_is_single_true1
+
         label end1
 
         clear
 
         add 1
 
-        beq is_single2 verify-single
+        verify-single
+        store is_single2
+
+        if is_single2 is_single_label2
         set-name test_is_single_false2
         b end2
-        label is_single2
+
+        label is_single_label2
         set-name test_is_single_true2
+
         label end2
 
 	]
