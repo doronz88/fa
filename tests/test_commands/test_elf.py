@@ -37,3 +37,10 @@ def test_elf_symbols(sample_elf):
     assert 'test_ond_81' not in symbols
     assert symbols['test_intersect_ab'] == 2
     assert 'test_intersect_abc' not in symbols
+
+    # test for branches
+    assert 'test_is_single_false1' in symbols
+    assert 'test_is_single_true1' not in symbols
+
+    assert 'test_is_single_false2' not in symbols
+    assert 'test_is_single_true2' in symbols

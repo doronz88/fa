@@ -11,6 +11,8 @@ import os
 
 import hjson
 
+from fa.utils import ArgumentParserNoExit
+
 CONFIG_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')
 DEFAULT_SIGNATURES_ROOT = os.path.join(
@@ -311,6 +313,35 @@ class FaInterp:
         with open(filename, 'w') as f:
             hjson.dump(signature, f, indent=4)
 
+    @staticmethod
+    def _get_labeled_instructions(instructions):
+        labels = {}
+        processed_instructions = []
+
+        label_parser = ArgumentParserNoExit('label')
+        label_parser.add_argument('name')
+
+        pc = 0
+        for line in instructions:
+            line = line.strip()
+
+            if len(line) == 0:
+                continue
+
+            if line.startswith('#'):
+                # treat as comment
+                continue
+
+            if line.startswith('label '):
+                args = label_parser.parse_args(shlex.split(line)[1:])
+                labels[args.name] = pc
+                continue
+
+            processed_instructions.append(line)
+            pc += 1
+
+        return labels, processed_instructions
+
     def find_from_instructions_list(self, instructions,
                                     clear_variables=False,
                                     decremental=False, addresses=None):
@@ -330,21 +361,38 @@ class FaInterp:
         if clear_variables:
             self.variables = {}
 
-        for line in instructions:
-            line = line.strip()
+        labels, instructions = self._get_labeled_instructions(instructions)
 
-            if len(line) == 0:
-                continue
+        beq = ArgumentParserNoExit('cmp')
+        beq.add_argument('label')
+        beq.add_argument('cond')
 
-            if line.startswith('#'):
-                # treat as comment
-                continue
+        b_parser = ArgumentParserNoExit('branch')
+        b_parser.add_argument('label')
+
+        pc = 0
+        while pc < len(instructions):
+            line = instructions[pc]
+            print(line)
 
             if line == 'stop-if-empty':
                 if len(addresses) == 0:
                     return addresses
                 else:
+                    pc += 1
                     continue
+            elif line.startswith('beq '):
+                args = beq.parse_args(shlex.split(line)[1:])
+                if 0 != len(self.find_from_instructions_list(
+                        [args.cond], addresses=addresses)):
+                    pc = labels[args.label]
+                else:
+                    pc += 1
+                continue
+            elif line.startswith('b '):
+                args = b_parser.parse_args(shlex.split(line)[1:])
+                pc = labels[args.label]
+                continue
 
             # normal commands
 
@@ -365,6 +413,7 @@ class FaInterp:
 
             addresses = new_addresses
             self.history.append(addresses)
+            pc += 1
 
         return addresses
 

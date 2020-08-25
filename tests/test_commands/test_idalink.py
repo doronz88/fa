@@ -97,6 +97,13 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['test_intersect_ab'] == 2
         assert 'test_intersect_abc' not in symbols
 
+        # test for branches
+        assert 'test_is_single_false1' in symbols
+        assert 'test_is_single_true1' not in symbols
+
+        assert 'test_is_single_false2' not in symbols
+        assert 'test_is_single_true2' in symbols
+
         # from test-ida-context
         assert symbols['test_find_bytes_ida'] == 0x1240
         assert symbols['test_xref'] == 0x125c
@@ -112,3 +119,5 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['test_find_immediate'] == 0x1240
         assert symbols['test_operand'] == 1
         assert symbols['test_argument'] == 0x00001250
+        assert 'test_branch1_false' not in symbols
+        assert 'test_branch1_true' in symbols

@@ -323,6 +323,39 @@ To view the list of available commands, [view the list below](#available-command
 }
 ```
 
+#### Conditional branches
+
+```hjson
+{
+    name: set_opcode_const
+    instructions: [
+        # goto printf function
+        locate printf
+
+        # goto 'case_opcode_bl' if current opcode is bl
+        beq case_opcode_bl 'verify-operand bl' 
+
+        # mark as 'case_opcode_bl' label
+        label case_opcode_bl
+
+        # set bl const
+        set-const is_bl
+
+        # finish script by jumping to end
+        b end
+
+        # mark as 'case_opcode_ldr' label
+        label case_opcode_ldr
+
+        # set is_ldr const
+        set-const is_ldr
+
+        # mark script end
+        label end
+    ]
+}
+```
+
 #### Python script to find a list of symbols
 
 ```python
