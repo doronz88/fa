@@ -376,7 +376,7 @@ optional arguments:
 ```
 ## function-lines
 ```
-usage: function-lines [-h] [--after]
+usage: function-lines [-h] [--after | --before]
 
 get all function's lines
 
@@ -395,6 +395,7 @@ EXAMPLE:
 optional arguments:
   -h, --help  show this help message and exit
   --after     include only function lines which occur after currentresultset
+  --before    include only function lines which occur before current resultset
 ```
 ## function-start
 ```

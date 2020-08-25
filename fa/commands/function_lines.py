@@ -26,22 +26,30 @@ def get_parser():
     p = utils.ArgumentParserNoExit('function-lines',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('--after', action='store_true',
+    g = p.add_mutually_exclusive_group()
+    g.add_argument('--after', action='store_true',
                    help='include only function lines which occur after current'
                         'resultset')
+    g.add_argument('--before', action='store_true',
+                   help='include only function lines which occur before '
+                        'current resultset')
     return p
 
 
 @context.ida_context
-def function_lines(addresses, after=False):
+def function_lines(addresses, after=False, before=False):
     for address in addresses:
         for item in idautils.FuncItems(address):
-            if not after:
-                yield item
-            else:
+            if after:
                 if item > address:
                     yield item
+            elif before:
+                if item < address:
+                    yield item
+            else:
+                yield item
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(function_lines(addresses, args.after))
+    return list(function_lines(addresses, after=args.after,
+                               before=args.before))

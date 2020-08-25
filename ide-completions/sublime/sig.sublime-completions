@@ -84,7 +84,7 @@
         {
             "kind": "snippet", 
             "trigger": "function-lines", 
-            "contents": "function-lines --after"
+            "contents": "function-lines --after | --before"
         }, 
         {
             "kind": "snippet", 
