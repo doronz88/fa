@@ -174,14 +174,12 @@ class IdaLoader(fainterp.FaInterp):
         :return: None
         """
         self.verify_project()
-        with open(TEMP_SIG_FILENAME) as f:
-            sig = hjson.load(f)
 
         if ida_kernwin.ask_yn(1, 'Are you sure you want '
                                  'to save this signature?') != 1:
             return
 
-        self.save_signature(sig)
+        self.save_signature(TEMP_SIG_FILENAME)
 
     def find(self, symbol_name, decremental=False):
         """

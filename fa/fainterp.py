@@ -292,26 +292,31 @@ class FaInterp:
 
         return retval
 
-    def save_signature(self, signature):
+    def save_signature(self, filename):
         """
         Save given signature object (by dictionary) into active project
         as a new SIG file. If symbol name already exists, then create another
         file (never overwrites).
-        :param signature: Dictionary of signature object
+        :param filename: Dictionary of signature object
         :return: None
         """
+        with open(filename) as f:
+            sig = hjson.load(f)
+            f.seek(0)
+            sig_text = f.read()
+
         filename = os.path.join(
             self._signatures_root,
             self._project,
-            signature['name'] + '.sig')
+            sig['name'] + '.sig')
         i = 1
         while os.path.exists(filename):
             filename = os.path.join(self._signatures_root, self._project,
-                                    signature['name'] + '.{}.sig'.format(i))
+                                    sig['name'] + '.{}.sig'.format(i))
             i += 1
 
         with open(filename, 'w') as f:
-            hjson.dump(signature, f, indent=4)
+            f.write(sig_text)
 
     @staticmethod
     def _get_labeled_instructions(instructions):
