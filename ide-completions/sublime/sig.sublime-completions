@@ -38,16 +38,6 @@
         }, 
         {
             "kind": "snippet", 
-            "trigger": "back-to-checkpoint", 
-            "contents": "back-to-checkpoint ${1:name}"
-        }, 
-        {
-            "kind": "snippet", 
-            "trigger": "checkpoint", 
-            "contents": "checkpoint ${1:name}"
-        }, 
-        {
-            "kind": "snippet", 
             "trigger": "clear", 
             "contents": "clear "
         }, 
@@ -99,7 +89,7 @@
         {
             "kind": "snippet", 
             "trigger": "intersect", 
-            "contents": "intersect ${1:checkpoints} ${2:checkpoints} ..."
+            "contents": "intersect ${1:variables} ${2:variables} ..."
         }, 
         {
             "kind": "snippet", 
@@ -110,6 +100,11 @@
             "kind": "snippet", 
             "trigger": "keystone-verify-opcodes", 
             "contents": "keystone-verify-opcodes --bele --until ${1:UNTIL} ${2:arch} ${3:mode} ${4:code}"
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "load", 
+            "contents": "load ${1:name}"
         }, 
         {
             "kind": "snippet", 
@@ -215,6 +210,11 @@
             "kind": "snippet", 
             "trigger": "sort", 
             "contents": "sort "
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "store", 
+            "contents": "store ${1:name}"
         }, 
         {
             "kind": "snippet", 

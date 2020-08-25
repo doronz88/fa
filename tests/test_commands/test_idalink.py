@@ -76,7 +76,7 @@ def test_ida_symbols(ida, sample_elf):
         assert symbols['test_pos_offset'] == 81
         assert symbols['test_neg_offset'] == 80
         assert symbols['test_add_offset_range'] == 100
-        assert symbols['test_back_to_checkpoint'] == 80
+        assert symbols['test_load'] == 80
         assert symbols['test_align'] == 84
         assert symbols['test_most_common'] == 2
         assert symbols['test_sort'] == 3

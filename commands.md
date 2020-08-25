@@ -8,8 +8,6 @@ Below is the list of available commands:
 - [append](#append)
 - [argument](#argument)
 - [back](#back)
-- [back-to-checkpoint](#back-to-checkpoint)
-- [checkpoint](#checkpoint)
 - [clear](#clear)
 - [find](#find)
 - [find-bytes](#find-bytes)
@@ -23,6 +21,7 @@ Below is the list of available commands:
 - [intersect](#intersect)
 - [keystone-find-opcodes](#keystone-find-opcodes)
 - [keystone-verify-opcodes](#keystone-verify-opcodes)
+- [load](#load)
 - [locate](#locate)
 - [make-code](#make-code)
 - [make-comment](#make-comment)
@@ -44,6 +43,7 @@ Below is the list of available commands:
 - [set-type](#set-type)
 - [single](#single)
 - [sort](#sort)
+- [store](#store)
 - [trace](#trace)
 - [unique](#unique)
 - [verify-aligned](#verify-aligned)
@@ -189,51 +189,6 @@ EXAMPLE:
 
 positional arguments:
   amount      amount of command results to go back by
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## back-to-checkpoint
-```
-usage: back-to-checkpoint [-h] name
-
-go back to previous result-set saved by 'checkpoint' command.
-
-EXAMPLE:
-    results = [0, 4, 8]
-    checkpoint foo
-
-    find-bytes --or 12345678
-    results = [0, 4, 8, 10, 20]
-
-    -> back-to-checkpoint foo
-    results = [0, 4, 8]
-
-positional arguments:
-  name        name of checkpoint in history to go back to
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## checkpoint
-```
-usage: checkpoint [-h] name
-
-save current result-set as a checkpoint.
-You can later restore the result-set using 'back-to-checkpoint'
-
-EXAMPLE:
-    results = [0, 4, 8]
-    -> checkpoint foo
-
-    find-bytes --or 12345678
-    results = [0, 4, 8, 10, 20]
-
-    back-to-checkpoint foo
-    results = [0, 4, 8]
-
-positional arguments:
-  name        name of checkpoint to use
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -438,25 +393,25 @@ optional arguments:
 ```
 ## intersect
 ```
-usage: intersect [-h] checkpoints [checkpoints ...]
+usage: intersect [-h] variables [variables ...]
 
-intersect two or more checkpoints
+intersect two or more variables
 
 EXAMPLE:
     results = [0, 4, 8]
-    checkpoint a
+    store a
     ...
     results = [0, 12, 20]
-    checkpoint b
+    store b
 
     -> intersect a b
     results = [0]
 
 positional arguments:
-  checkpoints  checkpoint names
+  variables   variable names
 
 optional arguments:
-  -h, --help   show this help message and exit
+  -h, --help  show this help message and exit
 ```
 ## keystone-find-opcodes
 ```
@@ -506,6 +461,28 @@ optional arguments:
   -h, --help     show this help message and exit
   --bele         figure out the endianity from IDA instead of explicit mode
   --until UNTIL  keep going onwards opcode-opcode until verified
+```
+## load
+```
+usage: load [-h] name
+
+go back to previous result-set saved by 'store' command.
+
+EXAMPLE:
+    results = [0, 4, 8]
+    store foo
+
+    find-bytes 12345678
+    results = [0, 4, 8, 10, 20]
+
+    -> load foo
+    results = [0, 4, 8]
+
+positional arguments:
+  name        name of variable in history to go back to
+
+optional arguments:
+  -h, --help  show this help message and exit
 ```
 ## locate
 ```
@@ -795,6 +772,29 @@ EXAMPLE:
     results = [4, 12, 0, 8]
     -> sort
     result = [0, 4, 8 ,12]
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## store
+```
+usage: store [-h] name
+
+save current result-set in a variable.
+You can later load the result-set using 'load'
+
+EXAMPLE:
+    results = [0, 4, 8]
+    -> store foo
+
+    find-bytes --or 12345678
+    results = [0, 4, 8, 10, 20]
+
+    load foo
+    results = [0, 4, 8]
+
+positional arguments:
+  name        name of variable to use
 
 optional arguments:
   -h, --help  show this help message and exit

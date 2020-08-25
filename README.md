@@ -212,7 +212,7 @@ To view the list of available commands, [view the list below](#available-command
             function-lines
 
             # save this result
-            checkpoint printf-lines
+            store printf-lines
             
             # look for: li r7, ???
             verify-operand li --op0 7
@@ -223,8 +223,8 @@ To view the list of available commands, [view the list below](#available-command
             # define the constant
             set-const IMPORTANT_OFFSET
 
-            # back to previous results
-            back-to-checkpoint printf-lines
+            # load previous results
+            load printf-lines
             
             # look for: li r7, ???
             verify-operand li --op0 8
@@ -301,8 +301,8 @@ To view the list of available commands, [view the list below](#available-command
             # sort results
             sort
 
-            # mark resultset checkpoint
-            checkpoint BLs
+            # store resultset in 'BLs'
+            store BLs
 
             # set first bl to malloc function
             single 0
@@ -312,7 +312,7 @@ To view the list of available commands, [view the list below](#available-command
 
             # go back to the results from 4 commands ago 
             # (the sort results)
-            back-to-checkpoint BLs
+            load BLs
 
             # rename next symbol :)
             single 1

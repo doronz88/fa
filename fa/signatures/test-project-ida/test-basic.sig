@@ -3,7 +3,7 @@
 	"instructions": [
 	    add 80
 	    set-name test_add
-	    checkpoint 80
+	    store 80
 
 	    offset 1
 	    set-name test_pos_offset
@@ -16,8 +16,8 @@
 	    set-name test_add_offset_range
 
 	    clear
-	    back-to-checkpoint 80
-	    set-name test_back_to_checkpoint
+	    load 80
+	    set-name test_load
 
 	    offset 1
 	    align 4
@@ -125,7 +125,7 @@
         add 2
         add 3
 
-        checkpoint a
+        store a
 
         clear
 
@@ -133,11 +133,11 @@
         add 8
         add 12
 
-        checkpoint b
+        store b
 
         clear
 
-        checkpoint c
+        store c
 
         intersect a b
         set-name test_intersect_ab

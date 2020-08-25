@@ -39,7 +39,7 @@ class FaInterp:
         self._symbols = {}
         self._consts = {}
         self.history = []
-        self.checkpoints = {}
+        self.variables = {}
         self.endianity = '<'
         self._config_path = config_path
 
@@ -312,7 +312,7 @@ class FaInterp:
             hjson.dump(signature, f, indent=4)
 
     def find_from_instructions_list(self, instructions,
-                                    clear_checkpoints=False,
+                                    clear_variables=False,
                                     decremental=False, addresses=None):
         """
         Run the given instruction list and output the result
@@ -327,8 +327,8 @@ class FaInterp:
 
         self.history = []
 
-        if clear_checkpoints:
-            self.checkpoints = {}
+        if clear_variables:
+            self.variables = {}
 
         for line in instructions:
             line = line.strip()
