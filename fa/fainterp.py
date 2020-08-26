@@ -4,7 +4,7 @@ from tkinter import ttk, Tk
 from configparser import ConfigParser
 
 from abc import ABCMeta, abstractmethod
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 import shlex
 import sys
 import os
@@ -19,6 +19,13 @@ DEFAULT_SIGNATURES_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'commands')
+
+
+class InterpreterState:
+    def __init__(self):
+        self.pc = 0
+        self.variables = {}
+        self.labels = {}
 
 
 class FaInterp:
@@ -41,14 +48,49 @@ class FaInterp:
         self._symbols = {}
         self._consts = {}
         self.history = []
-        self.variables = {}
         self.endianity = '<'
         self._config_path = config_path
+        self.stack = []
 
         if (config_path is not None) and (os.path.exists(config_path)):
             self._signatures_root = os.path.expanduser(
                 self.config_get('global', 'signatures_root'))
             self._project = self.config_get('global', 'project', None)
+
+    def _push_stack_frame(self):
+        self.stack.append(InterpreterState())
+
+    def _pop_stack_frame(self):
+        self.stack.pop()
+
+    def set_labels(self, labels):
+        self.stack[-1].labels = labels
+
+    def get_pc(self):
+        return self.stack[-1].pc
+
+    def set_pc(self, pc):
+        if isinstance(pc, int):
+            self.stack[-1].pc = pc
+        elif isinstance(pc, str):
+            self.stack[-1].pc = self.stack[-1].labels[pc]
+        else:
+            raise KeyError('invalid pc: {}'.format(pc))
+
+    def dec_pc(self):
+        self.stack[-1].pc -= 1
+
+    def inc_pc(self):
+        self.stack[-1].pc += 1
+
+    def set_variable(self, name, value):
+        self.stack[-1].variables[name] = value
+
+    def get_variable(self, name):
+        return self.stack[-1].variables[name]
+
+    def get_all_variables(self):
+        return self.stack[-1].variables
 
     @abstractmethod
     def set_input(self, input_):
@@ -318,13 +360,14 @@ class FaInterp:
         with open(filename, 'w') as f:
             f.write(sig_text)
 
-    @staticmethod
-    def _get_labeled_instructions(instructions):
+    def _get_labeled_instructions(self, instructions):
         labels = {}
         processed_instructions = []
 
         label_parser = ArgumentParserNoExit('label')
         label_parser.add_argument('name')
+
+        alias_items = self.get_alias().items()
 
         pc = 0
         for line in instructions:
@@ -342,19 +385,20 @@ class FaInterp:
                 labels[args.name] = pc
                 continue
 
+            for k, v in alias_items:
+                # handle aliases
+                if line.startswith(k):
+                    line = line.replace(k, v)
+
             processed_instructions.append(line)
             pc += 1
 
         return labels, processed_instructions
 
-    def find_from_instructions_list(self, instructions,
-                                    clear_variables=False,
-                                    decremental=False, addresses=None):
+    def find_from_instructions_list(self, instructions, addresses=None):
         """
         Run the given instruction list and output the result
         :param instructions: instruction list
-        :param decremental: should stop and return the output *before* the last
-                            command that returned an empty list of results
         :param addresses: input address list (if any)
         :return: output address list
         """
@@ -363,47 +407,16 @@ class FaInterp:
 
         self.history = []
 
-        if clear_variables:
-            self.variables = {}
+        self._push_stack_frame()
 
         labels, instructions = self._get_labeled_instructions(instructions)
+        
+        self.set_labels(labels)
 
-        if_parser = ArgumentParserNoExit('if')
-        if_parser.add_argument('cond')
-        if_parser.add_argument('label')
+        n = len(instructions)
 
-        b_parser = ArgumentParserNoExit('branch')
-        b_parser.add_argument('label')
-
-        pc = 0
-        while pc < len(instructions):
-            line = instructions[pc]
-            print(line)
-
-            for k, v in self.get_alias().items():
-                # handle aliases
-                if line.startswith(k):
-                    line = line.replace(k, v)
-
-            if line == 'stop-if-empty':
-                if len(addresses) == 0:
-                    return addresses
-                else:
-                    pc += 1
-                    continue
-            elif line.startswith('if '):
-                args = if_parser.parse_args(shlex.split(line)[1:])
-                if eval(args.cond, self.variables):
-                    pc = labels[args.label]
-                else:
-                    pc += 1
-                continue
-            elif line.startswith('b '):
-                args = b_parser.parse_args(shlex.split(line)[1:])
-                pc = labels[args.label]
-                continue
-
-            # normal commands
+        while self.get_pc() < n:
+            line = instructions[self.get_pc()]
 
             new_addresses = []
             try:
@@ -412,13 +425,11 @@ class FaInterp:
                 FaInterp.log('failed to run: {}. error: {}'
                              .format(line, str(m)))
 
-            if decremental and len(new_addresses) == 0 and len(addresses) > 0:
-                return addresses
-
             addresses = new_addresses
             self.history.append(addresses)
-            pc += 1
+            self.inc_pc()
 
+        self._pop_stack_frame()
         return addresses
 
     def find_from_sig_json(self, signature_json, decremental=False):
@@ -432,7 +443,7 @@ class FaInterp:
         self.log('interpreting SIG for: {}'.format(signature_json['name']))
         start = time.time()
         retval = self.find_from_instructions_list(
-            signature_json['instructions'], decremental)
+            signature_json['instructions'])
         self.log('interpretation took: {}s'.format(time.time() - start))
         return retval
 

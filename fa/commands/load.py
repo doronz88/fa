@@ -25,4 +25,4 @@ def get_parser():
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return interpreter.variables[args.name]
+    return interpreter.get_variable(args.name)

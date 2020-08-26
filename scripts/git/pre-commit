@@ -22,12 +22,10 @@ SUBLIME_COMP = os.path.join(
 
 def main():
     command_usage = OrderedDict()
-    command_usage['stop-if-empty'] = 'stop-if-empty'
+    command_usage['label'] = 'label'
 
     command_help = OrderedDict()
-    command_help['stop-if-empty'] = 'builtin interpreter command. \n' \
-                           'stops parsing current SIG if current ' \
-                           'resultset is empty\n'
+    command_help['label'] = 'builtin interpreter command. mark a label\n'
 
     commands = os.listdir(COMMANDS_ROOT)
     commands.sort()

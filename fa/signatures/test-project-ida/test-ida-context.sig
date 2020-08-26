@@ -88,7 +88,7 @@
         verify-operand mov --op0 0
         store tmp
 
-        if tmp test_branch1
+        python-if tmp test_branch1
         set-name test_branch1_false
 
         label test_branch1

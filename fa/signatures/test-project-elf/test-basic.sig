@@ -152,7 +152,7 @@
 
         verify-single
         store is_single1
-        if is_single1 is_single_label1
+        python-if is_single1 is_single_label1
         add 1
         set-name test_is_single_false1
         b end1
@@ -168,7 +168,7 @@
         verify-single
         store is_single2
 
-        if is_single2 is_single_label2
+        python-if is_single2 is_single_label2
         set-name test_is_single_false2
         b end2
 

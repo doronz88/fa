@@ -25,9 +25,9 @@ def get_parser():
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
     first_var = args.variables[0]
-    results = set(interpreter.variables[first_var])
+    results = set(interpreter.get_variable(first_var))
 
     for c in args.variables[1:]:
-        results.intersection_update(interpreter.variables[c])
+        results.intersection_update(interpreter.get_variable(c))
 
     return list(results)

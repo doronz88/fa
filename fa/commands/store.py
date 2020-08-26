@@ -25,5 +25,5 @@ def get_parser():
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    interpreter.variables[args.name] = addresses
+    interpreter.set_variable(args.name, addresses)
     return addresses

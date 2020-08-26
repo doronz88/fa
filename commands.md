@@ -1,12 +1,13 @@
 # FA Command List
 Below is the list of available commands:
-- [stop-if-empty](#stop-if-empty)
+- [label](#label)
 - [add](#add)
 - [add-offset-range](#add-offset-range)
 - [align](#align)
 - [and](#and)
 - [append](#append)
 - [argument](#argument)
+- [b](#b)
 - [back](#back)
 - [clear](#clear)
 - [find](#find)
@@ -35,6 +36,7 @@ Below is the list of available commands:
 - [operand](#operand)
 - [or](#or)
 - [print](#print)
+- [python-if](#python-if)
 - [run](#run)
 - [set-const](#set-const)
 - [set-enum](#set-enum)
@@ -43,6 +45,7 @@ Below is the list of available commands:
 - [set-type](#set-type)
 - [single](#single)
 - [sort](#sort)
+- [stop-if-empty](#stop-if-empty)
 - [store](#store)
 - [trace](#trace)
 - [unique](#unique)
@@ -56,10 +59,9 @@ Below is the list of available commands:
 - [verify-str](#verify-str)
 - [xref](#xref)
 - [xrefs-to](#xrefs-to)
-## stop-if-empty
+## label
 ```
-builtin interpreter command. 
-stops parsing current SIG if current resultset is empty
+builtin interpreter command. mark a label
 ```
 ## add
 ```
@@ -167,6 +169,29 @@ EXAMPLE:
 
 positional arguments:
   arg         argument number
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## b
+```
+usage: b [-h] label
+
+branch unconditionally to label
+
+EXAMPLE:
+    results = []
+
+    add 1
+    -> b skip
+    add 2
+    label skip
+    add 3
+    
+    results = [1, 3]
+
+positional arguments:
+  label       label to jump to
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -670,6 +695,35 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 ```
+## python-if
+```
+usage: python-if [-h] cond label
+
+perform an 'if' statement to create conditional branches
+
+EXAMPLE:
+    results = [0, 4, 8]
+    
+    verify-single
+    store a
+    
+    # jump to a_is_single_label since a == []
+    -> python-if a a_is_single_label
+    set-name a_isnt_single
+    b end
+    
+    label a_is_single_label
+    set-name a_is_single
+
+    label end
+
+positional arguments:
+  cond        condition to evaluate (being eval'ed)
+  label       label to jump to if condition is true
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
 ## run
 ```
 usage: run [-h] name
@@ -772,6 +826,23 @@ EXAMPLE:
     results = [4, 12, 0, 8]
     -> sort
     result = [0, 4, 8 ,12]
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## stop-if-empty
+```
+usage: stop-if-empty [-h]
+
+exit if current resultset is empty
+
+EXAMPLE:
+    results = []
+
+    -> stop-if-empty
+    add 1
+    
+    results = []
 
 optional arguments:
   -h, --help  show this help message and exit

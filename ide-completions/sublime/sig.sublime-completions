@@ -33,6 +33,11 @@
         }, 
         {
             "kind": "snippet", 
+            "trigger": "b", 
+            "contents": "b ${1:label}"
+        }, 
+        {
+            "kind": "snippet", 
             "trigger": "back", 
             "contents": "back ${1:amount}"
         }, 
@@ -173,6 +178,11 @@
         }, 
         {
             "kind": "snippet", 
+            "trigger": "python-if", 
+            "contents": "python-if ${1:cond} ${2:label}"
+        }, 
+        {
+            "kind": "snippet", 
             "trigger": "run", 
             "contents": "run ${1:name}"
         }, 
@@ -210,6 +220,11 @@
             "kind": "snippet", 
             "trigger": "sort", 
             "contents": "sort "
+        }, 
+        {
+            "kind": "snippet", 
+            "trigger": "stop-if-empty", 
+            "contents": "stop-if-empty "
         }, 
         {
             "kind": "snippet", 
