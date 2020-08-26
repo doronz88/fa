@@ -14,7 +14,7 @@ def get_parser():
     p = utils.ArgumentParserNoExit('align',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('value', type=int)
+    p.add_argument('value')
     return p
 
 
@@ -23,4 +23,4 @@ def align(addresses, value):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(align(addresses, args.value))
+    return list(align(addresses, eval(args.value)))

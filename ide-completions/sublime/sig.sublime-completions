@@ -18,16 +18,6 @@
         }, 
         {
             "kind": "snippet", 
-            "trigger": "and", 
-            "contents": "and ${1:cmd} ${2:cmd} ..."
-        }, 
-        {
-            "kind": "snippet", 
-            "trigger": "append", 
-            "contents": "append ${1:cmd} ${2:cmd} ..."
-        }, 
-        {
-            "kind": "snippet", 
             "trigger": "argument", 
             "contents": "argument ${1:arg}"
         }, 
@@ -165,11 +155,6 @@
             "kind": "snippet", 
             "trigger": "operand", 
             "contents": "operand ${1:op}"
-        }, 
-        {
-            "kind": "snippet", 
-            "trigger": "or", 
-            "contents": "or ${1:cmd} ${2:cmd} ..."
         }, 
         {
             "kind": "snippet", 

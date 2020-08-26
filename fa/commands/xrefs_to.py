@@ -23,7 +23,6 @@ def get_parser():
     return p
 
 
-@utils.deprecated
 @context.ida_context
 def run(segments, args, addresses, interpreter=None, **kwargs):
     if args.name:

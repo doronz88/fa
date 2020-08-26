@@ -24,7 +24,7 @@ def get_parser():
     p = utils.ArgumentParserNoExit('argument',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('arg', type=int, help='argument number')
+    p.add_argument('arg', help='argument number')
     return p
 
 
@@ -41,4 +41,4 @@ def argument(addresses, arg):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(argument(addresses, args.arg))
+    return list(argument(addresses, eval(args.arg)))

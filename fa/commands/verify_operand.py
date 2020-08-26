@@ -67,9 +67,9 @@ def verify_operand(addresses, mnem, op0=None, op1=None, op2=None):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    op0 = [int(i) for i in args.op0.split(',')] if args.op0 else None
-    op1 = [int(i) for i in args.op1.split(',')] if args.op1 else None
-    op2 = [int(i) for i in args.op2.split(',')] if args.op2 else None
+    op0 = [eval(i) for i in args.op0.split(',')] if args.op0 else None
+    op1 = [eval(i) for i in args.op1.split(',')] if args.op1 else None
+    op2 = [eval(i) for i in args.op2.split(',')] if args.op2 else None
     return list(verify_operand(addresses,
                                args.name,
                                op0=op0,

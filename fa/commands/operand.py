@@ -23,7 +23,7 @@ def get_parser():
     p = utils.ArgumentParserNoExit('operand',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('op', type=int, help='operand number')
+    p.add_argument('op', help='operand number')
     return p
 
 
@@ -34,4 +34,4 @@ def operand(addresses, op):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(operand(addresses, args.op))
+    return list(operand(addresses, eval(args.op)))

@@ -4,8 +4,6 @@ Below is the list of available commands:
 - [add](#add)
 - [add-offset-range](#add-offset-range)
 - [align](#align)
-- [and](#and)
-- [append](#append)
 - [argument](#argument)
 - [b](#b)
 - [back](#back)
@@ -34,7 +32,6 @@ Below is the list of available commands:
 - [most-common](#most-common)
 - [offset](#offset)
 - [operand](#operand)
-- [or](#or)
 - [print](#print)
 - [python-if](#python-if)
 - [run](#run)
@@ -112,41 +109,6 @@ EXAMPLE:
 
 positional arguments:
   value
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## and
-```
-usage: and [-h] cmd [cmd ...]
-
-[DEPRECATED]
-intersect with another command's resultset
-
-EXAMPLE:
-    results = [80]
-    -> and offset 0
-    results = [80]
-
-EXAMPLE #2:
-    results = [80]
-    -> and offset 1
-    results = []
-
-positional arguments:
-  cmd         command
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## append
-```
-usage: append [-h] cmd [cmd ...]
-
-append results from another command
-
-positional arguments:
-  cmd         command
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -656,29 +618,6 @@ EXAMPLE #1:
 
 positional arguments:
   op          operand number
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## or
-```
-usage: or [-h] cmd [cmd ...]
-
-[DEPRECATED]
-unite with another command's resultset
-
-EXAMPLE:
-    results = [80]
-    -> or offset 0
-    results = [80]
-
-EXAMPLE #2:
-    results = [80]
-    -> or offset 1
-    results = [80, 81]
-
-positional arguments:
-  cmd         command
 
 optional arguments:
   -h, --help  show this help message and exit

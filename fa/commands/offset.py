@@ -14,7 +14,7 @@ def get_parser():
     p = utils.ArgumentParserNoExit('offset',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('offset', type=int)
+    p.add_argument('offset')
     return p
 
 
@@ -24,4 +24,4 @@ def offset(addresses, advance_by):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return list(offset(addresses, args.offset))
+    return list(offset(addresses, eval(args.offset)))
