@@ -186,14 +186,11 @@ class IdaLoader(fainterp.FaInterp):
         Find symbol by name (as specified in SIG file)
         Show an IDA waitbox while doing so
         :param symbol_name: symbol name
-        :param decremental: Should stop before reaching a command with no
-                            results?
         :return: output address list
         """
         ida_kernwin.replace_wait_box('Searching symbol: \'{}\'...'
                                      .format(symbol_name))
-        return super(IdaLoader, self).find(symbol_name,
-                                           decremental=decremental)
+        return super(IdaLoader, self).find(symbol_name)
 
     def get_python_symbols(self, file_name=None):
         """
