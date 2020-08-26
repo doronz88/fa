@@ -119,11 +119,12 @@
         verify-single
         store is_single1
         python-if is_single1 is_single_label1
-        add 1
-        set-name test_is_single_false1
-        b end1
+            add 1
+            set-name test_is_single_false1
+            b end1
+
         label is_single_label1
-        set-name test_is_single_true1
+            set-name test_is_single_true1
 
         label end1
 

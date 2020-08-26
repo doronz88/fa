@@ -348,21 +348,21 @@ To view the list of available commands, [view the list below](#available-command
         # mark as 'case_opcode_bl' label
         label case_opcode_bl
 
-        # make: #define is_bl (1)
-        clear
-        add 1
-        set-const is_bl
-
-        # finish script by jumping to end
-        b end
+            # make: #define is_bl (1)
+            clear
+            add 1
+            set-const is_bl
+    
+            # finish script by jumping to end
+            b end
 
         # mark as 'not_bl' label
         label not_bl
 
-        # make: #define is_ldr (1)
-        clear
-        add 1
-        set-const is_ldr
+            # make: #define is_ldr (1)
+            clear
+            add 1
+            set-const is_ldr
 
         # mark script end
         label end

@@ -33,5 +33,6 @@ def get_parser():
 def run(segments, args, addresses, interpreter=None, **kwargs):
     if eval(args.cond, interpreter.get_all_variables()):
         interpreter.set_pc(args.label)
+        # pc is incremented by 1, after each instruction
         interpreter.dec_pc()
     return addresses
