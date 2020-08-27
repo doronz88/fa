@@ -99,6 +99,9 @@ def test_ida_symbols(ida, sample_elf):
         assert 'test_is_single_false2' not in symbols
         assert 'test_is_single_true2' in symbols
 
+        assert 'test_else3' not in symbols
+        assert 'test_if3' in symbols
+
         # from test-ida-context
         assert symbols['test_find_bytes_ida'] == 0x1240
         assert symbols['test_xref'] == 0x125c

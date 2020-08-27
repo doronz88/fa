@@ -16,6 +16,7 @@ Below is the list of available commands:
 - [function-lines](#function-lines)
 - [function-start](#function-start)
 - [goto-ref](#goto-ref)
+- [if](#if)
 - [intersect](#intersect)
 - [keystone-find-opcodes](#keystone-find-opcodes)
 - [keystone-verify-opcodes](#keystone-verify-opcodes)
@@ -355,6 +356,33 @@ optional arguments:
   --code      include code references
   --data      include data references
 ```
+## if
+```
+usage: if [-h] cond label
+
+perform an 'if' statement to create conditional branches
+using an FA command
+
+EXAMPLE:
+    results = [0, 4, 8]
+    
+    -> if 'verify-single' a_is_single_label
+
+    set-name a_isnt_single
+    b end
+    
+    label a_is_single_label
+    set-name a_is_single
+
+    label end
+
+positional arguments:
+  cond        condition as an FA command
+  label       label to jump to if condition is true
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
 ## intersect
 ```
 usage: intersect [-h] variables [variables ...]
@@ -616,6 +644,7 @@ optional arguments:
 usage: python-if [-h] cond label
 
 perform an 'if' statement to create conditional branches
+using an eval'ed expression
 
 EXAMPLE:
     results = [0, 4, 8]

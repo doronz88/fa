@@ -34,9 +34,11 @@ def test_elf_symbols(sample_elf):
     assert 'test_intersect_abc' not in symbols
 
     # test for branches
-    print(symbols)
     assert 'test_is_single_false1' in symbols
     assert 'test_is_single_true1' not in symbols
 
     assert 'test_is_single_false2' not in symbols
     assert 'test_is_single_true2' in symbols
+
+    assert 'test_else3' not in symbols
+    assert 'test_if3' in symbols

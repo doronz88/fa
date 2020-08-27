@@ -78,6 +78,11 @@
         }, 
         {
             "kind": "snippet", 
+            "trigger": "if", 
+            "contents": "if ${1:cond} ${2:label}"
+        }, 
+        {
+            "kind": "snippet", 
             "trigger": "intersect", 
             "contents": "intersect ${1:variables} ${2:variables} ..."
         }, 

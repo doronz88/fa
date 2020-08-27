@@ -144,5 +144,24 @@
 
         label end2
 
+        clear
+
+        add 1
+
+        if 'verify-single' is_single_label3
+
+        clear
+        add 1
+        set-name test_else3
+        b end3
+
+        label is_single_label3
+
+        clear
+        add 1
+        set-name test_if3
+
+        label end3
+
 	]
 }
