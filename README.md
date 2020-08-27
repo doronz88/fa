@@ -332,18 +332,16 @@ To view the list of available commands, [view the list below](#available-command
         # goto printf function
         locate printf
 
-        # save current resultset
-        store tmp
-
-        # is_bl = is current opcode a bl?
-        verify-operand bl
-        store is_bl
-
-        # load previous resultset
-        load tmp
-
         # goto 'case_opcode_bl' if current opcode is bl
-        if is_bl case_opcode_bl
+        if 'verify-operand bl' case_opcode_bl
+
+            # make: #define is_bl (0)
+            clear
+            add 0
+            set-const is_bl
+    
+            # finish script by jumping to end
+            b end
 
         # mark as 'case_opcode_bl' label
         label case_opcode_bl
@@ -352,17 +350,6 @@ To view the list of available commands, [view the list below](#available-command
             clear
             add 1
             set-const is_bl
-    
-            # finish script by jumping to end
-            b end
-
-        # mark as 'not_bl' label
-        label not_bl
-
-            # make: #define is_ldr (1)
-            clear
-            add 1
-            set-const is_ldr
 
         # mark script end
         label end
