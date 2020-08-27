@@ -6,7 +6,6 @@ Below is the list of available commands:
 - [align](#align)
 - [argument](#argument)
 - [b](#b)
-- [back](#back)
 - [clear](#clear)
 - [find](#find)
 - [find-bytes](#find-bytes)
@@ -154,28 +153,6 @@ EXAMPLE:
 
 positional arguments:
   label       label to jump to
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## back
-```
-usage: back [-h] amount
-
-go back to previous result-set
-
-EXAMPLE:
-    find-bytes --or 01 02 03 04
-    results = [0, 0x100, 0x200]
-
-    find-bytes --or 05 06 07 08
-    results = [0, 0x100, 0x200, 0x300, 0x400]
-
-    -> back -3
-    results = [0, 0x100, 0x200]
-
-positional arguments:
-  amount      amount of command results to go back by
 
 optional arguments:
   -h, --help  show this help message and exit

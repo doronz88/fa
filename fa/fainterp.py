@@ -405,8 +405,6 @@ class FaInterp:
         if addresses is None:
             addresses = []
 
-        self.history = []
-
         self._push_stack_frame()
 
         labels, instructions = self._get_labeled_instructions(instructions)
@@ -426,7 +424,6 @@ class FaInterp:
                              .format(line, str(m)))
 
             addresses = new_addresses
-            self.history.append(addresses)
             self.inc_pc()
 
         self._pop_stack_frame()

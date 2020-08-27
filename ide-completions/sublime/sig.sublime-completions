@@ -28,11 +28,6 @@
         }, 
         {
             "kind": "snippet", 
-            "trigger": "back", 
-            "contents": "back ${1:amount}"
-        }, 
-        {
-            "kind": "snippet", 
             "trigger": "clear", 
             "contents": "clear "
         }, 
