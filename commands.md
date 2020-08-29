@@ -1006,8 +1006,7 @@ optional arguments:
 ```
 ## xrefs-to
 ```
-usage: xrefs-to [-h] [--function-start] [--or] [--and] [--name NAME]
-                [--bytes BYTES]
+usage: xrefs-to [-h] [--function-start] [--or] [--and] [--name NAME] [--bytes BYTES]
 
 search for xrefs pointing at given parameter
 
