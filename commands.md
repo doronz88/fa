@@ -44,6 +44,7 @@ Below is the list of available commands:
 - [sort](#sort)
 - [stop-if-empty](#stop-if-empty)
 - [store](#store)
+- [symdiff](#symdiff)
 - [trace](#trace)
 - [unique](#unique)
 - [verify-aligned](#verify-aligned)
@@ -811,6 +812,28 @@ EXAMPLE:
 
 positional arguments:
   name        name of variable to use
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## symdiff
+```
+usage: symdiff [-h] variables [variables ...]
+
+symmetric difference between two or more variables
+
+EXAMPLE:
+    results = [0, 4, 8]
+    store a
+    ...
+    results = [0, 12, 20]
+    store b
+
+    -> symdiff a b
+    results = [4, 8, 12, 20]
+
+positional arguments:
+  variables   variable names
 
 optional arguments:
   -h, --help  show this help message and exit

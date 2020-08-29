@@ -113,6 +113,34 @@
 
         clear
 
+		add 2
+		
+		store a
+
+		add 4
+
+		store b
+		store c
+
+		clear
+
+		add 8
+
+		store d
+
+		clear
+
+		symdiff a b
+		set-name test_symdiff_ab
+
+		symdiff b c
+		set-name test_symdiff_bc
+
+		symdiff b c d
+		set-name test_symdiff_bcd
+
+		clear
+
         add 1
         add 2
 

@@ -32,6 +32,9 @@ def test_elf_symbols(sample_elf):
     assert symbols['test_find'] == 76
     assert symbols['test_intersect_ab'] == 2
     assert 'test_intersect_abc' not in symbols
+    assert symbols['test_symdiff_ab'] == 4
+    assert 'test_symdiff_bc' not in symbols
+    assert symbols['test_symdiff_bcd'] == 8
 
     # test for branches
     assert 'test_is_single_false1' in symbols
