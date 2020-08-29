@@ -4,7 +4,7 @@ from tkinter import ttk, Tk
 from configparser import ConfigParser
 
 from abc import ABCMeta, abstractmethod
-from collections import OrderedDict, namedtuple
+from collections import OrderedDict
 import shlex
 import sys
 import os
@@ -408,7 +408,7 @@ class FaInterp:
         self._push_stack_frame()
 
         labels, instructions = self._get_labeled_instructions(instructions)
-        
+
         self.set_labels(labels)
 
         n = len(instructions)

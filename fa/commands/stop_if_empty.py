@@ -8,7 +8,7 @@ EXAMPLE:
 
     -> stop-if-empty
     add 1
-    
+
     results = []
 '''
 

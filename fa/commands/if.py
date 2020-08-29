@@ -6,12 +6,12 @@ using an FA command
 
 EXAMPLE:
     results = [0, 4, 8]
-    
+
     -> if 'verify-single' a_is_single_label
 
     set-name a_isnt_single
     b end
-    
+
     label a_is_single_label
     set-name a_is_single
 

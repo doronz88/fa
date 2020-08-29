@@ -150,7 +150,7 @@ EXAMPLE:
     add 2
     label skip
     add 3
-    
+
     results = [1, 3]
 
 positional arguments:
@@ -366,12 +366,12 @@ using an FA command
 
 EXAMPLE:
     results = [0, 4, 8]
-    
+
     -> if 'verify-single' a_is_single_label
 
     set-name a_isnt_single
     b end
-    
+
     label a_is_single_label
     set-name a_is_single
 
@@ -649,15 +649,15 @@ using an eval'ed expression
 
 EXAMPLE:
     results = [0, 4, 8]
-    
+
     verify-single
     store a
-    
+
     # jump to a_is_single_label since a == []
     -> python-if a a_is_single_label
     set-name a_isnt_single
     b end
-    
+
     label a_is_single_label
     set-name a_is_single
 
@@ -787,7 +787,7 @@ EXAMPLE:
 
     -> stop-if-empty
     add 1
-    
+
     results = []
 
 optional arguments:

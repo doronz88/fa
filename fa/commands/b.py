@@ -11,7 +11,7 @@ EXAMPLE:
     add 2
     label skip
     add 3
-    
+
     results = [1, 3]
 '''
 
