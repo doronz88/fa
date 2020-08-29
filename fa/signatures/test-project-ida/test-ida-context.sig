@@ -9,12 +9,12 @@
 
         function-start
         set-name test_function_start
-        checkpoint func
+        store func
 
         function-end
         set-name test_function_end
 
-        back-to-checkpoint func
+        load func
         offset 10
         function-lines
         single 0
@@ -23,7 +23,7 @@
         function-lines
         verify-operand ldr --op0 0
         set-name test_verify_operand
-        checkpoint ref
+        store ref
 
         verify-ref --code --data
         set-name test_verify_ref_no_name
@@ -31,7 +31,7 @@
         goto-ref --data
         set-name test_verify_goto_ref
 
-        back-to-checkpoint ref
+        load ref
         verify-ref --name test_verify_goto_ref --code --data
         set-name test_verify_ref_name
 
@@ -82,5 +82,16 @@
         set-name test_argument
 
         clear
+
+        arm-find-all 'mov r0, 1; bx lr'
+
+        verify-operand mov --op0 0
+        store tmp
+
+        python-if tmp test_branch1
+        set-name test_branch1_false
+
+        label test_branch1
+        set-name test_branch1_true
 	]
 }

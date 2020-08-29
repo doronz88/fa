@@ -14,7 +14,7 @@ def get_parser():
     p = utils.ArgumentParserNoExit('single',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('index', type=int, default=0, help='result index')
+    p.add_argument('index', default='0', help='result index')
     return p
 
 
@@ -26,4 +26,4 @@ def single(addresses, index):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    return single(addresses, args.index)
+    return single(addresses, eval(args.index))

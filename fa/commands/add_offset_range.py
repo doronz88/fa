@@ -15,9 +15,9 @@ def get_parser():
     p = utils.ArgumentParserNoExit('add-offset-range',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
-    p.add_argument('start', type=int)
-    p.add_argument('end', type=int)
-    p.add_argument('step', type=int)
+    p.add_argument('start')
+    p.add_argument('end')
+    p.add_argument('step')
     return p
 
 
@@ -28,5 +28,6 @@ def add_offset_range(addresses, start, end, step):
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    gen = add_offset_range(addresses, args.start, args.end, args.step)
+    gen = add_offset_range(addresses, eval(args.start), eval(args.end),
+                           eval(args.step))
     return list(gen)

@@ -17,7 +17,7 @@ def test_elf_symbols(sample_elf):
     assert symbols['test_pos_offset'] == 81
     assert symbols['test_neg_offset'] == 80
     assert symbols['test_add_offset_range'] == 100
-    assert symbols['test_back_to_checkpoint'] == 80
+    assert symbols['test_load'] == 80
     assert symbols['test_align'] == 84
     assert symbols['test_most_common'] == 2
     assert symbols['test_sort'] == 3
@@ -27,13 +27,21 @@ def test_elf_symbols(sample_elf):
     assert symbols['test_alias'] == 0x123c
     assert symbols['test_keystone_find_opcodes'] == 0x123c
     assert symbols['test_keystone_verify_opcodes'] == 0x123c
-    assert symbols['test_append'] == 2
     assert symbols['test_find_bytes'] == 0x1240
     assert symbols['test_find_str'] == 0x1242
     assert symbols['test_find'] == 76
-    assert symbols['test_or_80'] == 80
-    assert symbols['test_or_81'] == 81
-    assert symbols['test_and_80'] == 80
-    assert 'test_ond_81' not in symbols
     assert symbols['test_intersect_ab'] == 2
     assert 'test_intersect_abc' not in symbols
+    assert symbols['test_symdiff_ab'] == 4
+    assert 'test_symdiff_bc' not in symbols
+    assert symbols['test_symdiff_bcd'] == 8
+
+    # test for branches
+    assert 'test_is_single_false1' in symbols
+    assert 'test_is_single_true1' not in symbols
+
+    assert 'test_is_single_false2' not in symbols
+    assert 'test_is_single_true2' in symbols
+
+    assert 'test_else3' not in symbols
+    assert 'test_if3' in symbols

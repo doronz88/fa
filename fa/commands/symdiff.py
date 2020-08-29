@@ -1,7 +1,7 @@
 from argparse import RawTextHelpFormatter
 from fa import utils
 
-DESCRIPTION = '''intersect two or more variables
+DESCRIPTION = '''symmetric difference between two or more variables
 
 EXAMPLE:
     results = [0, 4, 8]
@@ -10,13 +10,13 @@ EXAMPLE:
     results = [0, 12, 20]
     store b
 
-    -> intersect a b
-    results = [0]
+    -> symdiff a b
+    results = [4, 8, 12, 20]
 '''
 
 
 def get_parser():
-    p = utils.ArgumentParserNoExit('intersect',
+    p = utils.ArgumentParserNoExit('symdiff',
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
     p.add_argument('variables', nargs='+', help='variable names')
@@ -28,6 +28,6 @@ def run(segments, args, addresses, interpreter=None, **kwargs):
     results = set(interpreter.get_variable(first_var))
 
     for c in args.variables[1:]:
-        results.intersection_update(interpreter.get_variable(c))
+        results.symmetric_difference_update(interpreter.get_variable(c))
 
     return list(results)

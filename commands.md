@@ -1,15 +1,11 @@
 # FA Command List
 Below is the list of available commands:
-- [stop-if-empty](#stop-if-empty)
+- [label](#label)
 - [add](#add)
 - [add-offset-range](#add-offset-range)
 - [align](#align)
-- [and](#and)
-- [append](#append)
 - [argument](#argument)
-- [back](#back)
-- [back-to-checkpoint](#back-to-checkpoint)
-- [checkpoint](#checkpoint)
+- [b](#b)
 - [clear](#clear)
 - [find](#find)
 - [find-bytes](#find-bytes)
@@ -20,9 +16,11 @@ Below is the list of available commands:
 - [function-lines](#function-lines)
 - [function-start](#function-start)
 - [goto-ref](#goto-ref)
+- [if](#if)
 - [intersect](#intersect)
 - [keystone-find-opcodes](#keystone-find-opcodes)
 - [keystone-verify-opcodes](#keystone-verify-opcodes)
+- [load](#load)
 - [locate](#locate)
 - [make-code](#make-code)
 - [make-comment](#make-comment)
@@ -34,8 +32,8 @@ Below is the list of available commands:
 - [most-common](#most-common)
 - [offset](#offset)
 - [operand](#operand)
-- [or](#or)
 - [print](#print)
+- [python-if](#python-if)
 - [run](#run)
 - [set-const](#set-const)
 - [set-enum](#set-enum)
@@ -44,6 +42,9 @@ Below is the list of available commands:
 - [set-type](#set-type)
 - [single](#single)
 - [sort](#sort)
+- [stop-if-empty](#stop-if-empty)
+- [store](#store)
+- [symdiff](#symdiff)
 - [trace](#trace)
 - [unique](#unique)
 - [verify-aligned](#verify-aligned)
@@ -56,10 +57,9 @@ Below is the list of available commands:
 - [verify-str](#verify-str)
 - [xref](#xref)
 - [xrefs-to](#xrefs-to)
-## stop-if-empty
+## label
 ```
-builtin interpreter command. 
-stops parsing current SIG if current resultset is empty
+builtin interpreter command. mark a label
 ```
 ## add
 ```
@@ -114,41 +114,6 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 ```
-## and
-```
-usage: and [-h] cmd [cmd ...]
-
-[DEPRECATED]
-intersect with another command's resultset
-
-EXAMPLE:
-    results = [80]
-    -> and offset 0
-    results = [80]
-
-EXAMPLE #2:
-    results = [80]
-    -> and offset 1
-    results = []
-
-positional arguments:
-  cmd         command
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## append
-```
-usage: append [-h] cmd [cmd ...]
-
-append results from another command
-
-positional arguments:
-  cmd         command
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
 ## argument
 ```
 usage: argument [-h] arg
@@ -171,69 +136,25 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 ```
-## back
+## b
 ```
-usage: back [-h] amount
+usage: b [-h] label
 
-go back to previous result-set
+branch unconditionally to label
 
 EXAMPLE:
-    find-bytes --or 01 02 03 04
-    results = [0, 0x100, 0x200]
+    results = []
 
-    find-bytes --or 05 06 07 08
-    results = [0, 0x100, 0x200, 0x300, 0x400]
+    add 1
+    -> b skip
+    add 2
+    label skip
+    add 3
 
-    -> back -3
-    results = [0, 0x100, 0x200]
-
-positional arguments:
-  amount      amount of command results to go back by
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## back-to-checkpoint
-```
-usage: back-to-checkpoint [-h] name
-
-go back to previous result-set saved by 'checkpoint' command.
-
-EXAMPLE:
-    results = [0, 4, 8]
-    checkpoint foo
-
-    find-bytes --or 12345678
-    results = [0, 4, 8, 10, 20]
-
-    -> back-to-checkpoint foo
-    results = [0, 4, 8]
+    results = [1, 3]
 
 positional arguments:
-  name        name of checkpoint in history to go back to
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-## checkpoint
-```
-usage: checkpoint [-h] name
-
-save current result-set as a checkpoint.
-You can later restore the result-set using 'back-to-checkpoint'
-
-EXAMPLE:
-    results = [0, 4, 8]
-    -> checkpoint foo
-
-    find-bytes --or 12345678
-    results = [0, 4, 8, 10, 20]
-
-    back-to-checkpoint foo
-    results = [0, 4, 8]
-
-positional arguments:
-  name        name of checkpoint to use
+  label       label to jump to
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -376,7 +297,7 @@ optional arguments:
 ```
 ## function-lines
 ```
-usage: function-lines [-h] [--after]
+usage: function-lines [-h] [--after | --before]
 
 get all function's lines
 
@@ -395,6 +316,7 @@ EXAMPLE:
 optional arguments:
   -h, --help  show this help message and exit
   --after     include only function lines which occur after currentresultset
+  --before    include only function lines which occur before current resultset
 ```
 ## function-start
 ```
@@ -435,27 +357,54 @@ optional arguments:
   --code      include code references
   --data      include data references
 ```
-## intersect
+## if
 ```
-usage: intersect [-h] checkpoints [checkpoints ...]
+usage: if [-h] cond label
 
-intersect two or more checkpoints
+perform an 'if' statement to create conditional branches
+using an FA command
 
 EXAMPLE:
     results = [0, 4, 8]
-    checkpoint a
+
+    -> if 'verify-single' a_is_single_label
+
+    set-name a_isnt_single
+    b end
+
+    label a_is_single_label
+    set-name a_is_single
+
+    label end
+
+positional arguments:
+  cond        condition as an FA command
+  label       label to jump to if condition is true
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## intersect
+```
+usage: intersect [-h] variables [variables ...]
+
+intersect two or more variables
+
+EXAMPLE:
+    results = [0, 4, 8]
+    store a
     ...
     results = [0, 12, 20]
-    checkpoint b
+    store b
 
     -> intersect a b
     results = [0]
 
 positional arguments:
-  checkpoints  checkpoint names
+  variables   variable names
 
 optional arguments:
-  -h, --help   show this help message and exit
+  -h, --help  show this help message and exit
 ```
 ## keystone-find-opcodes
 ```
@@ -505,6 +454,28 @@ optional arguments:
   -h, --help     show this help message and exit
   --bele         figure out the endianity from IDA instead of explicit mode
   --until UNTIL  keep going onwards opcode-opcode until verified
+```
+## load
+```
+usage: load [-h] name
+
+go back to previous result-set saved by 'store' command.
+
+EXAMPLE:
+    results = [0, 4, 8]
+    store foo
+
+    find-bytes 12345678
+    results = [0, 4, 8, 10, 20]
+
+    -> load foo
+    results = [0, 4, 8]
+
+positional arguments:
+  name        name of variable in history to go back to
+
+optional arguments:
+  -h, --help  show this help message and exit
 ```
 ## locate
 ```
@@ -657,29 +628,6 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 ```
-## or
-```
-usage: or [-h] cmd [cmd ...]
-
-[DEPRECATED]
-unite with another command's resultset
-
-EXAMPLE:
-    results = [80]
-    -> or offset 0
-    results = [80]
-
-EXAMPLE #2:
-    results = [80]
-    -> or offset 1
-    results = [80, 81]
-
-positional arguments:
-  cmd         command
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
 ## print
 ```
 usage: print [-h] [phrase]
@@ -688,6 +636,36 @@ prints the current result-set (for debugging)
 
 positional arguments:
   phrase      optional string
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## python-if
+```
+usage: python-if [-h] cond label
+
+perform an 'if' statement to create conditional branches
+using an eval'ed expression
+
+EXAMPLE:
+    results = [0, 4, 8]
+
+    verify-single
+    store a
+
+    # jump to a_is_single_label since a == []
+    -> python-if a a_is_single_label
+    set-name a_isnt_single
+    b end
+
+    label a_is_single_label
+    set-name a_is_single
+
+    label end
+
+positional arguments:
+  cond        condition to evaluate (being eval'ed)
+  label       label to jump to if condition is true
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -794,6 +772,68 @@ EXAMPLE:
     results = [4, 12, 0, 8]
     -> sort
     result = [0, 4, 8 ,12]
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## stop-if-empty
+```
+usage: stop-if-empty [-h]
+
+exit if current resultset is empty
+
+EXAMPLE:
+    results = []
+
+    -> stop-if-empty
+    add 1
+
+    results = []
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## store
+```
+usage: store [-h] name
+
+save current result-set in a variable.
+You can later load the result-set using 'load'
+
+EXAMPLE:
+    results = [0, 4, 8]
+    -> store foo
+
+    find-bytes --or 12345678
+    results = [0, 4, 8, 10, 20]
+
+    load foo
+    results = [0, 4, 8]
+
+positional arguments:
+  name        name of variable to use
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+## symdiff
+```
+usage: symdiff [-h] variables [variables ...]
+
+symmetric difference between two or more variables
+
+EXAMPLE:
+    results = [0, 4, 8]
+    store a
+    ...
+    results = [0, 12, 20]
+    store b
+
+    -> symdiff a b
+    results = [4, 8, 12, 20]
+
+positional arguments:
+  variables   variable names
 
 optional arguments:
   -h, --help  show this help message and exit

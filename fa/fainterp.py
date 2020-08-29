@@ -11,12 +11,21 @@ import os
 
 import hjson
 
+from fa.utils import ArgumentParserNoExit
+
 CONFIG_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')
 DEFAULT_SIGNATURES_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'commands')
+
+
+class InterpreterState:
+    def __init__(self):
+        self.pc = 0
+        self.variables = {}
+        self.labels = {}
 
 
 class FaInterp:
@@ -39,14 +48,49 @@ class FaInterp:
         self._symbols = {}
         self._consts = {}
         self.history = []
-        self.checkpoints = {}
         self.endianity = '<'
         self._config_path = config_path
+        self.stack = []
 
         if (config_path is not None) and (os.path.exists(config_path)):
             self._signatures_root = os.path.expanduser(
                 self.config_get('global', 'signatures_root'))
             self._project = self.config_get('global', 'project', None)
+
+    def _push_stack_frame(self):
+        self.stack.append(InterpreterState())
+
+    def _pop_stack_frame(self):
+        self.stack.pop()
+
+    def set_labels(self, labels):
+        self.stack[-1].labels = labels
+
+    def get_pc(self):
+        return self.stack[-1].pc
+
+    def set_pc(self, pc):
+        if isinstance(pc, int):
+            self.stack[-1].pc = pc
+        elif isinstance(pc, str):
+            self.stack[-1].pc = self.stack[-1].labels[pc]
+        else:
+            raise KeyError('invalid pc: {}'.format(pc))
+
+    def dec_pc(self):
+        self.stack[-1].pc -= 1
+
+    def inc_pc(self):
+        self.stack[-1].pc += 1
+
+    def set_variable(self, name, value):
+        self.stack[-1].variables[name] = value
+
+    def get_variable(self, name):
+        return self.stack[-1].variables[name]
+
+    def get_all_variables(self):
+        return self.stack[-1].variables
 
     @abstractmethod
     def set_input(self, input_):
@@ -290,46 +334,42 @@ class FaInterp:
 
         return retval
 
-    def save_signature(self, signature):
+    def save_signature(self, filename):
         """
         Save given signature object (by dictionary) into active project
         as a new SIG file. If symbol name already exists, then create another
         file (never overwrites).
-        :param signature: Dictionary of signature object
+        :param filename: Dictionary of signature object
         :return: None
         """
+        with open(filename) as f:
+            sig = hjson.load(f)
+            f.seek(0)
+            sig_text = f.read()
+
         filename = os.path.join(
             self._signatures_root,
             self._project,
-            signature['name'] + '.sig')
+            sig['name'] + '.sig')
         i = 1
         while os.path.exists(filename):
             filename = os.path.join(self._signatures_root, self._project,
-                                    signature['name'] + '.{}.sig'.format(i))
+                                    sig['name'] + '.{}.sig'.format(i))
             i += 1
 
         with open(filename, 'w') as f:
-            hjson.dump(signature, f, indent=4)
+            f.write(sig_text)
 
-    def find_from_instructions_list(self, instructions,
-                                    clear_checkpoints=False,
-                                    decremental=False, addresses=None):
-        """
-        Run the given instruction list and output the result
-        :param instructions: instruction list
-        :param decremental: should stop and return the output *before* the last
-                            command that returned an empty list of results
-        :param addresses: input address list (if any)
-        :return: output address list
-        """
-        if addresses is None:
-            addresses = []
+    def _get_labeled_instructions(self, instructions):
+        labels = {}
+        processed_instructions = []
 
-        self.history = []
+        label_parser = ArgumentParserNoExit('label')
+        label_parser.add_argument('name')
 
-        if clear_checkpoints:
-            self.checkpoints = {}
+        alias_items = self.get_alias().items()
 
+        pc = 0
         for line in instructions:
             line = line.strip()
 
@@ -340,18 +380,41 @@ class FaInterp:
                 # treat as comment
                 continue
 
-            if line == 'stop-if-empty':
-                if len(addresses) == 0:
-                    return addresses
-                else:
-                    continue
+            if line.startswith('label '):
+                args = label_parser.parse_args(shlex.split(line)[1:])
+                labels[args.name] = pc
+                continue
 
-            # normal commands
-
-            for k, v in self.get_alias().items():
+            for k, v in alias_items:
                 # handle aliases
                 if line.startswith(k):
                     line = line.replace(k, v)
+
+            processed_instructions.append(line)
+            pc += 1
+
+        return labels, processed_instructions
+
+    def find_from_instructions_list(self, instructions, addresses=None):
+        """
+        Run the given instruction list and output the result
+        :param instructions: instruction list
+        :param addresses: input address list (if any)
+        :return: output address list
+        """
+        if addresses is None:
+            addresses = []
+
+        self._push_stack_frame()
+
+        labels, instructions = self._get_labeled_instructions(instructions)
+
+        self.set_labels(labels)
+
+        n = len(instructions)
+
+        while self.get_pc() < n:
+            line = instructions[self.get_pc()]
 
             new_addresses = []
             try:
@@ -360,12 +423,10 @@ class FaInterp:
                 FaInterp.log('failed to run: {}. error: {}'
                              .format(line, str(m)))
 
-            if decremental and len(new_addresses) == 0 and len(addresses) > 0:
-                return addresses
-
             addresses = new_addresses
-            self.history.append(addresses)
+            self.inc_pc()
 
+        self._pop_stack_frame()
         return addresses
 
     def find_from_sig_json(self, signature_json, decremental=False):
@@ -379,7 +440,7 @@ class FaInterp:
         self.log('interpreting SIG for: {}'.format(signature_json['name']))
         start = time.time()
         retval = self.find_from_instructions_list(
-            signature_json['instructions'], decremental)
+            signature_json['instructions'])
         self.log('interpretation took: {}s'.format(time.time() - start))
         return retval
 
