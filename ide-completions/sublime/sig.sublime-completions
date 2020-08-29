@@ -279,7 +279,7 @@
         {
             "trigger": "xrefs-to",
             "kind": "snippet",
-            "contents": "xrefs-to --function-start --or --and --name ${1:NAME} --bytes ${2:BYTES}"
+            "contents": "xrefs-to --function-start --or --and --name ${1:NAME}                --bytes ${2:BYTES}"
         }
     ]
 }
