@@ -217,6 +217,11 @@
             "contents": "store ${1:name}"
         },
         {
+            "trigger": "symdiff",
+            "kind": "snippet",
+            "contents": "symdiff ${1:variables} ${2:variables} ..."
+        },
+        {
             "trigger": "trace",
             "kind": "snippet",
             "contents": "trace "
