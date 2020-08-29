@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import json
 import re
 from collections import OrderedDict
@@ -95,7 +95,7 @@ def main():
         f.write(json.dumps(sublime_completions, indent=4))
 
     if current_buf != commands_md_buf:
-        print('commands.md has been changed. please review and then commit')
+        print('commands.md and / or ide-completions/ has been changed. Please review and then commit again.')
         sys.exit(1)
 
 
