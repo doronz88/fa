@@ -331,6 +331,9 @@ class IdaLoader(fainterp.FaInterp):
                     elif ti.get_type_name() in ('__va_list_tag',
                                                 'va_list'):
                         continue
+                    elif '$' in ti.get_type_name():
+                        # skip deleted types
+                        continue
                     else:
                         ordinals.append(str(ordinal))
 
@@ -357,10 +360,12 @@ class IdaLoader(fainterp.FaInterp):
                                               idc.PDF_DEF_BASE)
 
                 for struct_name in re.findall(
-                        r'struct .*?([a-zA-Z0-9_\-]+?)\s+\{',
+                        r'(struct|enum) .*?([a-zA-Z0-9_\-]+?)\s+\{',
                         structs_buf):
                     f.write('typedef struct {struct_name} {struct_name};\n'
                             .format(struct_name=struct_name))
+
+                structs_buf = structs_buf.replace('__fastcall', '')
                 f.write('\n')
                 f.write(structs_buf)
                 f.write('\n')
