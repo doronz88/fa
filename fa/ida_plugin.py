@@ -181,7 +181,7 @@ class IdaLoader(fainterp.FaInterp):
 
         self.save_signature(TEMP_SIG_FILENAME)
 
-    def find(self, symbol_name, decremental=False):
+    def find(self, symbol_name, use_cache=False):
         """
         Find symbol by name (as specified in SIG file)
         Show an IDA waitbox while doing so
@@ -190,7 +190,7 @@ class IdaLoader(fainterp.FaInterp):
         """
         ida_kernwin.replace_wait_box('Searching symbol: \'{}\'...'
                                      .format(symbol_name))
-        return super(IdaLoader, self).find(symbol_name)
+        return super(IdaLoader, self).find(symbol_name, use_cache=use_cache)
 
     def get_python_symbols(self, file_name=None):
         """
