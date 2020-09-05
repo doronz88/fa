@@ -51,6 +51,8 @@ class FaInterp:
         self.endianity = '<'
         self._config_path = config_path
         self.stack = []
+        self._sig_cache = []
+        self.implicit_use_sig_cache = False
 
         if (config_path is not None) and (os.path.exists(config_path)):
             self._signatures_root = os.path.expanduser(
@@ -195,10 +197,16 @@ class FaInterp:
         Run find for all SIG files in currently active project
         :return: dictionary of found symbols
         """
-        self.get_python_symbols()
+        try:
+            self._sig_cache = []
+            self.implicit_use_sig_cache = True
+            self.get_python_symbols()
 
-        for sig in self.get_json_signatures():
-            self.find(sig['name'])
+            for sig in self.get_json_signatures():
+                self.find(sig['name'], use_cache=True)
+        finally:
+            self._sig_cache = []
+            self.implicit_use_sig_cache = False
 
         return self._symbols
 
@@ -502,6 +510,7 @@ class FaInterp:
                     continue
 
                 filename = os.path.join(project_root, filename)
+
                 with open(filename) as f:
                     try:
                         signature = hjson.load(f)
@@ -523,14 +532,15 @@ class FaInterp:
     def get_consts(self):
         return self._consts
 
-    def find(self, symbol_name, decremental=False):
+    def find(self, symbol_name, use_cache=False):
         """
         Find symbol by its name in the SIG file
         :param symbol_name: symbol name
-        :param decremental: Should stop *before* the last command which
-                            returned zero results
         :return: list of matches for the given symbol
         """
+        if use_cache and symbol_name in self._sig_cache:
+            return
+
         results = []
         signatures = self.get_json_signatures(symbol_name)
         if len(signatures) == 0:
@@ -545,5 +555,8 @@ class FaInterp:
                     results += sig_results[symbol_name]
             else:
                 results += sig_results
+
+        if use_cache and symbol_name not in self._sig_cache:
+            self._sig_cache.append(symbol_name)
 
         return list(set(results))

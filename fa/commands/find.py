@@ -10,7 +10,7 @@ def get_parser():
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    interpreter.find(args.name)
+    interpreter.find(args.name, use_cache=interpreter.implicit_use_sig_cache)
 
     # return an empty result-set
     return []
