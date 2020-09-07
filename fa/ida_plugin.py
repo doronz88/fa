@@ -359,11 +359,13 @@ class IdaLoader(fainterp.FaInterp):
                 structs_buf = idc.print_decls(','.join(ordinals),
                                               idc.PDF_DEF_BASE)
 
-                for struct_name in re.findall(
+                for struct_type, struct_name in re.findall(
                         r'(struct|enum) .*?([a-zA-Z0-9_\-]+?)\s+\{',
                         structs_buf):
-                    f.write('typedef struct {struct_name} {struct_name};\n'
-                            .format(struct_name=struct_name))
+                    f.write(
+                        'typedef {struct_type} {struct_name} {struct_name};\n'
+                        .format(struct_type=struct_type,
+                                struct_name=struct_name))
 
                 structs_buf = structs_buf.replace('__fastcall', '')
                 f.write('\n')
