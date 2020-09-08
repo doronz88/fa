@@ -312,7 +312,7 @@ class IdaLoader(fainterp.FaInterp):
                                             form.iSymbolsFilename.value)
             with open(symbols_filename, 'w') as f:
                 results = IdaLoader.extract_all_user_names(None)
-                for k, v in results.items():
+                for k, v in sorted(results.items()):
                     f.write('{} = 0x{:08x};\n'.format(k, v))
 
             # save c header
