@@ -5,12 +5,12 @@ DESCRIPTION = '''verifies the result-list contains a single value
 
 EXAMPLE #1:
     results = [4, 12, 0, 8]
-    -> unique
+    -> verify-single
     result = []
 
 EXAMPLE #2:
     results = [4]
-    -> unique
+    -> verify-single
     result = [4]
 '''
 
