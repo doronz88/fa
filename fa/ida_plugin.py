@@ -1,10 +1,11 @@
-import binascii
-import re
-import traceback
 from collections import namedtuple
+import pkg_resources
 import subprocess
 import tempfile
+import traceback
+import binascii
 import sys
+import re
 import os
 
 sys.path.append('.')  # noqa: E402
@@ -527,9 +528,12 @@ def add_action(action):
 
     act_icon = -1
     if action.icon_filename:
-        icon_full_filename = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            'res', 'icons', action.icon_filename)
+        icon_full_filename = \
+            pkg_resources.resource_filename('fa',
+                                            os.path.join(
+                                                'res',
+                                                'icons',
+                                                action.icon_filename))
         with open(icon_full_filename, 'rb') as f:
             icon_data = f.read()
         act_icon = ida_kernwin.load_custom_icon(data=icon_data, format="png")

@@ -1,5 +1,6 @@
 import time
 
+import pkg_resources
 from tkinter import ttk, Tk
 from configparser import ConfigParser
 
@@ -323,7 +324,10 @@ class FaInterp:
         :return: dictionary of all fa command aliases
         """
         retval = {}
-        with open(os.path.join(COMMANDS_ROOT, 'alias')) as f:
+
+        alias_res_path = os.path.join('commands', 'alias')
+        alias_filename = pkg_resources.resource_filename('fa', alias_res_path)
+        with open(alias_filename) as f:
             for line in f.readlines():
                 line = line.strip()
                 k, v = line.split('=')
