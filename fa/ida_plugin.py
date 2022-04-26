@@ -8,16 +8,22 @@ import sys
 import re
 import os
 
+import rpyc
+from rpyc import OneShotServer
+
 sys.path.append('.')  # noqa: E402
 
 import hjson
 import click
 
 from ida_kernwin import Form
+import ida_segment
 import ida_kernwin
 import ida_typeinf
+import ida_struct
 import ida_bytes
 import idautils
+import ida_auto
 import ida_pro
 import idaapi
 import idc
@@ -258,7 +264,7 @@ class IdaLoader(fainterp.FaInterp):
 
             results.update(ida_symbols)
 
-        except Exception as e:
+        except Exception:
             traceback.print_exc()
         finally:
             ida_kernwin.hide_wait_box()
@@ -271,6 +277,7 @@ class IdaLoader(fainterp.FaInterp):
         IDB.
         :return: None
         """
+
         class ExportForm(Form):
             def __init__(self):
                 description = '''
@@ -347,7 +354,7 @@ class IdaLoader(fainterp.FaInterp):
                             .format(ifdef_name=ifdef_name))
 
                 if consts_ordinal is not None:
-                    consts = re.findall('\s*(.+?) = (.+?),',
+                    consts = re.findall('\\s*(.+?) = (.+?),',
                                         idc.print_decls(
                                             str(consts_ordinal), 0))
                     for k, v in consts:
@@ -365,8 +372,8 @@ class IdaLoader(fainterp.FaInterp):
                         structs_buf):
                     f.write(
                         'typedef {struct_type} {struct_name} {struct_name};\n'
-                        .format(struct_type=struct_type,
-                                struct_name=struct_name))
+                            .format(struct_type=struct_type,
+                                    struct_name=struct_name))
 
                 structs_buf = structs_buf.replace('__fastcall', '')
                 f.write('\n')
@@ -402,6 +409,7 @@ class IdaLoader(fainterp.FaInterp):
         Show settings dialog
         :return: None
         """
+
         class SettingsForm(Form):
             def __init__(self, signatures_root, use_template):
                 description = '''
@@ -455,6 +463,7 @@ class IdaLoader(fainterp.FaInterp):
         Show set-project dialog
         :return: None
         """
+
         class SetProjectForm(Form):
             def __init__(self, signatures_root, projects, current):
                 description = '''
@@ -515,6 +524,7 @@ def add_action(action):
     :param action: action given as the `Action` namedtuple
     :return: None
     """
+
     class Handler(ida_kernwin.action_handler_t):
         def __init__(self):
             ida_kernwin.action_handler_t.__init__(self)
@@ -661,25 +671,38 @@ except ImportError:
 
 
 @click.command()
-@click.argument('signatures_root', default='.')
-@click.option('--project_name', default=None)
-@click.option('--symbols-file', default=None)
-def main(signatures_root, project_name, symbols_file=None):
-    plugin_main(signatures_root, project_name, symbols_file)
+@click.option('-s', '--service', type=click.IntRange(1024, 65535), help='execute in rpyc service mode at given port')
+def main(service):
+    plugin_main(service)
 
 
-def plugin_main(signatures_root, project_name, symbols_file=None):
+class FaService(rpyc.Service):
+    ida_segment = ida_segment
+    ida_kernwin = ida_kernwin
+    ida_typeinf = ida_typeinf
+    ida_struct = ida_struct
+    ida_bytes = ida_bytes
+    idautils = idautils
+    ida_auto = ida_auto
+    ida_pro = ida_pro
+    idaapi = idaapi
+    idc = idc
+
+    @staticmethod
+    def load_module(name, filename):
+        return fainterp.FaInterp.get_module(name, filename)
+
+
+def plugin_main(service=None):
     global fa_instance
 
     fa_instance = IdaLoader()
     fa_instance.set_input('ida')
 
-    if project_name is not None:
-        fa_instance.set_project(project_name)
-
     load_ui()
 
-    IdaLoader.log('''    ---------------------------------
+    IdaLoader.log('''
+    ---------------------------------
     FA Loaded successfully
 
     Quick usage:
@@ -689,12 +712,15 @@ def plugin_main(signatures_root, project_name, symbols_file=None):
     fa_instance.set_symbol_template(status) # enable/disable template temp
                                               signature
     fa_instance.symbols() # searches for the symbols in the current project
-    ---------------------------------''')
+    ---------------------------------
+    ''')
 
-    if symbols_file is not None:
-        fa_instance.set_signatures_root(signatures_root)
-        fa_instance.symbols(symbols_file)
-        ida_pro.qexit(0)
+    if service:
+        t = OneShotServer(FaService, port=service, protocol_config={
+            'allow_all_attrs': True,
+            'allow_setattr': True,
+        })
+        t.start()
 
     # TODO: consider adding as autostart script
     # install()
@@ -709,7 +735,7 @@ try:
         help = "Load FA in IDA Pro"
 
         def init(self):
-            plugin_main('.', None, None)
+            plugin_main()
             return idaapi.PLUGIN_KEEP
 
         def run(self, args):

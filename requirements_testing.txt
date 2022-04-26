@@ -8,3 +8,8 @@ idalink
 pytest
 simpleelf
 pyelftools
+six
+rpyc
+click
+ipython
+termcolor
