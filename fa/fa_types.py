@@ -6,6 +6,7 @@ try:
     import idc
     import idaapi
     import ida_auto
+    import ida_bytes
     import ida_enum
     import ida_struct
 
@@ -40,10 +41,10 @@ class FaEnum(FaType):
     def update_idb(self):
         id = ida_enum.get_enum(self._name)
         if idc.BADADDR == id:
-            id = ida_enum.add_enum(idc.BADADDR, self._name, idaapi.decflag())
+            id = ida_enum.add_enum(idc.BADADDR, self._name, ida_bytes.dec_flag())
 
         keys = self._values.keys()
-        keys.sort()
+        sorted(keys)
 
         for k in keys:
             ida_enum.add_enum_member(id, self._values[k], k)
