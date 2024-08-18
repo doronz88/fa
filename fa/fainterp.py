@@ -9,6 +9,7 @@ from collections import OrderedDict
 import shlex
 import sys
 import os
+import re
 
 import hjson
 
@@ -397,10 +398,10 @@ class FaInterp:
                 labels[args.name] = pc
                 continue
 
-            for k, v in alias_items:
+            for alias, replacement in alias_items:
                 # handle aliases
-                if line.startswith(k):
-                    line = line.replace(k, v)
+                pattern = r'^\b' + re.escape(alias) + r'\b'
+                line = re.sub(pattern, replacement, line)
 
             processed_instructions.append(line)
             pc += 1

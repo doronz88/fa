@@ -26,7 +26,7 @@ def get_parser():
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
-    hex_str = binascii.hexlify(args.hex_str)
+    hex_str = binascii.hexlify(args.hex_str.encode()).decode()
     hex_str += '00' if args.null_terminated else ''
 
     setattr(args, 'hex_str', hex_str)
