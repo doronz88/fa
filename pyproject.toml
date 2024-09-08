@@ -1,5 +1,5 @@
 [project]
-name = "pymobiledevice3"
+name = "fa"
 description = "Automation tool for locating symbols & structs in binary (primarily IDA focused)"
 readme = "README.md"
 requires-python = ">=3.9"
