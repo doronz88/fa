@@ -24,7 +24,7 @@ Pull Requests are of course more than welcome :smirk:.
 
 ## Requirements
 
-Supported IDA 7.x.
+Supported IDA 8.0+.
 
 In your IDA's python directory, run:
 

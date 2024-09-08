@@ -1,4 +1,4 @@
-from fa import utils, context
+from fa import context, utils
 
 try:
     import ida_funcs

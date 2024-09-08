@@ -1,0 +1,55 @@
+[project]
+name = "pymobiledevice3"
+description = "Automation tool for locating symbols & structs in binary (primarily IDA focused)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007" }
+keywords = ["reverse-engineering", "ida", "automation", "signatures", "symbols"]
+authors = [
+    { name = "doronz88", email = "doron88@gmail.com" }
+]
+maintainers = [
+    { name = "doronz88", email = "doron88@gmail.com" }
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+]
+dynamic = ["dependencies", "version"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+"Homepage" = "https://github.com/doronz88/fa"
+"Bug Reports" = "https://github.com/doronz88/fa/issues"
+
+[tool.setuptools]
+package-data = { "fa" = ["res/icons/create_sig.png",
+    "res/icons/export.png",
+    "res/icons/find.png",
+    "res/icons/find_all.png",
+    "res/icons/save.png",
+    "res/icons/settings.png",
+    "res/icons/suitcase.png",
+    "commands/alias"] }
+
+[tool.setuptools.packages.find]
+exclude = ["docs*", "tests*"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+version = { attr = "fa._version.__version__" }
+
+[tool.setuptools_scm]
+version_file = "fa/_version.py"
+
+[build-system]
+requires = ["setuptools>=43.0.0", "setuptools_scm>=8", "wheel"]
+build-backend = "setuptools.build_meta"

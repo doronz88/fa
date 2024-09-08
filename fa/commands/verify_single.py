@@ -1,4 +1,5 @@
 from argparse import RawTextHelpFormatter
+
 from fa import utils
 
 DESCRIPTION = '''verifies the result-list contains a single value

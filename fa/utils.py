@@ -2,12 +2,14 @@ import argparse
 import inspect
 import os
 import warnings
+from typing import Generator, Union
 
 IDA_MODULE = False
 
 try:
+    import ida_bytes
+    import idaapi
     import idc
-    import ida_struct
 
     IDA_MODULE = True
 except ImportError:
@@ -41,18 +43,23 @@ def find_raw(needle, segments=None):
             address = segment_ea + offset + extra_offset
             yield address
 
-            extra_offset += offset+1
-            data = data[offset+1:]
+            extra_offset += offset + 1
+            data = data[offset + 1:]
 
             offset = index_of(needle, data)
 
 
-def ida_find_all(payload):
-    ea = idc.find_binary(0, idc.SEARCH_DOWN | idc.SEARCH_REGEX, payload)
-    while ea != idc.BADADDR:
-        yield ea
-        ea = idc.find_binary(ea + 1, idc.SEARCH_DOWN | idc.SEARCH_REGEX,
-                             payload)
+def ida_find_all(payload: Union[bytes, bytearray, str]) -> Generator[int, None, None]:
+    if float(idaapi.get_kernel_version()) < 9:
+        ea = idc.find_binary(0, idc.SEARCH_DOWN | idc.SEARCH_REGEX, payload)
+        while ea != idc.BADADDR:
+            yield ea
+            ea = idc.find_binary(ea + 1, idc.SEARCH_DOWN | idc.SEARCH_REGEX, payload)
+    else:
+        ea = ida_bytes.find_bytes(payload, 0)
+        while ea != idc.BADADDR:
+            yield ea
+            ea = ida_bytes.find_bytes(payload, ea + 1)
 
 
 def read_memory(segments, ea, size):
@@ -62,7 +69,7 @@ def read_memory(segments, ea, size):
     for segment_ea, data in segments.items():
         if (ea <= segment_ea + len(data)) and (ea >= segment_ea):
             offset = ea - segment_ea
-            return data[offset:offset+size]
+            return data[offset:offset + size]
 
 
 def yield_unique(func):
@@ -72,6 +79,7 @@ def yield_unique(func):
             if i not in results:
                 yield i
                 results.add(i)
+
     return wrapper
 
 
@@ -96,7 +104,7 @@ def add_struct_to_idb(name):
 
 
 def find_or_create_struct(name):
-    sid = ida_struct.get_struc_id(name)
+    sid = idc.get_struc_id(name)
     if sid == idc.BADADDR:
         sid = idc.add_struc(-1, name, 0)
         print("added struct \"{0}\", id: {1}".format(name, sid))

@@ -1,15 +1,14 @@
-import time
-
-import pkg_resources
-from tkinter import ttk, Tk
-from configparser import ConfigParser
-
-from abc import ABCMeta, abstractmethod
-from collections import OrderedDict
-import shlex
-import sys
+import importlib.resources
+import importlib.util
 import os
 import re
+import shlex
+import sys
+import time
+from abc import ABCMeta, abstractmethod
+from collections import OrderedDict
+from configparser import ConfigParser
+from tkinter import Tk, ttk
 
 import hjson
 
@@ -276,15 +275,9 @@ class FaInterp:
         if not os.path.exists(filename):
             raise NotImplementedError("no such filename: {}".format(filename))
 
-        if sys.version == '3':
-            # TODO: support python 3.0-3.4
-            import importlib.util
-            spec = importlib.util.spec_from_file_location(name, filename)
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-        else:
-            import imp
-            module = imp.load_source(name, filename)
+        spec = importlib.util.spec_from_file_location(name, filename)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
 
         return module
 
@@ -327,8 +320,7 @@ class FaInterp:
         retval = {}
 
         alias_res_path = os.path.join('commands', 'alias')
-        alias_filename = pkg_resources.resource_filename('fa', alias_res_path)
-        with open(alias_filename) as f:
+        with importlib.resources.files('fa').joinpath(alias_res_path).open('rt') as f:
             for line in f.readlines():
                 line = line.strip()
                 k, v = line.split('=')

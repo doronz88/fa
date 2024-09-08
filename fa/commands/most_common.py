@@ -1,4 +1,5 @@
 from argparse import RawTextHelpFormatter
+
 from fa import utils
 
 DESCRIPTION = '''get the result appearing the most in the result-set

@@ -4,8 +4,8 @@ import socket
 import subprocess
 from collections import namedtuple
 
-import IPython
 import click
+import IPython
 import rpyc
 from termcolor import cprint
 

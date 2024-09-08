@@ -1,4 +1,5 @@
 from argparse import RawTextHelpFormatter
+
 from fa import utils
 
 DESCRIPTION = '''peek a single result from the result-set (zero-based)

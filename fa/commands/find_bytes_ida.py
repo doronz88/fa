@@ -1,6 +1,6 @@
 from argparse import RawTextHelpFormatter
 
-from fa import utils, context
+from fa import context, utils
 
 DESCRIPTION = '''expands the result-set with the occurrences of the given bytes
 expression in "ida bytes syntax"

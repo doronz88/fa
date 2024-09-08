@@ -1,4 +1,5 @@
 from argparse import RawTextHelpFormatter
+
 from fa import utils
 
 DESCRIPTION = '''perform an 'if' statement to create conditional branches

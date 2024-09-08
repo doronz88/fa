@@ -1,4 +1,5 @@
 from argparse import RawTextHelpFormatter
+
 from fa import utils
 
 DESCRIPTION = '''performs a sort on the current result-set

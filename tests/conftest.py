@@ -1,9 +1,9 @@
 import tempfile
 
-from keystone import KS_MODE_BIG_ENDIAN, KS_MODE_ARM, KS_ARCH_ARM, Ks
-from simpleelf.elf_builder import ElfBuilder
-from simpleelf import elf_consts
 import pytest
+from keystone import KS_ARCH_ARM, KS_MODE_ARM, KS_MODE_BIG_ENDIAN, Ks
+from simpleelf import elf_consts
+from simpleelf.elf_builder import ElfBuilder
 
 
 def pytest_addoption(parser):
@@ -51,7 +51,7 @@ def sample_elf(request):
 
         e.add_segment(text_address, text_buffer,
                       elf_consts.PF_R | elf_consts.PF_W | elf_consts.PF_X)
-        e.add_code_section('.text', text_address, len(text_buffer))
+        e.add_code_section(text_address, len(text_buffer), name='.text')
         f.write(e.build())
         yield f
 

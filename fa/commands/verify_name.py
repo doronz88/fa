@@ -1,4 +1,4 @@
-from fa import utils, context
+from fa import context, utils
 from fa.commands.locate import locate
 
 

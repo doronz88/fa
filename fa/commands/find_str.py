@@ -1,6 +1,7 @@
+import binascii
 import sys
 from argparse import RawTextHelpFormatter
-import binascii
+
 import six
 
 from fa.commands import find_bytes

@@ -1,8 +1,8 @@
-from fa import utils, fa_types, context
+from fa import context, fa_types, utils
 
 try:
-    import idc
     import ida_auto
+    import idc
 except ImportError:
     pass
 
