@@ -108,3 +108,6 @@ venv.bak/
 
 # config
 config.ini
+
+# setuptools-scm
+fa/_version.py

@@ -1,34 +1,33 @@
-from collections import namedtuple
-import pkg_resources
+import binascii
+import importlib.resources
+import os
+import re
 import subprocess
+import sys
 import tempfile
 import traceback
-import binascii
-import sys
-import re
-import os
+from collections import namedtuple
 
 import rpyc
 from rpyc import OneShotServer
 
 sys.path.append('.')  # noqa: E402
 
-import hjson
 import click
-
-from ida_kernwin import Form
-import ida_segment
-import ida_kernwin
-import ida_typeinf
-import ida_struct
-import ida_bytes
-import idautils
+import hjson
 import ida_auto
+import ida_bytes
+import ida_ida
+import ida_kernwin
 import ida_pro
+import ida_segment
+import ida_typeinf
 import idaapi
+import idautils
 import idc
+from ida_kernwin import Form
 
-from fa import fainterp, fa_types
+from fa import fa_types, fainterp
 
 # Filename for the temporary created signature
 TEMP_SIG_FILENAME = os.path.join(tempfile.gettempdir(), 'fa_tmp_sig.sig')
@@ -172,7 +171,7 @@ class IdaLoader(fainterp.FaInterp):
         try:
             super(IdaLoader, self).verify_project()
         except IOError as e:
-            ida_kernwin.warning(e.message)
+            ida_kernwin.warning(str(e))
             raise e
 
     def prompt_save_signature(self):
@@ -372,8 +371,8 @@ class IdaLoader(fainterp.FaInterp):
                         structs_buf):
                     f.write(
                         'typedef {struct_type} {struct_name} {struct_name};\n'
-                            .format(struct_type=struct_type,
-                                    struct_name=struct_name))
+                        .format(struct_type=struct_type,
+                                struct_name=struct_name))
 
                 structs_buf = structs_buf.replace('__fastcall', '')
                 f.write('\n')
@@ -392,7 +391,7 @@ class IdaLoader(fainterp.FaInterp):
         :param input_: doesn't matter
         :return: None
         """
-        self.endianity = '>' if idaapi.get_inf_structure().is_be() else '<'
+        self.endianity = '>' if ida_ida.inf_is_be() else '<'
         self._input = input_
         self.reload_segments()
 
@@ -538,14 +537,8 @@ def add_action(action):
 
     act_icon = -1
     if action.icon_filename:
-        icon_full_filename = \
-            pkg_resources.resource_filename('fa',
-                                            os.path.join(
-                                                'res',
-                                                'icons',
-                                                action.icon_filename))
-        with open(icon_full_filename, 'rb') as f:
-            icon_data = f.read()
+        icon_data = \
+            importlib.resources.files('fa').joinpath(f'res/icons/{action.icon_filename}').read_bytes()
         act_icon = ida_kernwin.load_custom_icon(data=icon_data, format="png")
 
     act_name = action.name
@@ -680,11 +673,11 @@ class FaService(rpyc.Service):
     ida_segment = ida_segment
     ida_kernwin = ida_kernwin
     ida_typeinf = ida_typeinf
-    ida_struct = ida_struct
     ida_bytes = ida_bytes
     idautils = idautils
     ida_auto = ida_auto
     ida_pro = ida_pro
+    ida_ida = ida_ida
     idaapi = idaapi
     idc = idc
 

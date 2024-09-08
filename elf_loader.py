@@ -1,5 +1,5 @@
-from elftools.elf import elffile
 import click
+from elftools.elf import elffile
 
 from fa import fainterp
 

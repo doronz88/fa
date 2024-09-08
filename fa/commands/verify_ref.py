@@ -1,5 +1,5 @@
+from fa import context, utils
 from fa.commands.locate import locate
-from fa import utils, context
 
 try:
     import idautils

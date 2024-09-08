@@ -1,9 +1,9 @@
-from fa import utils, context
+from fa import context, utils
 from fa.commands import function_start
 
 try:
-    import idc
     import idautils
+    import idc
 except ImportError:
     pass
 

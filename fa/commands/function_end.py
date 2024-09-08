@@ -1,6 +1,6 @@
 from argparse import RawTextHelpFormatter
-from fa import utils
-from fa import context
+
+from fa import context, utils
 
 try:
     import idc

@@ -1,18 +1,30 @@
 from abc import abstractmethod
 from collections import namedtuple
 
-
 try:
-    import idc
-    import idaapi
     import ida_auto
     import ida_bytes
-    import ida_enum
-    import ida_struct
+    import ida_typeinf
+    import idaapi
+    import idc
 
     IDA_MODULE = True
 except ImportError:
     pass
+
+
+def del_struct_members(sid: int, offset1: int, offset2: int) -> None:
+    tif = ida_typeinf.tinfo_t()
+    if tif.get_type_by_tid(sid) and tif.is_udt():
+        udm = ida_typeinf.udm_t()
+        udm.offset = offset1 * 8
+        idx1 = tif.find_udm(udm, ida_typeinf.STRMEM_OFFSET)
+        udm = ida_typeinf.udm_t()
+        udm.offset = offset2 * 8
+        idx2 = tif.find_udm(udm, ida_typeinf.STRMEM_OFFSET)
+        idx1 &= 0xffffffff
+        idx2 &= 0xffffffff
+        tif.del_udms(idx1, idx2)
 
 
 class FaType(object):
@@ -23,7 +35,7 @@ class FaType(object):
         return self._name
 
     def exists(self):
-        return -1 != ida_struct.get_struc_id(self._name)
+        return -1 != idc.get_struc_id(self._name)
 
     @abstractmethod
     def update_idb(self):
@@ -39,15 +51,15 @@ class FaEnum(FaType):
         self._values[value] = name
 
     def update_idb(self):
-        id = ida_enum.get_enum(self._name)
+        id = idc.get_enum(self._name)
         if idc.BADADDR == id:
-            id = ida_enum.add_enum(idc.BADADDR, self._name, ida_bytes.dec_flag())
+            id = idc.add_enum(idc.BADADDR, self._name, ida_bytes.dec_flag())
 
         keys = self._values.keys()
         sorted(keys)
 
         for k in keys:
-            ida_enum.add_enum_member(id, self._values[k], k)
+            idc.add_enum_member(id, self._values[k], k, 0xffffffff)
 
 
 class FaStruct(FaType):
@@ -60,25 +72,20 @@ class FaStruct(FaType):
     def add_field(self, name, type_, offset=0xffffffff):
         self._fields.append(self.Field(name, type_, offset))
 
-    def update_idb(self, delete_existing_members=True):
-        sid = ida_struct.get_struc_id(self._name)
-        sptr = ida_struct.get_struc(sid)
+    def update_idb(self, delete_existing_members: bool = True) -> None:
+        sid = idc.get_struc_id(self._name)
 
         if sid == idc.BADADDR:
-            sid = ida_struct.add_struc(idc.BADADDR, self._name, 0)
-            sptr = ida_struct.get_struc(sid)
+            sid = idc.add_struc(idc.BADADDR, self._name, 0)
         else:
             if delete_existing_members:
-                ida_struct.del_struc_members(sptr, 0, 0xffffffff)
+                del_struct_members(sid, 0, 0xffffffff)
 
         for f in self._fields:
-            ida_struct.add_struc_member(sptr, f.name, f.offset,
-                                        (idc.FF_BYTE | idc.FF_DATA)
-                                        & 0xFFFFFFFF,
-                                        None, 1)
-            member_name = "{}.{}".format(self._name, f.name)
-            idc.SetType(idaapi.get_member_by_fullname(member_name)[0].id,
-                        f.type)
+            idc.add_struc_member(sid, f.name, f.offset, (idc.FF_BYTE | idc.FF_DATA) & 0xFFFFFFFF, 0xFFFFFFFF, 1)
+            member_name = f'{self._name}.{f.name}'
+            member_struct_id = idc.get_struc_id(member_name)
+            idc.SetType(member_struct_id, f.type)
 
         ida_auto.auto_wait()
 

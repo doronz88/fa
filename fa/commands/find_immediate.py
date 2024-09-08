@@ -1,10 +1,10 @@
 from argparse import RawTextHelpFormatter
 
-from fa import utils, context
+from fa import context, utils
 
 try:
-    import idc
     import ida_search
+    import idc
 except ImportError:
     pass
 
@@ -34,11 +34,10 @@ def find_immediate(expression):
     if isinstance(expression, str):
         expression = eval(expression)
 
-    ea, imm = ida_search.find_imm(0, idc.SEARCH_DOWN, expression)
+    ea, imm = ida_search.find_imm(0, ida_search.SEARCH_DOWN, expression)
     while ea != idc.BADADDR:
         yield ea
-        ea, imm = idc.find_imm(ea + 1, idc.SEARCH_DOWN,
-                               expression)
+        ea, imm = idc.find_imm(ea + 1, ida_search.SEARCH_DOWN, expression)
 
 
 def run(segments, args, addresses, interpreter=None, **kwargs):

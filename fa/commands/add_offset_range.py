@@ -1,6 +1,6 @@
 from argparse import RawTextHelpFormatter
-from fa import utils
 
+from fa import utils
 
 DESCRIPTION = '''adds a python-range to resultset
 

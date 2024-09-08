@@ -1,4 +1,5 @@
 from argparse import RawTextHelpFormatter
+
 try:
     # flake8: noqa
     from keystone import *
@@ -8,8 +9,8 @@ except ImportError:
 
 import binascii
 
-from fa.commands import verify_bytes
 from fa import utils
+from fa.commands import verify_bytes
 
 DESCRIPTION = '''use keystone to verify the result-set matches the given
 opcodes

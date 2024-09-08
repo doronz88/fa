@@ -1,5 +1,5 @@
-from argparse import RawTextHelpFormatter
 import binascii
+from argparse import RawTextHelpFormatter
 
 from fa.commands import verify_bytes
 

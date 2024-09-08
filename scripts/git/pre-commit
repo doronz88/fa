@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 import json
-import re
-from collections import OrderedDict
 import os
+import re
 import sys
+from collections import OrderedDict
 
 sys.path.append('.')  # noqa: E402
 

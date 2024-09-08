@@ -5,7 +5,7 @@ try:
 except ImportError:
     pass
 
-from fa import utils, context
+from fa import context, utils
 
 DESCRIPTION = '''reduce the result-set to those in the given segment name
 
