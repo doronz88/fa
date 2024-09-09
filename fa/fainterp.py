@@ -319,8 +319,7 @@ class FaInterp:
         """
         retval = {}
 
-        alias_res_path = os.path.join('commands', 'alias')
-        with importlib.resources.files('fa').joinpath(alias_res_path).open('rt') as f:
+        with open(os.path.join(COMMANDS_ROOT, 'alias')) as f:
             for line in f.readlines():
                 line = line.strip()
                 k, v = line.split('=')
