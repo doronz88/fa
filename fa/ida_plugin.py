@@ -1,5 +1,4 @@
 import binascii
-import importlib.resources
 import os
 import re
 import subprocess
@@ -537,8 +536,9 @@ def add_action(action):
 
     act_icon = -1
     if action.icon_filename:
-        icon_data = \
-            importlib.resources.files('fa').joinpath(f'res/icons/{action.icon_filename}').read_bytes()
+        icon_full_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'res', 'icons', action.icon_filename)
+        with open(icon_full_filename, 'rb') as f:
+            icon_data = f.read()
         act_icon = ida_kernwin.load_custom_icon(data=icon_data, format="png")
 
     act_name = action.name
