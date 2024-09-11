@@ -31,7 +31,7 @@ def get_parser():
 
 def run(segments, args, addresses, interpreter=None, **kwargs):
     if len(interpreter.find_from_instructions_list([args.cond],
-                                                   addresses=addresses)):
+                                                   addresses=addresses[:])):
         interpreter.set_pc(args.label)
 
         # pc is incremented by 1, after each instruction
