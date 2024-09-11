@@ -32,6 +32,11 @@
             "contents": "clear "
         },
         {
+            "trigger": "deref-data",
+            "kind": "snippet",
+            "contents": "deref-data ${1:-l} ${2:LEN}"
+        },
+        {
             "trigger": "find",
             "kind": "snippet",
             "contents": "find ${1:name}"
@@ -69,12 +74,17 @@
         {
             "trigger": "function-start",
             "kind": "snippet",
-            "contents": "function-start ${1:cmd} ${2:cmd} ..."
+            "contents": "function-start ${1:cmd} ..."
         },
         {
             "trigger": "goto-ref",
             "kind": "snippet",
             "contents": "goto-ref --code --data"
+        },
+        {
+            "trigger": "if-not",
+            "kind": "snippet",
+            "contents": "if-not ${1:cond} ${2:label}"
         },
         {
             "trigger": "if",
@@ -84,7 +94,7 @@
         {
             "trigger": "intersect",
             "kind": "snippet",
-            "contents": "intersect ${1:variables} ${2:variables} ..."
+            "contents": "intersect --piped ${1:variables} ${2:variables} ..."
         },
         {
             "trigger": "keystone-find-opcodes",
@@ -145,6 +155,11 @@
             "trigger": "most-common",
             "kind": "snippet",
             "contents": "most-common "
+        },
+        {
+            "trigger": "next-instruction",
+            "kind": "snippet",
+            "contents": "next-instruction --limit ${1:LIMIT} --back --op0 ${2:OP0} --op1 ${3:OP1} --op2 ${4:OP2} --op3 ${5:OP3} --op4 ${6:OP4} --op5 ${7:OP5} ${8:mnem} ${9:mnem} ..."
         },
         {
             "trigger": "offset",
@@ -247,6 +262,11 @@
             "contents": "verify-name ${1:name}"
         },
         {
+            "trigger": "verify-opcode",
+            "kind": "snippet",
+            "contents": "verify-opcode --op0 ${1:OP0} --op1 ${2:OP1} --op2 ${3:OP2} --op3 ${4:OP3} --op4 ${5:OP4} --op5 ${6:OP5} ${7:mnem} ${8:mnem} ..."
+        },
+        {
             "trigger": "verify-operand",
             "kind": "snippet",
             "contents": "verify-operand --op0 ${1:OP0} --op1 ${2:OP1} --op2 ${3:OP2} ${4:name}"
@@ -259,7 +279,7 @@
         {
             "trigger": "verify-segment",
             "kind": "snippet",
-            "contents": "verify-segment ${1:name}"
+            "contents": "verify-segment --regex ${1:name}"
         },
         {
             "trigger": "verify-single",
@@ -279,7 +299,7 @@
         {
             "trigger": "xrefs-to",
             "kind": "snippet",
-            "contents": "xrefs-to --function-start --or --and --name ${1:NAME}                --bytes ${2:BYTES}"
+            "contents": "xrefs-to --function-start --or --and --name ${1:NAME} --bytes ${2:BYTES}"
         }
     ]
 }

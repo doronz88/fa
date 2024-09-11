@@ -7,6 +7,7 @@ Below is the list of available commands:
 - [argument](#argument)
 - [b](#b)
 - [clear](#clear)
+- [deref-data](#deref-data)
 - [find](#find)
 - [find-bytes](#find-bytes)
 - [find-bytes-ida](#find-bytes-ida)
@@ -16,6 +17,7 @@ Below is the list of available commands:
 - [function-lines](#function-lines)
 - [function-start](#function-start)
 - [goto-ref](#goto-ref)
+- [if-not](#if-not)
 - [if](#if)
 - [intersect](#intersect)
 - [keystone-find-opcodes](#keystone-find-opcodes)
@@ -30,6 +32,7 @@ Below is the list of available commands:
 - [max-xrefs](#max-xrefs)
 - [min-xrefs](#min-xrefs)
 - [most-common](#most-common)
+- [next-instruction](#next-instruction)
 - [offset](#offset)
 - [operand](#operand)
 - [print](#print)
@@ -50,6 +53,7 @@ Below is the list of available commands:
 - [verify-aligned](#verify-aligned)
 - [verify-bytes](#verify-bytes)
 - [verify-name](#verify-name)
+- [verify-opcode](#verify-opcode)
 - [verify-operand](#verify-operand)
 - [verify-ref](#verify-ref)
 - [verify-segment](#verify-segment)
@@ -75,7 +79,7 @@ EXAMPLE:
 positional arguments:
   value
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## add-offset-range
@@ -94,7 +98,7 @@ positional arguments:
   end
   step
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## align
@@ -111,7 +115,7 @@ EXAMPLE:
 positional arguments:
   value
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## argument
@@ -133,7 +137,7 @@ EXAMPLE:
 positional arguments:
   arg         argument number
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## b
@@ -156,7 +160,7 @@ EXAMPLE:
 positional arguments:
   label       label to jump to
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## clear
@@ -170,8 +174,19 @@ EXAMPLE:
     -> clear
     results = []
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
+```
+## deref-data
+```
+usage: deref-data [-h] -l LEN
+
+Dereference pointer as integer data type. Note that the data is assumed to be stored in little endian format. Example #1: 0x00000000: LDR R1, [SP, #0x34] results = [0] -> deref-data -l 4 results = [0xe5d1034] Example #2: 0x00000000: LDR R1, [SP, #0x34] results = [0]
+-> deref-data -l 2 results = [0x1034]
+
+options:
+  -h, --help         show this help message and exit
+  -l LEN, --len LEN  length of the data in bytes
 ```
 ## find
 ```
@@ -182,7 +197,7 @@ find another symbol defined in other SIG files
 positional arguments:
   name        symbol name
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## find-bytes
@@ -205,7 +220,7 @@ EXAMPLE:
 positional arguments:
   hex_str
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## find-bytes-ida
@@ -229,7 +244,7 @@ EXAMPLE:
 positional arguments:
   expression
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## find-immediate
@@ -250,7 +265,7 @@ EXAMPLE:
 positional arguments:
   expression
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## find-str
@@ -273,7 +288,7 @@ EXAMPLE:
 positional arguments:
   hex_str
 
-optional arguments:
+options:
   -h, --help         show this help message and exit
   --null-terminated
 ```
@@ -292,7 +307,7 @@ EXAMPLE:
     -> function-end
     result = [0xf0]
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## function-lines
@@ -313,14 +328,14 @@ EXAMPLE:
     -> function-lines
     result = [0, 4, ..., 0xc0, ..., 0xf0]
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
   --after     include only function lines which occur after currentresultset
   --before    include only function lines which occur before current resultset
 ```
 ## function-start
 ```
-usage: function-start [-h] [cmd [cmd ...]]
+usage: function-start [-h] [cmd ...]
 
 goto function's start
 
@@ -336,7 +351,7 @@ EXAMPLE:
 positional arguments:
   cmd         command
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## goto-ref
@@ -352,10 +367,37 @@ EXAMPLE:
     -> goto-ref --data
     results = [0x12345678]
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
   --code      include code references
   --data      include data references
+```
+## if-not
+```
+usage: if-not [-h] cond label
+
+perform an 'if not' statement to create conditional branches
+using an FA command
+
+EXAMPLE:
+    results = [0, 4, 8]
+
+    -> if-not 'verify-single' a_is_single_label
+
+    set-name a_is_single
+    b end
+
+    label a_is_not_single_label
+    set-name a_is_not_single
+
+    label end
+
+positional arguments:
+  cond        condition as an FA command
+  label       label to jump to if condition is false
+
+options:
+  -h, --help  show this help message and exit
 ```
 ## if
 ```
@@ -381,12 +423,12 @@ positional arguments:
   cond        condition as an FA command
   label       label to jump to if condition is true
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## intersect
 ```
-usage: intersect [-h] variables [variables ...]
+usage: intersect [-h] [--piped] variables [variables ...]
 
 intersect two or more variables
 
@@ -401,10 +443,11 @@ EXAMPLE:
     results = [0]
 
 positional arguments:
-  variables   variable names
+  variables    variable names
 
-optional arguments:
-  -h, --help  show this help message and exit
+options:
+  -h, --help   show this help message and exit
+  --piped, -p
 ```
 ## keystone-find-opcodes
 ```
@@ -425,7 +468,7 @@ positional arguments:
   mode        keystone mode const (evald)
   code        keystone architecture const (opcodes to compile)
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
   --bele      figure out the endianity from IDA instead of explicit mode
   --or        mandatory. expands search results
@@ -450,7 +493,7 @@ positional arguments:
   mode           keystone mode const (evald)
   code           keystone architecture const (opcodes to compile)
 
-optional arguments:
+options:
   -h, --help     show this help message and exit
   --bele         figure out the endianity from IDA instead of explicit mode
   --until UNTIL  keep going onwards opcode-opcode until verified
@@ -474,7 +517,7 @@ EXAMPLE:
 positional arguments:
   name        name of variable in history to go back to
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## locate
@@ -496,7 +539,7 @@ EXAMPLE:
 positional arguments:
   name
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## make-code
@@ -505,7 +548,7 @@ usage: make-code [-h]
 
 convert into a code block
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## make-comment
@@ -528,7 +571,7 @@ EXAMPLE:
 positional arguments:
   comment     comment string
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## make-function
@@ -537,7 +580,7 @@ usage: make-function [-h]
 
 convert into a function
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## make-literal
@@ -546,7 +589,7 @@ usage: make-literal [-h]
 
 convert into a literal
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## make-unknown
@@ -555,7 +598,7 @@ usage: make-unknown [-h]
 
 convert into an unknown block
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## max-xrefs
@@ -564,7 +607,7 @@ usage: max-xrefs [-h]
 
 get the result with most xrefs pointing at it
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## min-xrefs
@@ -573,7 +616,7 @@ usage: min-xrefs [-h]
 
 get the result with least xrefs pointing at it
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## most-common
@@ -587,8 +630,48 @@ EXAMPLE:
     -> most-common
     result = [4]
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
+```
+## next-instruction
+```
+usage: next-instruction [-h] [--limit LIMIT] [--back] [--op0 OP0] [--op1 OP1] [--op2 OP2] [--op3 OP3] [--op4 OP4] [--op5 OP5] mnem [mnem ...]
+
+Map the resultset to the next instruction of a given pattern. The instruction is searched for linearly.
+
+Example #1:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+    0x0000000c: mov r2, r3
+    
+    results = [0, 4, 8]
+    -> next-instruction mov
+    results = [0, 4, 12]
+
+Example #2:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+    0x0000000c: mov r2, r3
+    
+    results = [0, 4, 8]
+    -> next-instruction mov --op 2
+    results = [12, 12, 12]
+
+positional arguments:
+  mnem
+
+options:
+  -h, --help     show this help message and exit
+  --limit LIMIT  Number of instructions to search per address
+  --back         Search backwards instead of forwards
+  --op0 OP0
+  --op1 OP1
+  --op2 OP2
+  --op3 OP3
+  --op4 OP4
+  --op5 OP5
 ```
 ## offset
 ```
@@ -604,7 +687,7 @@ EXAMPLE:
 positional arguments:
   offset
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## operand
@@ -625,7 +708,7 @@ EXAMPLE #1:
 positional arguments:
   op          operand number
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## print
@@ -637,7 +720,7 @@ prints the current result-set (for debugging)
 positional arguments:
   phrase      optional string
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## python-if
@@ -667,7 +750,7 @@ positional arguments:
   cond        condition to evaluate (being eval'ed)
   label       label to jump to if condition is true
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## run
@@ -679,7 +762,7 @@ run another SIG file
 positional arguments:
   name        SIG filename
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## set-const
@@ -691,7 +774,7 @@ define a const value
 positional arguments:
   name
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## set-enum
@@ -704,7 +787,7 @@ positional arguments:
   enum_name
   enum_key
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## set-name
@@ -716,7 +799,7 @@ set symbol name
 positional arguments:
   name
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## set-struct-member
@@ -730,7 +813,7 @@ positional arguments:
   member_name
   member_type
 
-optional arguments:
+options:
   -h, --help   show this help message and exit
 ```
 ## set-type
@@ -742,7 +825,7 @@ sets the type in the disassembler
 positional arguments:
   type_str
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## single
@@ -759,7 +842,7 @@ EXAMPLE:
 positional arguments:
   index       result index
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## sort
@@ -773,7 +856,7 @@ EXAMPLE:
     -> sort
     result = [0, 4, 8 ,12]
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## stop-if-empty
@@ -790,7 +873,7 @@ EXAMPLE:
 
     results = []
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## store
@@ -813,7 +896,7 @@ EXAMPLE:
 positional arguments:
   name        name of variable to use
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## symdiff
@@ -835,7 +918,7 @@ EXAMPLE:
 positional arguments:
   variables   variable names
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## trace
@@ -844,7 +927,7 @@ usage: trace [-h]
 
 sets a pdb breakpoint
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## unique
@@ -858,7 +941,7 @@ EXAMPLE:
     -> unique
     result = [0, 4, 8, 12]
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## verify-aligned
@@ -875,7 +958,7 @@ EXAMPLE:
 positional arguments:
   value
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## verify-bytes
@@ -895,7 +978,7 @@ EXAMPLE:
 positional arguments:
   hex_str
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## verify-name
@@ -907,8 +990,44 @@ verifies the given name appears in result set
 positional arguments:
   name
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
+```
+## verify-opcode
+```
+usage: verify-opcode [-h] [--op0 OP0] [--op1 OP1] [--op2 OP2] [--op3 OP3] [--op4 OP4] [--op5 OP5] mnem [mnem ...]
+
+reduce the result-set to those matching the given instruction
+
+EXAMPLE #1:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-opcode mov
+    results = [0, 4]
+
+EXAMPLE #2:
+    0x00000000: mov r0, r1
+    0x00000004: mov r1, r2
+    0x00000008: push {r4}
+
+    results = [0, 2, 4, 6, 8]
+    -> verify-opcode mov --op1 r2
+    results = [4]
+
+positional arguments:
+  mnem
+
+options:
+  -h, --help  show this help message and exit
+  --op0 OP0
+  --op1 OP1
+  --op2 OP2
+  --op3 OP3
+  --op4 OP4
+  --op5 OP5
 ```
 ## verify-operand
 ```
@@ -937,7 +1056,7 @@ EXAMPLE #2:
 positional arguments:
   name
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
   --op0 OP0
   --op1 OP1
@@ -949,7 +1068,7 @@ usage: verify-ref [-h] [--code] [--data] [--name NAME]
 
 verifies a given reference exists to current result set
 
-optional arguments:
+options:
   -h, --help   show this help message and exit
   --code       include code references
   --data       include data references
@@ -957,7 +1076,7 @@ optional arguments:
 ```
 ## verify-segment
 ```
-usage: verify-segment [-h] name
+usage: verify-segment [-h] [--regex] name
 
 reduce the result-set to those in the given segment name
 
@@ -975,8 +1094,9 @@ EXAMPLE:
 positional arguments:
   name        segment name
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
+  --regex     interpret name as a regex
 ```
 ## verify-single
 ```
@@ -994,7 +1114,7 @@ EXAMPLE #2:
     -> verify-single
     result = [4]
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## verify-str
@@ -1014,7 +1134,7 @@ EXAMPLE:
 positional arguments:
   hex_str
 
-optional arguments:
+options:
   -h, --help         show this help message and exit
   --null-terminated
 ```
@@ -1024,17 +1144,16 @@ usage: xref [-h]
 
 goto xrefs pointing at current search results
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
 ```
 ## xrefs-to
 ```
-usage: xrefs-to [-h] [--function-start] [--or] [--and] [--name NAME]
-                [--bytes BYTES]
+usage: xrefs-to [-h] [--function-start] [--or] [--and] [--name NAME] [--bytes BYTES]
 
 search for xrefs pointing at given parameter
 
-optional arguments:
+options:
   -h, --help        show this help message and exit
   --function-start  goto function prolog for each xref
   --or              expand the current result set
