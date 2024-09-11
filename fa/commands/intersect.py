@@ -1,4 +1,5 @@
 from argparse import RawTextHelpFormatter
+from typing import List
 
 from fa import utils
 
@@ -21,14 +22,19 @@ def get_parser():
                                    description=DESCRIPTION,
                                    formatter_class=RawTextHelpFormatter)
     p.add_argument('variables', nargs='+', help='variable names')
+    p.add_argument('--piped', '-p', action='store_true')
     return p
 
 
-def run(segments, args, addresses, interpreter=None, **kwargs):
-    first_var = args.variables[0]
-    results = set(interpreter.get_variable(first_var))
+def run(segments, args, addresses: List[int], interpreter=None, **kwargs):
+    if args.piped:
+        first_var = addresses
+    else:
+        first_var = interpreter.get_variable(args.variables.pop(0))
 
-    for c in args.variables[1:]:
+    results = set(first_var)
+
+    for c in args.variables:
         results.intersection_update(interpreter.get_variable(c))
 
     return list(results)
