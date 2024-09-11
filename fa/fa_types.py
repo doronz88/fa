@@ -59,7 +59,7 @@ class FaEnum(FaType):
         sorted(keys)
 
         for k in keys:
-            idc.add_enum_member(id, self._values[k], k, 0xffffffff)
+            idc.add_enum_member(id, self._values[k], k, 0xffffffffffffffff)
 
 
 class FaStruct(FaType):
