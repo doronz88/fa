@@ -82,14 +82,14 @@
             "contents": "goto-ref --code --data"
         },
         {
-            "trigger": "if-not",
-            "kind": "snippet",
-            "contents": "if-not ${1:cond} ${2:label}"
-        },
-        {
             "trigger": "if",
             "kind": "snippet",
             "contents": "if ${1:cond} ${2:label}"
+        },
+        {
+            "trigger": "if-not",
+            "kind": "snippet",
+            "contents": "if-not ${1:cond} ${2:label}"
         },
         {
             "trigger": "intersect",
@@ -159,7 +159,7 @@
         {
             "trigger": "next-instruction",
             "kind": "snippet",
-            "contents": "next-instruction --limit ${1:LIMIT} --back --op0 ${2:OP0} --op1 ${3:OP1} --op2 ${4:OP2} --op3 ${5:OP3} --op4 ${6:OP4} --op5 ${7:OP5}                        ${8:mnem} ${9:mnem} ..."
+            "contents": "next-instruction --limit ${1:LIMIT} --back --op0 ${2:OP0} --op1 ${3:OP1} --op2 ${4:OP2} --op3 ${5:OP3} --op4 ${6:OP4} --op5 ${7:OP5} ${8:mnem} ${9:mnem} ..."
         },
         {
             "trigger": "offset",
