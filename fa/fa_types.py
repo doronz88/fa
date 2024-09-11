@@ -10,7 +10,7 @@ try:
 
     IDA_MODULE = True
 except ImportError:
-    pass
+    IDA_MODULE = False
 
 
 def del_struct_members(sid: int, offset1: int, offset2: int) -> None:

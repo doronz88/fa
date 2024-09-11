@@ -114,7 +114,7 @@
         {
             "trigger": "locate",
             "kind": "snippet",
-            "contents": "locate ${1:name}"
+            "contents": "locate ${1:name} ${2:name} ..."
         },
         {
             "trigger": "make-code",
@@ -159,7 +159,7 @@
         {
             "trigger": "next-instruction",
             "kind": "snippet",
-            "contents": "next-instruction --limit ${1:LIMIT} --back --op0 ${2:OP0} --op1 ${3:OP1} --op2 ${4:OP2} --op3 ${5:OP3} --op4 ${6:OP4} --op5 ${7:OP5} ${8:mnem} ${9:mnem} ..."
+            "contents": "next-instruction --limit ${1:LIMIT} --back --op0 ${2:OP0} --op1 ${3:OP1} --op2 ${4:OP2} --op3 ${5:OP3} --op4 ${6:OP4} --op5 ${7:OP5}                        ${8:mnem} ${9:mnem} ..."
         },
         {
             "trigger": "offset",
@@ -240,6 +240,11 @@
             "trigger": "trace",
             "kind": "snippet",
             "contents": "trace "
+        },
+        {
+            "trigger": "union",
+            "kind": "snippet",
+            "contents": "union --piped ${1:variables} ${2:variables} ..."
         },
         {
             "trigger": "unique",

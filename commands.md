@@ -49,6 +49,7 @@ Below is the list of available commands:
 - [store](#store)
 - [symdiff](#symdiff)
 - [trace](#trace)
+- [union](#union)
 - [unique](#unique)
 - [verify-aligned](#verify-aligned)
 - [verify-bytes](#verify-bytes)
@@ -181,8 +182,9 @@ options:
 ```
 usage: deref-data [-h] -l LEN
 
-Dereference pointer as integer data type. Note that the data is assumed to be stored in little endian format. Example #1: 0x00000000: LDR R1, [SP, #0x34] results = [0] -> deref-data -l 4 results = [0xe5d1034] Example #2: 0x00000000: LDR R1, [SP, #0x34] results = [0]
--> deref-data -l 2 results = [0x1034]
+Dereference pointer as integer data type. Note that the data is assumed to be stored in little endian format. Example #1:
+0x00000000: LDR R1, [SP, #0x34] results = [0] -> deref-data -l 4 results = [0xe5d1034] Example #2: 0x00000000: LDR R1, [SP, #0x34]
+results = [0] -> deref-data -l 2 results = [0x1034]
 
 options:
   -h, --help         show this help message and exit
@@ -522,7 +524,7 @@ options:
 ```
 ## locate
 ```
-usage: locate [-h] name
+usage: locate [-h] name [name ...]
 
 goto symbol by name
 
@@ -635,7 +637,8 @@ options:
 ```
 ## next-instruction
 ```
-usage: next-instruction [-h] [--limit LIMIT] [--back] [--op0 OP0] [--op1 OP1] [--op2 OP2] [--op3 OP3] [--op4 OP4] [--op5 OP5] mnem [mnem ...]
+usage: next-instruction [-h] [--limit LIMIT] [--back] [--op0 OP0] [--op1 OP1] [--op2 OP2] [--op3 OP3] [--op4 OP4] [--op5 OP5]
+                        mnem [mnem ...]
 
 Map the resultset to the next instruction of a given pattern. The instruction is searched for linearly.
 
@@ -929,6 +932,29 @@ sets a pdb breakpoint
 
 options:
   -h, --help  show this help message and exit
+```
+## union
+```
+usage: union [-h] [--piped] variables [variables ...]
+
+union two or more variables
+
+EXAMPLE:
+    results = [0, 4, 8]
+    store a
+    ...
+    results = [0, 12, 20]
+    store b
+
+    -> union a b
+    results = [0, 4, 8, 12, 20]
+
+positional arguments:
+  variables    variable names
+
+options:
+  -h, --help   show this help message and exit
+  --piped, -p
 ```
 ## unique
 ```
