@@ -135,7 +135,7 @@ def add_operand_args(parser: argparse.ArgumentParser) -> None:
         parser.add_argument(f'--op{op_ix}', default=None)
 
 
-def create_regs_description_from_args(*args) -> List[Tuple[int, str]]:
+def create_regs_description_from_args(args) -> List[Tuple[int, str]]:
     regs = []
     for op_ix in range(MAX_NUMBER_OF_OPERANDS):
         v = getattr(args, f'op{op_ix}', None)
