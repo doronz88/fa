@@ -89,4 +89,4 @@ def next_instruction(addresses: List[int],
 
 def run(segments, args, addresses: List[int], interpreter=None, **kwargs):
     regs_description = utils.create_regs_description_from_args(args)
-    return list(next_instruction(addresses, args.mnem, regs_description, args.address, args.back, args.limit))
+    return list(next_instruction(addresses, args.mnem, regs_description, args.back, args.limit))
