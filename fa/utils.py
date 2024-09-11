@@ -122,7 +122,7 @@ def find_or_create_struct(name):
     return sid
 
 
-def create_create_regs_description(*regs) -> List[Tuple[int, str]]:
+def create_regs_description(*regs) -> List[Tuple[int, str]]:
     result = []
     for i, r in enumerate(regs):
         if r is not None:
@@ -142,7 +142,7 @@ def create_regs_description_from_args(*args) -> List[Tuple[int, str]]:
         if v is not None:
             v = [i.strip() for i in v.split(',')]
         regs.append(v)
-    return create_create_regs_description(*regs)
+    return create_regs_description(*regs)
 
 
 def size_of_operand(op: 'ida_ua.op_t') -> int:
@@ -267,7 +267,7 @@ def compare_arm_coprocessor_operand(ea: int, index: int, values: Iterable[str]) 
     operand = insn.ops[1]
 
     if index == 2:
-        op_val = operand.value
+        op_val = operand.reg
         return compare_reg_value(op_val, values)
 
     if index == 3:

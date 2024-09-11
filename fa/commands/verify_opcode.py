@@ -1,5 +1,5 @@
 from argparse import RawTextHelpFormatter
-from typing import Generator, Iterable
+from typing import Generator, List, Union
 
 from fa import context, utils
 
@@ -41,10 +41,11 @@ def get_parser():
 
 @context.ida_context
 @utils.yield_unique
-def verify_opcode(addresses: Iterable[int], mnem: str, regs_description) -> Generator[int, None, None]:
+def verify_opcode(addresses: List[int], mnems: Union[str, List[str]], regs_description) \
+        -> Generator[int, None, None]:
     for ea in addresses:
         current_mnem = idc.print_insn_mnem(ea).lower()
-        if current_mnem == mnem:
+        if current_mnem in mnems:
             if not regs_description:
                 yield ea
                 continue
@@ -57,6 +58,6 @@ def verify_opcode(addresses: Iterable[int], mnem: str, regs_description) -> Gene
                 yield ea
 
 
-def run(segments, args, addresses: Iterable[int], interpreter=None, **kwargs):
-    regs_description = utils.create_create_regs_description(args)
+def run(segments, args, addresses: List[int], interpreter=None, **kwargs) -> List[int]:
+    regs_description = utils.create_regs_description_from_args(args)
     return list(verify_opcode(addresses, args.mnem, regs_description))
