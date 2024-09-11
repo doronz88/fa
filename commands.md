@@ -17,8 +17,8 @@ Below is the list of available commands:
 - [function-lines](#function-lines)
 - [function-start](#function-start)
 - [goto-ref](#goto-ref)
-- [if-not](#if-not)
 - [if](#if)
+- [if-not](#if-not)
 - [intersect](#intersect)
 - [keystone-find-opcodes](#keystone-find-opcodes)
 - [keystone-verify-opcodes](#keystone-verify-opcodes)
@@ -182,9 +182,8 @@ options:
 ```
 usage: deref-data [-h] -l LEN
 
-Dereference pointer as integer data type. Note that the data is assumed to be stored in little endian format. Example #1:
-0x00000000: LDR R1, [SP, #0x34] results = [0] -> deref-data -l 4 results = [0xe5d1034] Example #2: 0x00000000: LDR R1, [SP, #0x34]
-results = [0] -> deref-data -l 2 results = [0x1034]
+Dereference pointer as integer data type. Note that the data is assumed to be stored in little endian format. Example #1: 0x00000000: LDR R1, [SP, #0x34] results = [0] -> deref-data -l 4 results = [0xe5d1034] Example #2: 0x00000000: LDR R1, [SP, #0x34] results = [0]
+-> deref-data -l 2 results = [0x1034]
 
 options:
   -h, --help         show this help message and exit
@@ -374,33 +373,6 @@ options:
   --code      include code references
   --data      include data references
 ```
-## if-not
-```
-usage: if-not [-h] cond label
-
-perform an 'if not' statement to create conditional branches
-using an FA command
-
-EXAMPLE:
-    results = [0, 4, 8]
-
-    -> if-not 'verify-single' a_is_single_label
-
-    set-name a_is_single
-    b end
-
-    label a_is_not_single_label
-    set-name a_is_not_single
-
-    label end
-
-positional arguments:
-  cond        condition as an FA command
-  label       label to jump to if condition is false
-
-options:
-  -h, --help  show this help message and exit
-```
 ## if
 ```
 usage: if [-h] cond label
@@ -424,6 +396,33 @@ EXAMPLE:
 positional arguments:
   cond        condition as an FA command
   label       label to jump to if condition is true
+
+options:
+  -h, --help  show this help message and exit
+```
+## if-not
+```
+usage: if-not [-h] cond label
+
+perform an 'if not' statement to create conditional branches
+using an FA command
+
+EXAMPLE:
+    results = [0, 4, 8]
+
+    -> if-not 'verify-single' a_is_single_label
+
+    set-name a_is_single
+    b end
+
+    label a_is_not_single_label
+    set-name a_is_not_single
+
+    label end
+
+positional arguments:
+  cond        condition as an FA command
+  label       label to jump to if condition is false
 
 options:
   -h, --help  show this help message and exit
@@ -637,8 +636,7 @@ options:
 ```
 ## next-instruction
 ```
-usage: next-instruction [-h] [--limit LIMIT] [--back] [--op0 OP0] [--op1 OP1] [--op2 OP2] [--op3 OP3] [--op4 OP4] [--op5 OP5]
-                        mnem [mnem ...]
+usage: next-instruction [-h] [--limit LIMIT] [--back] [--op0 OP0] [--op1 OP1] [--op2 OP2] [--op3 OP3] [--op4 OP4] [--op5 OP5] mnem [mnem ...]
 
 Map the resultset to the next instruction of a given pattern. The instruction is searched for linearly.
 
