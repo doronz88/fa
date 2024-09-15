@@ -30,8 +30,8 @@ def get_parser():
     return p
 
 
-def find_str(string, null_terminated=False):
-    hex_str = binascii.hexlify(string)
+def find_str(string: str, null_terminated: bool = False):
+    hex_str = str(binascii.hexlify(bytearray(string.encode())).decode())
     if null_terminated:
         hex_str += '00'
     return find_bytes.find_bytes(hex_str)
