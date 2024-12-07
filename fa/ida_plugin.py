@@ -117,7 +117,7 @@ class IdaLoader(fainterp.FaInterp):
                     continue
 
                 opcode = binascii.hexlify(idc.get_bytes(ea, opcode_size))
-                formatted_hex = ' '.join(opcode[i:i + 2] for i in
+                formatted_hex = ' '.join(opcode[i:i + 2].decode() for i in
                                          range(0, len(opcode), 2))
                 find_bytes_ida += formatted_hex + ' '
 
