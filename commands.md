@@ -28,6 +28,7 @@ Below is the list of available commands:
 - [make-comment](#make-comment)
 - [make-function](#make-function)
 - [make-literal](#make-literal)
+- [make-offset](#make-offset)
 - [make-unknown](#make-unknown)
 - [max-xrefs](#max-xrefs)
 - [min-xrefs](#min-xrefs)
@@ -592,6 +593,25 @@ convert into a literal
 
 options:
   -h, --help  show this help message and exit
+```
+## make-offset
+```
+usage: make-offset [-h] [-l LEN]
+
+convert into an offset EXAMPLE:
+    0x00000200: 01 02 03 04
+    0x00000204: 00 02 00 00
+
+    results = [0x204]
+    -> make-offset
+    results = [0x204]
+
+    0x00000200: 01 02 03 04
+    0x00000204: byte_200
+
+options:
+  -h, --help     show this help message and exit
+  -l, --len LEN  length of offset in bytes
 ```
 ## make-unknown
 ```

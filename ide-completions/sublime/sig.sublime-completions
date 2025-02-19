@@ -137,6 +137,11 @@
             "contents": "make-literal "
         },
         {
+            "trigger": "make-offset",
+            "kind": "snippet",
+            "contents": "make-offset ${1:-l} ${2:LEN}"
+        },
+        {
             "trigger": "make-unknown",
             "kind": "snippet",
             "contents": "make-unknown "
