@@ -12,7 +12,7 @@ DESCRIPTION = '''goto function's end
 EXAMPLE:
     0x00000000: push {r4-r7, lr} -> function's prolog
     ...
-    0x000000f0: push {r4-r7, pc} -> function's epilog
+    0x000000f0: pop {r4-r7, pc} -> function's epilog
 
     results = [0]
     -> function-end
