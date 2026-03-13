@@ -3,7 +3,7 @@ from fa import context, utils
 try:
     import ida_auto
     import ida_offset
-    import idaapi
+    import ida_ida
     from idc import REF_OFF8, REF_OFF16, REF_OFF32, REF_OFF64
 except ImportError:
     pass
@@ -34,7 +34,7 @@ def get_parser():
 @context.ida_context
 def make_offset(addresses: list[int], offset_len: int = 0):
     offset_length_to_ref_type = {
-        0: REF_OFF64 if idaapi.get_inf_structure().is_64bit() else REF_OFF32,
+        0: REF_OFF64 if ida_ida.inf_is_64bit() else REF_OFF32,
         1: REF_OFF8,
         2: REF_OFF16,
         4: REF_OFF32,
