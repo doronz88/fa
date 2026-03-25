@@ -57,7 +57,7 @@ class FaInterp:
 
         if (config_path is not None) and (os.path.exists(config_path)):
             self._signatures_root = os.path.expanduser(
-                self.config_get('global', 'signatures_root'))
+                self.config_get('global', 'signatures_root', self._signatures_root))
             self._project = self.config_get('global', 'project', None)
 
     def _push_stack_frame(self):
