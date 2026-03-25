@@ -15,7 +15,7 @@ import hjson
 from fa.utils import ArgumentParserNoExit
 
 CONFIG_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')
+    os.path.dirname(os.path.abspath(__file__)), 'config.ini')
 DEFAULT_SIGNATURES_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(
@@ -57,7 +57,7 @@ class FaInterp:
 
         if (config_path is not None) and (os.path.exists(config_path)):
             self._signatures_root = os.path.expanduser(
-                self.config_get('global', 'signatures_root'))
+                self.config_get('global', 'signatures_root', self._signatures_root))
             self._project = self.config_get('global', 'project', None)
 
     def _push_stack_frame(self):
