@@ -15,7 +15,7 @@ import hjson
 from fa.utils import ArgumentParserNoExit
 
 CONFIG_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..', 'config.ini')
+    os.path.dirname(os.path.abspath(__file__)), 'config.ini')
 DEFAULT_SIGNATURES_ROOT = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'signatures')
 COMMANDS_ROOT = os.path.join(
